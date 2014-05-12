@@ -19,6 +19,10 @@ Line::Line(Quantity x1,Quantity y1,Quantity x2,Quantity y2):
 {
 }
 
+void Line::draw(Canvas& canvas)
+{
+}
+
 Line::~Line()
 {
 }
