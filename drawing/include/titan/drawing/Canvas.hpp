@@ -5,7 +5,7 @@
 #include "titan/core/Quantity.hpp"
 #include "titan/drawing/Context.hpp"
 
-#include <map>
+#include <memory>
 
 namespace titan
 {
@@ -15,11 +15,10 @@ class Canvas
     protected:
         uint32 _pxWidth;
         uint32 _pxHeight;
-        float32 _pxmmResolution;
-        Canvas(uint32 pxWidth, uint32 pxHeight, float32 pxmmResolution);
+        ColorType::type _format;
+        Canvas(uint32 pxWidth, uint32 pxHeight, ColorType::type format);
     public:
-        virtual Canvas* create(Quantity width, Quantity height, Quantity resolution) = 0;
-        virtual Context* getContext() = 0;
+        virtual std::shared_ptr<Context> getContext() = 0;
         ~Canvas();
 };
 

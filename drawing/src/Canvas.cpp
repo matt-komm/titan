@@ -3,10 +3,10 @@
 namespace titan
 {
 
-Canvas::Canvas(uint32 pxWidth, uint32 pxHeight, float32 pxmmResolution):
+Canvas::Canvas(uint32 pxWidth, uint32 pxHeight, ColorType::type format):
     _pxWidth(pxWidth),
     _pxHeight(pxHeight),
-    _pxmmResolution(pxmmResolution)
+    _format(format)
 {
 }
 

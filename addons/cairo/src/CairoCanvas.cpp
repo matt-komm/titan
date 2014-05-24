@@ -5,25 +5,18 @@ namespace titan
 namespace plugins
 {
 
-CairoCanvas::CairoCanvas(uint32 pxWidth, uint32 pxHeight, float32 pxmmResolution):
-	titan::Canvas(pxWidth,pxHeight,pxmmResolution),
-	_cairoSurface(nullptr)
+CairoCanvas::CairoCanvas(uint32 pxWidth, uint32 pxHeight, ColorType::type format):
+	Canvas(pxWidth,pxHeight,format)
 {
-	cairo_t *cr = cairo_create (_cairoSurface);
 }
 
 CairoCanvas::~CairoCanvas()
 {
 }
 
-Canvas* CairoCanvas::create(Quantity width, Quantity height, Quantity resolution)
+std::shared_ptr<Context> CairoCanvas::getContext()
 {
-	return new CairoCanvas(100,100,100);
-}
-
-Context* getContext()
-{
-
+	return std::shared_ptr<Context>(nullptr);
 }
 
 }

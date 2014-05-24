@@ -33,6 +33,11 @@ static_assert(sizeof(float32)==4, "float32 is not of required size: 4");
 static_assert(sizeof(float64)==8, "float64 is not of required size: 8");
 static_assert(sizeof(float128)==16, "float128 is not of required size: 16");
 
+struct ColorType
+{
+	enum type {ARGB32,RGB24};
+};
+
 }
 
 #endif
