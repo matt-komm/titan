@@ -20,16 +20,20 @@ CairoContext::~CairoContext()
 	cairo_destroy(_cairo_context);
 }
 
-void CairoContext::setStroke(Stroke& stroke)
+void CairoContext::setStroke(const Stroke& stroke)
 {
-
+	_currentStroke=stroke;
 }
-void CairoContext::setFill(Fill& stroke)
+
+void CairoContext::setFill(const Fill& fill)
 {
-
+	_currentFill=fill;
 }
+
 void CairoContext::drawLine(uint32 x1, uint32 y1, uint32 x2, uint32 y2)
 {
+	const Color& color = _currentStroke.getColor();
+	cairo_set_source_rgba(_cairo_context,color.getRed(),color.getGreen(),color.getBlue(),color.getAlpha());
 	cairo_set_source_rgba(_cairo_context,0.0,0.0,0.0,1.0);
 	cairo_move_to(_cairo_context,x1,y1);
 	cairo_line_to(_cairo_context,x2,y2);
@@ -38,13 +42,13 @@ void CairoContext::drawRect(uint32 x1, uint32 y1, uint32 x2, uint32 y2)
 {
 
 }
+
 void CairoContext::fillRect(uint32 x1, uint32 y1, uint32 x2, uint32 y2)
 {
-	//std::cout<<"fill:" <<cairo_status_to_string(cairo_status(_cairo_context))<<std::endl;
-	cairo_set_source_rgba(_cairo_context,0.0,0.0,0.0,1.0);
+	const Color& color = _currentFill.getColor();
+	cairo_set_source_rgba(_cairo_context,color.getRed(),color.getGreen(),color.getBlue(),color.getAlpha());
 	cairo_rectangle(_cairo_context,x1,y1,x2-x1,y2-y1);
 	cairo_fill(_cairo_context);
-	//cairo_paint(_cairo_context);
 }
 
 

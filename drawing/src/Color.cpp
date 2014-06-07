@@ -3,15 +3,15 @@
 namespace titan
 {
 
-Color::Color():
-    _alpha(255),
-    _red(255),
-    _green(255),
-    _blue(255)
+Color::Color(uint8 alpha, uint8 red, uint8 green, uint8 blue):
+    _alpha(alpha),
+    _red(red),
+    _green(green),
+    _blue(blue)
 {
 }
 
-Color Color::argb(uint8 alpha, uint8 red, uint8 green, uint8 blue)
+Color Color::argb32(float32 alpha, float32 red, float32 green, float32 blue)
 {
     Color color;
     color.setAlpha(alpha);

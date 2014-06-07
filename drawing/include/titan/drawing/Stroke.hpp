@@ -13,6 +13,26 @@ class Stroke
     public:
         Stroke();
         ~Stroke();
+
+        static Stroke byColor(const Color& color)
+		{
+        	Stroke s;
+			s._color=color;
+			return s;
+		}
+
+        inline const Color& getColor() const
+        {
+        	return _color;
+        }
+        inline Color& getColor()
+        {
+        	return _color;
+        }
+        inline void setColor(const Color& color)
+        {
+        	_color=color;
+        }
 };
 
 }

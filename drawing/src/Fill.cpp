@@ -3,7 +3,8 @@
 namespace titan
 {
 
-Fill::Fill()
+Fill::Fill():
+	_color(Color::argb32())
 {
 }
 

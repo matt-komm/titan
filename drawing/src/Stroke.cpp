@@ -3,7 +3,8 @@
 namespace titan
 {
 
-Stroke::Stroke()
+Stroke::Stroke():
+	_color(Color::argb32())
 {
 }
 
