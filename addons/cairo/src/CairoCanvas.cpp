@@ -8,15 +8,22 @@ namespace plugins
 CairoCanvas::CairoCanvas(uint32 pxWidth, uint32 pxHeight, ColorType::type format):
 	Canvas(pxWidth,pxHeight,format)
 {
+	_cairoContext= new CairoContext(this);
 }
 
 CairoCanvas::~CairoCanvas()
 {
+	delete _cairoContext;
 }
 
-std::shared_ptr<Context> CairoCanvas::getContext()
+Context& CairoCanvas::getContext()
 {
-	return std::shared_ptr<Context>(nullptr);
+	return *_cairoContext;
+}
+
+void CairoCanvas::save(std::string name, OutputFormat::type outputFormat)
+{
+
 }
 
 }

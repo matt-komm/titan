@@ -1,4 +1,5 @@
 #include "CairoContext.hpp"
+#include "CairoCanvas.hpp"
 
 namespace titan
 {
@@ -6,7 +7,8 @@ namespace plugins
 {
 
 
-CairoContext::CairoContext()
+CairoContext::CairoContext(CairoCanvas* cairoCanvas):
+	_cairoCanvas(cairoCanvas)
 {
 }
 
@@ -34,6 +36,7 @@ void CairoContext::fillRect(uint32 x1, uint32 y1, uint32 x2, uint32 y2)
 {
 
 }
+
 
 
 }

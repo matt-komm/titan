@@ -18,8 +18,24 @@ class Canvas
         ColorType::type _format;
         Canvas(uint32 pxWidth, uint32 pxHeight, ColorType::type format);
     public:
-        virtual std::shared_ptr<Context> getContext() = 0;
-        ~Canvas();
+        virtual ~Canvas();
+
+        virtual Context& getContext() = 0;
+        inline uint32 getPixelWidth() const
+        {
+        	return _pxWidth;
+        }
+        inline uint32 getPixelHeight() const
+		{
+			return _pxHeight;
+		}
+        inline ColorType::type getColorType() const
+		{
+			return _format;
+		}
+
+        virtual void save(std::string name, OutputFormat::type outputFormat) = 0;
+
 };
 
 }

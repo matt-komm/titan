@@ -8,10 +8,14 @@ find_package(Cairo)
 include_directories(${CAIRO_INCLUDE_DIRS}) 
 
 add_library(titan-cairoplugin SHARED
-    src/CairoRenderer.cpp
     src/CairoCanvas.cpp
     src/CairoContext.cpp
 )
 target_link_libraries(titan-cairoplugin titan-core titan-drawing ${CAIRO_LIBRARIES})
+
+add_executable(titan-addons-cairo-test
+    test/test.cpp
+)
+target_link_libraries(titan-addons-cairo-test titan-cairoplugin titan-core titan-drawing ${CAIRO_LIBRARIES})
 
 installlib(titan-cairoplugin)

@@ -16,11 +16,15 @@ class CairoCanvas:
 	public titan::Canvas
 {
     protected:
+		CairoContext* _cairoContext;
     public:
 		CairoCanvas(uint32 pxWidth, uint32 pxHeight, ColorType::type format);
         ~CairoCanvas();
 
-        virtual std::shared_ptr<Context> getContext();
+        virtual Context& getContext();
+
+        virtual void save(std::string name, OutputFormat::type outputFormat);
+
 
 };
 

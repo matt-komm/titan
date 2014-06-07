@@ -14,9 +14,9 @@ namespace titan
 class Context
 {
     protected:
-    public:
 		Context();
-        ~Context();
+    public:
+        virtual ~Context();
 
         virtual void setStroke(Stroke& stroke) = 0;
 		virtual void setFill(Fill& stroke) = 0;

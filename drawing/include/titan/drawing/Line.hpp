@@ -9,8 +9,7 @@
 namespace titan
 {
 
-class Line:
-	public Drawable
+class Line
 {
     protected:
         Quantity _x1, _x2, _y1, _y2;

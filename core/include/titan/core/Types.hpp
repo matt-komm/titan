@@ -38,6 +38,11 @@ struct ColorType
 	enum type {ARGB32,RGB24};
 };
 
+struct OutputFormat
+{
+	enum type {SVG,PNG,JPG,PDF};
+};
+
 }
 
 #endif
