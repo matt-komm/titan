@@ -17,9 +17,15 @@ class CairoCanvas:
 {
     protected:
 		CairoContext* _cairoContext;
+		cairo_surface_t* _cairo_surface;
     public:
 		CairoCanvas(uint32 pxWidth, uint32 pxHeight, ColorType::type format);
         ~CairoCanvas();
+
+        inline cairo_surface_t* getCairoSurface()
+        {
+        	return _cairo_surface;
+        }
 
         virtual Context& getContext();
 

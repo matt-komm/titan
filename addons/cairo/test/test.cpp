@@ -10,7 +10,8 @@ int main()
 {
 	Canvas* cv = new plugins::CairoCanvas(200,200,titan::ColorType::ARGB32);
 	Context& context = cv->getContext();
-	context.drawLine(20,20,180,180);
+	context.fillRect(20,20,180,180);
+	cv->save("test.png",OutputFormat::PNG);
 	return 0;
 }
 

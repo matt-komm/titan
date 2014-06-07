@@ -19,9 +19,10 @@ class CairoContext:
 	public Context
 {
     protected:
-		CairoCanvas* _cairoCanvas;
+		CairoCanvas& _cairoCanvas;
+		cairo_t* _cairo_context;
     public:
-		CairoContext(CairoCanvas* cairoCanvas);
+		CairoContext(CairoCanvas& cairoCanvas);
         virtual ~CairoContext();
 
         virtual void setStroke(Stroke& stroke);
