@@ -61,6 +61,16 @@ class Color
             _blue=((uint32)(blue*255.0))%256;
         }
 
+        inline bool operator==(const Color& color)
+		{
+        	return _alpha==color._alpha && _red==color._red && _green == color._green && _blue == color._blue;
+		}
+
+        inline bool operator!=(const Color& color)
+		{
+			return (_alpha!=color._alpha || _red!=color._red || _green != color._green || _blue != color._blue);
+		}
+
         ~Color();
 };
 

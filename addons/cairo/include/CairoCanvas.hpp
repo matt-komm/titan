@@ -19,7 +19,7 @@ class CairoCanvas:
 		CairoContext* _cairoContext;
 		cairo_surface_t* _cairo_surface;
     public:
-		CairoCanvas(uint32 pxWidth, uint32 pxHeight, ColorType::type format);
+		CairoCanvas(uint32 pxWidth, uint32 pxHeight, const std::string& outputName, OutputType::type outputType, ColorType::type colorTyp=ColorType::OUTPUTDEFAULT);
         ~CairoCanvas();
 
         inline cairo_surface_t* getCairoSurface()
@@ -29,7 +29,7 @@ class CairoCanvas:
 
         virtual Context& getContext();
 
-        virtual void save(std::string name, OutputFormat::type outputFormat);
+        virtual void freeSurface();
 
 
 };

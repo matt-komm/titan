@@ -23,10 +23,12 @@ class CairoContext:
 		cairo_t* _cairo_context;
 		Stroke _currentStroke;
 		Fill _currentFill;
+		Color _currentColor;
     public:
 		CairoContext(CairoCanvas& cairoCanvas);
         virtual ~CairoContext();
 
+        virtual void setAntialising(Antialising::type antialising);
         virtual void setStroke(const Stroke& stroke);
 		virtual void setFill(const Fill& stroke);
 		virtual void drawLine(uint32 x1, uint32 y1, uint32 x2, uint32 y2);

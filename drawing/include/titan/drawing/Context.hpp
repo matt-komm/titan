@@ -18,6 +18,7 @@ class Context
     public:
         virtual ~Context();
 
+        virtual void setAntialising(Antialising::type antialising) = 0;
         virtual void setStroke(const Stroke& stroke) = 0;
 		virtual void setFill(const Fill& stroke) = 0;
 		virtual void drawLine(uint32 x1, uint32 y1, uint32 x2, uint32 y2) = 0;

@@ -3,10 +3,18 @@
 namespace titan
 {
 
-Canvas::Canvas(uint32 pxWidth, uint32 pxHeight, ColorType::type format):
+Canvas::Canvas(
+	uint32 pxWidth,
+	uint32 pxHeight,
+	const std::string& outputName,
+	OutputType::type outputType,
+	ColorType::type colorType
+	):
     _pxWidth(pxWidth),
     _pxHeight(pxHeight),
-    _format(format)
+    _outputName(outputName),
+    _outputType(outputType),
+	_colorType(colorType)
 {
 }
 

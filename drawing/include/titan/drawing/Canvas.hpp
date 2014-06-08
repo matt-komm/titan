@@ -13,10 +13,12 @@ namespace titan
 class Canvas
 {
     protected:
-        uint32 _pxWidth;
-        uint32 _pxHeight;
-        ColorType::type _format;
-        Canvas(uint32 pxWidth, uint32 pxHeight, ColorType::type format);
+        const uint32 _pxWidth;
+        const uint32 _pxHeight;
+        const std::string _outputName;
+        const OutputType::type _outputType;
+        const ColorType::type _colorType;
+        Canvas(uint32 pxWidth, uint32 pxHeight, const std::string& outputName, OutputType::type outputType, ColorType::type colorType=ColorType::OUTPUTDEFAULT);
     public:
         virtual ~Canvas();
 
@@ -29,12 +31,20 @@ class Canvas
 		{
 			return _pxHeight;
 		}
+        inline const std::string& getOutputName() const
+        {
+        	return _outputName;
+        }
+        inline OutputType::type getOutputType() const
+        {
+        	return _outputType;
+        }
         inline ColorType::type getColorType() const
 		{
-			return _format;
+			return _colorType;
 		}
 
-        virtual void save(std::string name, OutputFormat::type outputFormat) = 0;
+        virtual void freeSurface() = 0;
 
 };
 

@@ -35,12 +35,17 @@ static_assert(sizeof(float128)==16, "float128 is not of required size: 16");
 
 struct ColorType
 {
-	enum type {ARGB32,RGB24};
+	enum type {ARGB32,RGB24,OUTPUTDEFAULT};
 };
 
-struct OutputFormat
+struct OutputType
 {
-	enum type {SVG,PNG,JPG,PDF};
+	enum type {SVG,PNG,PDF};
+};
+
+struct Antialising
+{
+	enum type {NONE,DEFAULT,SIMPLE,BEST};
 };
 
 }

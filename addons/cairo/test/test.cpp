@@ -8,16 +8,17 @@ using namespace titan;
 
 int main()
 {
-	Canvas* cv = new plugins::CairoCanvas(200,200,titan::ColorType::ARGB32);
+	Canvas* cv = new plugins::CairoCanvas(200,200,"test.svg",titan::OutputType::SVG);
 	Context& context = cv->getContext();
-	context.setStroke(Stroke::byColor(Color::argb32(1.0,0.1,0.2,0.6)));
-
+	context.setStroke(Stroke::byColorWidth(Color::argb32(0.5,0.0,0.0,0.0)));
 	context.setFill(Fill::byColor(Color::argb32(1.0,0.1,0.2,0.6)));
 	context.fillRect(20,20,180,180);
 	context.setFill(Fill::byColor(Color::argb32(0.5,1.0,1.0,1.0)));
 	context.fillRect(40,40,160,160);
-	//context.drawLine(20,20,180,180);
-	cv->save("test.png",OutputFormat::PNG);
+	context.setAntialising(titan::Antialising::NONE);
+	context.drawLine(0,0,200,200);
+	context.drawRect(50,50,150,150);
+	cv->freeSurface();
 	return 0;
 }
 
