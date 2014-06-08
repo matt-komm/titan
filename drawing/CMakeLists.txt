@@ -9,6 +9,7 @@ add_library(titan-drawing SHARED
     src/Color.cpp
     src/Canvas.cpp
     src/Context.cpp
+    src/Font.cpp
 )
 
 installheaders(drawing)

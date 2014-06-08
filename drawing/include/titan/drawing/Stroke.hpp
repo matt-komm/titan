@@ -15,7 +15,7 @@ class Stroke
         Stroke();
         ~Stroke();
 
-        static Stroke byColorWidth(const Color& color=Color::argb32(),float32 width=1.0)
+        static Stroke byColor(const Color& color=Color::argb32(),float32 width=1.0)
 		{
         	Stroke s;
 			s._color=color;

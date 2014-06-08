@@ -48,6 +48,11 @@ struct Antialising
 	enum type {NONE,DEFAULT,SIMPLE,BEST};
 };
 
+struct FontStyle
+{
+	enum type {NORMAL,BOLD,ITALIC,BOLDITALIC};
+};
+
 }
 
 #endif
