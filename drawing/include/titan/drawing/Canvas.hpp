@@ -12,6 +12,23 @@ namespace titan
 
 class Canvas
 {
+    public:
+        class Axis
+        {
+            protected:
+                uint32 _x1Pixel;
+                uint32 _x2Pixel;
+                uint32 _y1Pixel;
+                uint32 _y2Pixel;
+                Quantity _length;
+            public:
+                Axis()
+                {
+                }
+                ~Axis()
+                {
+                }
+        };
     protected:
         const uint32 _pxWidth;
         const uint32 _pxHeight;
@@ -20,6 +37,7 @@ class Canvas
         const ColorType::type _colorType;
         Canvas(uint32 pxWidth, uint32 pxHeight, const std::string& outputName, OutputType::type outputType, ColorType::type colorType=ColorType::OUTPUTDEFAULT);
     public:
+    
         virtual ~Canvas();
 
         virtual Context& getContext() = 0;
