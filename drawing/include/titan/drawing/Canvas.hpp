@@ -13,22 +13,7 @@ namespace titan
 class Canvas
 {
     public:
-        class Axis
-        {
-            protected:
-                uint32 _x1Pixel;
-                uint32 _x2Pixel;
-                uint32 _y1Pixel;
-                uint32 _y2Pixel;
-                Quantity _length;
-            public:
-                Axis()
-                {
-                }
-                ~Axis()
-                {
-                }
-        };
+
     protected:
         const uint32 _pxWidth;
         const uint32 _pxHeight;

@@ -1,5 +1,6 @@
 include_directories(${PROJECT_SOURCE_DIR}/core/include)
 include_directories(${PROJECT_SOURCE_DIR}/drawing/include)
+include_directories(${PROJECT_SOURCE_DIR}/xml/include)
 
 add_library(titan-drawing SHARED
     src/Stroke.cpp
@@ -10,6 +11,8 @@ add_library(titan-drawing SHARED
     src/Canvas.cpp
     src/Context.cpp
     src/Font.cpp
+    src/Coordinate.cpp
+    src/BoundingBox.cpp
 )
 
 installheaders(drawing)

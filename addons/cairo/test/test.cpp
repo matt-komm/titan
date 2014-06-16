@@ -4,6 +4,8 @@
 #include "CairoCanvas.hpp"
 #include "CairoContext.hpp"
 
+#include <iostream>
+
 using namespace titan;
 
 int main()
@@ -21,5 +23,9 @@ int main()
 	context.setFont(Font::byName("Courier",50.0,Color::argb32(0.5,1.0,0.0,0.0),FontStyle::BOLDITALIC));
 	context.drawText(60,60,"bla");
 	cv->freeSurface();
+
+
+	Line l;
+	//std::cout<<l.getTypeName()<<std::endl;
 	return 0;
 }

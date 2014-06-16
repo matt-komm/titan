@@ -7,4 +7,6 @@
 #include "titan/drawing/Line.hpp"
 #include "titan/drawing/Rect.hpp"
 #include "titan/drawing/Stroke.hpp"
+#include "titan/drawing/Coordinate.hpp"
+#include "titan/drawing/BoundingBox.hpp"
 

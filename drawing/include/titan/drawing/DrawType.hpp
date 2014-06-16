@@ -3,6 +3,7 @@
 
 #include "titan/core/Types.hpp"
 #include "titan/drawing/Canvas.hpp"
+#include "titan/drawing/BoundingBox.hpp"
 
 namespace titan
 {
@@ -27,6 +28,7 @@ class DrawType
         }
 
         virtual void draw(Canvas& canvas) = 0;
+        virtual const BoundingBox& getBoundingBox() const = 0;
         virtual ~DrawType()
         {
         }
