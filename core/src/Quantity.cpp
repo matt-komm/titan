@@ -263,6 +263,16 @@ Quantity operator-(const SingleQuantity& quantity1, const SingleQuantity& quanti
     return q-quantity2;
 }
 
+Quantity operator+(const SingleQuantity& singleQuantity, Quantity& quantity)
+{
+    return quantity+singleQuantity;
+}
+
+Quantity operator-(const SingleQuantity& singleQuantity, Quantity& quantity)
+{
+    return quantity-singleQuantity;
+}
+
 
 
 }

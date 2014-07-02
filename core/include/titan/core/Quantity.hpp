@@ -152,6 +152,48 @@ class Quantity
             _singles.push_back(singleQuantity);
             return *this;
         }
+        Quantity& operator+=(const SingleQuantity& singleQuantity)
+        {
+            for (unsigned int i = 0; i < _singles.size(); ++i)
+            {
+                if (_singles[i].getUnit()==singleQuantity.getUnit())
+                {
+                    _singles[i].getValue()+=singleQuantity.getValue();
+                    return *this;
+                }
+            }
+            _singles.push_back(singleQuantity);
+            return *this;
+        }
+        Quantity& operator-=(const SingleQuantity& singleQuantity)
+        {
+            for (unsigned int i = 0; i < _singles.size(); ++i)
+            {
+                if (_singles[i].getUnit()==singleQuantity.getUnit())
+                {
+                    _singles[i].getValue()-=singleQuantity.getValue();
+                    return *this;
+                }
+            }
+            _singles.push_back(singleQuantity);
+            return *this;
+        }
+        Quantity& operator+(const Quantity& quantity)
+        {
+            for (unsigned int i = 0; i < quantity._singles.size(); ++i)
+            {
+                *this+=quantity._singles[i];
+            }
+            return *this;
+        }
+        Quantity& operator-(const Quantity& quantity)
+        {
+            for (unsigned int i = 0; i < quantity._singles.size(); ++i)
+            {
+                *this-=quantity._singles[i];
+            }
+            return *this;
+        }
         Quantity& operator*(float32 factor)
         {
             for (unsigned int i = 0; i < _singles.size(); ++i)
@@ -219,6 +261,9 @@ SingleQuantity operator*(float32 factor, const SingleQuantity& quantity);
 
 Quantity operator+(const SingleQuantity& quantity1, const SingleQuantity& quantity2);
 Quantity operator-(const SingleQuantity& quantity1, const SingleQuantity& quantity2);
+
+Quantity operator+(const SingleQuantity& singleQuantity, Quantity& quantity);
+Quantity operator-(const SingleQuantity& singleQuantity, Quantity& quantity);
 
 static const SingleQuantity mm = 1.0*Unit("mm");
 static const SingleQuantity cm = 10.0*Unit("mm");
