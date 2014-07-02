@@ -56,7 +56,49 @@ Unit& Unit::operator/(const Unit& unit)
 	return *this;
 }
 
-bool Unit::operator==(const Unit& unit)
+Unit& Unit::operator*=(const Unit& unit)
+{
+	for (std::map<std::string,int32>::const_iterator it = unit._units.begin(); it!= unit._units.end();++it)
+	{
+		if (_units.find(it->first)!=_units.end())
+		{
+			int32& power = _units[it->first];
+			power+=it->second;
+			if (power==0)
+			{
+				_units.erase(it);
+			}
+		}
+		else
+		{
+			_units[it->first]=it->second;
+		}
+	}
+	return *this;
+}
+
+Unit& Unit::operator/=(const Unit& unit)
+{
+	for (std::map<std::string,int32>::const_iterator it = unit._units.begin(); it!= unit._units.end();++it)
+	{
+		if (_units.find(it->first)!=_units.end())
+		{
+			int32& power = _units[it->first];
+			power-=it->second;
+			if (power==0)
+			{
+				_units.erase(it);
+			}
+		}
+		else
+		{
+			_units[it->first]=-it->second;
+		}
+	}
+	return *this;
+}
+
+bool Unit::operator==(const Unit& unit) const
 {
 	for (std::map<std::string,int32>::const_iterator it = unit._units.begin(); it!= unit._units.end();++it)
 	{
@@ -68,7 +110,7 @@ bool Unit::operator==(const Unit& unit)
 		else
 		{
 			//check unit power
-			if (_units[it->first]!=it->second)
+			if (_units.at(it->first)!=it->second)
 			{
 				return false;
 			}
@@ -93,6 +135,8 @@ Unit::~Unit()
 {
 }
 
+
+/*
 Quantity::Quantity()
 {
 }
@@ -141,13 +185,49 @@ Quantity& Quantity::operator*(float32 factor)
 	return *this;
 }
 
-std::string Quantity::toString()
+Quantity& Quantity::operator/(float32 factor)
 {
-	std::stringstream ss;
-
 	for (const_iterator it = _values.begin(); it != _values.end(); ++it)
 	{
-		ss<<it->second<<"*"<<it->first.toString()<<"+";
+		_values[it->first]/=factor;
+	}
+	return *this;
+}
+
+Quantity& Quantity::operator*(const Unit& unit)
+{
+	std::map<Unit,float32,Unit::cmp> values;
+	for (const_iterator it = _values.begin(); it != _values.end(); ++it)
+	{
+		Unit newunit = Unit(it->first)*unit;
+		values[newunit]=it->second;
+	}
+	_values=values;
+	return *this;
+}
+
+Quantity& Quantity::operator/(const Unit& unit)
+{
+	std::map<Unit,float32,Unit::cmp> values;
+	for (const_iterator it = _values.begin(); it != _values.end(); ++it)
+	{
+		Unit newunit = Unit(it->first)/unit;
+		values[newunit]=it->second;
+	}
+	_values=values;
+	return *this;
+}
+*/
+std::string Quantity::toString()
+{
+    if (_singles.size()==0)
+    {
+        return "<none>";
+    }
+	std::stringstream ss;
+	for (unsigned int i = 0; i < _singles.size(); ++i)
+	{
+		ss<<_singles[i].getValue()<<"*"<<_singles[i].getUnit().toString()<<"+";
 	}
 	std::string ret=ss.str();
 	ret.erase(ret.end()-1,ret.end());
@@ -160,15 +240,29 @@ Quantity::~Quantity()
 
 
 
-Quantity operator*(float32 magnitude, const Unit& unit)
+SingleQuantity operator*(float32 magnitude, const Unit& unit)
 {
-    return Quantity(magnitude,unit);
+    return SingleQuantity(magnitude,unit);
 }
 
-Quantity operator*(float32 factor, const Quantity& quantity)
+SingleQuantity operator*(float32 factor, const SingleQuantity& quantity)
 {
-    Quantity q(quantity);
+    SingleQuantity q(quantity);
     return q*factor;
 }
+
+Quantity operator+(const SingleQuantity& quantity1, const SingleQuantity& quantity2)
+{
+    Quantity q(quantity1);
+    return q+quantity2;
+}
+
+Quantity operator-(const SingleQuantity& quantity1, const SingleQuantity& quantity2)
+{
+    Quantity q(quantity1);
+    return q-quantity2;
+}
+
+
 
 }
