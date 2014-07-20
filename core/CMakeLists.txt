@@ -5,11 +5,13 @@ add_library(titan-core SHARED
     src/Quantity.cpp
 )
 
-add_executable(titan-core-test
-    test/test.cpp
-)
-target_link_libraries(titan-core-test titan-core)
-
 installheaders(core)
 
 installlib(titan-core)
+
+
+add_gtest(
+    NAME core 
+    SOURCES tests/test.cpp 
+    LIBRARIES titan-core
+)

@@ -19,7 +19,8 @@ installheaders(drawing)
 
 installlib(titan-drawing)
 
-add_gtest(drawing 
-    tests/test.cpp 
-    titan-core titan-drawing
+add_gtest(
+    NAME drawing 
+    SOURCES tests/test.cpp 
+    LIBRARIES titan-core titan-drawing
 )

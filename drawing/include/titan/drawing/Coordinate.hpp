@@ -66,7 +66,7 @@ class CartesianCoordiante:
 			PxPoint<N> result;
 			for (uint32 idim = 0; idim < N; ++idim)
 			{
-				for (uint32 iunit = 0; iunit < point[idim].getNumberOfUnits(); ++iunit)
+				for (uint32 iunit = 0; iunit < point[idim].getNumberOfSingleQuantities(); ++iunit)
 				{
 					const SingleQuantity& sq_point = point[idim].getSingleQuantity(iunit);
 

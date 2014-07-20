@@ -1,5 +1,5 @@
 project(TITAN)
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.8.3)
 
 set(CMAKE_CXX_FLAGS "-Wextra -Wall -pedantic -std=c++0x -Wno-unused-parameter"${CMAKE_CXX_FLAGS} )
 set(CMAKE_INSTALL_PREFIX ${PROJECT_BINARY_DIR}/release)
@@ -37,31 +37,49 @@ endmacro(copy_file_if_changed)
 OPTION(ENABLE_TEST "Build tests" OFF)
 OPTION(ENABLE_VERBOSE_TEST "verbose tests" OFF)
 
+include (CMakeParseArguments)
+
 if (ENABLE_TEST)
     enable_testing()
     if (ENABLE_VERBOSE_TEST)
-        add_custom_target(tests ${CMAKE_CTEST_COMMAND} -V)
+        add_custom_target(runtests ${CMAKE_CTEST_COMMAND} -V)
     else (ENABLE_VERBOSE_TEST)
-        add_custom_target(tests ${CMAKE_CTEST_COMMAND})
+        add_custom_target(runtests ${CMAKE_CTEST_COMMAND})
     endif (ENABLE_VERBOSE_TEST)
-    add_custom_target(pretests) #use for e.g. copying files before tests are run
-    add_dependencies(tests pretests)
+    add_custom_target(buildtests) 
+    add_custom_target(prebuildtests) #use for e.g. copying files before tests are run
+    add_dependencies(runtests buildtests)
+    add_dependencies(buildtests prebuildtests)
     
     include_directories(${PROJECT_SOURCE_DIR}/external/gtest/include)
     
-    macro(add_gtest name sourcefile)
-        add_executable(gtest-${name}
-            ${sourcefile}
+    macro(add_gtest)
+        cmake_parse_arguments(
+            TEST                        #prefix
+            ""                          #options
+            "NAME"                   #one_value_keywords
+            "SOURCES;LIBRARIES"   #multi_value_keywords
+            ${ARGN} 
         )
-        target_link_libraries(gtest-${name} ${ARGN} gtest gtest_main)
-        add_test(${name} gtest-${name} --gtest_color=yes)
-        #add_test(memtest-${name} valgrind --tool=memcheck --leak-check=summary ${CMAKE_CURRENT_BINARY_DIR}/gtest-${name} > /dev/null)
-        add_dependencies(tests gtest-${name})
+        add_executable(gtest-${TEST_NAME}
+            ${TEST_SOURCES}
+        )
+        target_link_libraries(gtest-${TEST_NAME} ${TEST_LIBRARIES} gtest gtest_main)
+        add_test(${TEST_NAME} gtest-${TEST_NAME} --gtest_color=yes)
+        #add_test(memtest-${TEST_NAME} valgrind --tool=memcheck --leak-check=summary ${CMAKE_CURRENT_BINARY_DIR}/gtest-${TEST_NAME} > /dev/null)
+        add_dependencies(runtests gtest-${TEST_NAME})
     endmacro(add_gtest)
     
 else(ENABLE_TEST)
-    macro(add_gtest name sourcefile)
-        message(STATUS "Testing disabled: Skipping test ..."${name})
+    macro(add_gtest)
+        cmake_parse_arguments(
+            TEST                        #prefix
+            ""                          #options
+            "NAME"                   #one_value_keywords
+            "SOURCES;LIBRARIES"   #multi_value_keywords
+            ${ARGN} 
+        )
+        message(STATUS "Testing disabled: Skipping test ... "${TEST_NAME})
     endmacro(add_gtest)
 endif(ENABLE_TEST)
 

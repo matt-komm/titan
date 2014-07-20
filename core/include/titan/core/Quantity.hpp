@@ -10,6 +10,7 @@
 #include <sstream>
 #include <functional>
 
+
 namespace titan
 {
 
@@ -44,6 +45,15 @@ class Unit
         inline bool isScalar()
         {
         	return _units.empty();
+        }
+        inline int32 getPower(std::string unitName)
+        {
+        	std::map<std::string,int32>::const_iterator it = _units.find(unitName);
+        	if (it==_units.end())
+        	{
+        		return 0;
+        	}
+        	return _units[unitName];
         }
         Unit& operator*(const Unit& unit);
         Unit& operator/(const Unit& unit);
@@ -301,7 +311,7 @@ class Quantity
             return *this;
         }
 
-        uint32 getNumberOfUnits() const
+        uint32 getNumberOfSingleQuantities() const
         {
         	return _singles.size();
         }
