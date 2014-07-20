@@ -18,3 +18,8 @@ add_library(titan-drawing SHARED
 installheaders(drawing)
 
 installlib(titan-drawing)
+
+add_gtest(drawing 
+    tests/test.cpp 
+    titan-core titan-drawing
+)

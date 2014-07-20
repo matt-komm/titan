@@ -55,7 +55,7 @@ class CartesianCoordiante:
 	public Coordinate<N>
 {
 	protected:
-		const SingleQuantity _resolution;
+		SingleQuantity _resolution;
 	public:
 		CartesianCoordiante(SingleQuantity resolution):
 			_resolution(resolution)
@@ -69,7 +69,9 @@ class CartesianCoordiante:
 				for (uint32 iunit = 0; iunit < point[idim].getNumberOfUnits(); ++iunit)
 				{
 					const SingleQuantity& sq_point = point[idim].getSingleQuantity(iunit);
-					const SingleQuantity& sq_result =sq_point/_resolution;
+
+					const SingleQuantity sq_result =sq_point/_resolution;
+
 					if (sq_result.getUnit()==Unit("mm"))
 					{
 						result[idim]=sq_result.getValue();

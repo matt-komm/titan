@@ -110,6 +110,63 @@ class SingleQuantity
             _unit/=unit;
             return *this;
         }
+
+        SingleQuantity& operator*(const SingleQuantity& sq)
+		{
+			_value*=sq.getValue();
+			_unit*=sq.getUnit();
+			return *this;
+		}
+		SingleQuantity& operator/(const SingleQuantity& sq)
+		{
+			_value*=sq.getValue();
+			_unit*=sq.getUnit();
+			return *this;
+		}
+		SingleQuantity& operator*=(const SingleQuantity& sq)
+		{
+			_value*=sq.getValue();
+			_unit*=sq.getUnit();
+			return *this;
+		}
+		SingleQuantity& operator/=(const SingleQuantity& sq)
+		{
+			_value*=sq.getValue();
+			_unit*=sq.getUnit();
+			return *this;
+		}
+
+
+		SingleQuantity operator*(const SingleQuantity& sq) const
+		{
+			SingleQuantity tmp(*this);
+			tmp._value*=sq.getValue();
+			tmp._unit*=sq.getUnit();
+			return std::move(tmp);
+		}
+		SingleQuantity operator/(const SingleQuantity& sq) const
+		{
+			SingleQuantity tmp(*this);
+			tmp._value/=sq.getValue();
+			tmp._unit/=sq.getUnit();
+			return std::move(tmp);
+		}
+		SingleQuantity operator*=(const SingleQuantity& sq) const
+		{
+			SingleQuantity tmp(*this);
+			tmp._value*=sq.getValue();
+			tmp._unit*=sq.getUnit();
+			return std::move(tmp);
+		}
+		SingleQuantity operator/=(const SingleQuantity& sq) const
+		{
+			SingleQuantity tmp(*this);
+			tmp._value/=sq.getValue();
+			tmp._unit/=sq.getUnit();
+			return std::move(tmp);
+		}
+
+
         inline const Unit& getUnit() const
         {
             return _unit;
