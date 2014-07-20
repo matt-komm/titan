@@ -29,12 +29,17 @@ class Point
 		}
 };
 
+template<uint32 N>
+class QPoint:
+	Point<Quantity,N>
+{
+};
 
-//this is not supported by < gcc4.7
 template<uint32 N>
-using QPoint = Point<Quantity,N>;
-template<uint32 N>
-using PxPoint = Point<float32,N>;
+class PxPoint:
+	Point<float32,N>
+{
+};
 
 template<uint32 N>
 class Coordinate
@@ -50,23 +55,28 @@ class CartesianCoordiante:
 	public Coordinate<N>
 {
 	protected:
-		Quantity _resolution;
+		const SingleQuantity _resolution;
 	public:
-		CartesianCoordiante(Quantity resolution):
+		CartesianCoordiante(SingleQuantity resolution):
 			_resolution(resolution)
 		{
-			if (resolution.getNumberOfUnits()>1)
-			{
-				throw std::string("Cannot specify mixed quantity as resolution");
-			}
 		}
-		virtual PxPoint<N> toPixel(const QPoint<N>& quantity)
+		virtual PxPoint<N> toPixel(const QPoint<N>& point)
 		{
 			PxPoint<N> result;
 			for (uint32 idim = 0; idim < N; ++idim)
 			{
-				result[idim]=(quantity[idim]/_resolution.getUnit(0)).getValue(0);
+				for (uint32 iunit = 0; iunit < point[idim].getNumberOfUnits(); ++iunit)
+				{
+					const SingleQuantity& sq_point = point[idim].getSingleQuantity(iunit);
+					const SingleQuantity& sq_result =sq_point/_resolution;
+					if (sq_result.getUnit()==Unit("mm"))
+					{
+						result[idim]=sq_result.getValue();
+					}
+				}
 			}
+			return result;
 		}
 		virtual ~CartesianCoordiante()
 		{

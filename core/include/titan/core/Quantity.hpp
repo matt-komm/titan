@@ -23,11 +23,28 @@ class Unit
         	public:
 				inline bool operator()(const Unit& u1, const Unit& u2)
 				{
-					return u1.toString()<u2.toString();
+					for (std::map<std::string,int32>::const_iterator it1 =u1._units.begin(); it1 != u1._units.end();++it1)
+					{
+						std::map<std::string,int32>::const_iterator it2 = u2._units.find(it1->first);
+						if (it2==u2._units.end())
+						{
+							return false;
+						}
+						if (it2->second!=it1->second)
+						{
+							return false;
+						}
+					}
+					return true;
 				}
+
         };
         Unit();
         Unit(std::string name,int32 power=1);
+        inline bool isScalar()
+        {
+        	return _units.empty();
+        }
         Unit& operator*(const Unit& unit);
         Unit& operator/(const Unit& unit);
         Unit& operator*=(const Unit& unit);
@@ -214,7 +231,7 @@ class Quantity
         {
             for (unsigned int i = 0; i < _singles.size(); ++i)
             {
-                _singles[i]/=unit;
+                _singles[i]*=unit;
             }
             return *this;
         }
@@ -226,30 +243,17 @@ class Quantity
             }
             return *this;
         }
-        /*
+
         uint32 getNumberOfUnits() const
         {
-        	return _values.size();
+        	return _singles.size();
         }
-        const Unit& getUnit(uint32 index) const
+
+        const SingleQuantity& getSingleQuantity(uint32 index) const
         {
-        	const_iterator it = _values.begin();
-        	for (uint32 i=0;i<index;++i)
-        	{
-        		++it;
-        	}
-        	return it->first;
+        	return _singles[index];
         }
-        float32 getValue(uint32 index) const
-		{
-			const_iterator it = _values.begin();
-			for (uint32 i=0;i<index;++i)
-			{
-				++it;
-			}
-			return it->second;
-		}
-		*/
+
         std::string toString();
         
         ~Quantity();

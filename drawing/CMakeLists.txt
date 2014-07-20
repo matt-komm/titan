@@ -11,7 +11,7 @@ add_library(titan-drawing SHARED
     src/Canvas.cpp
     src/Context.cpp
     src/Font.cpp
-    #src/Coordinate.cpp
+    src/Coordinate.cpp
     src/BoundingBox.cpp
 )
 
