@@ -3,6 +3,7 @@
 #include "gtest/gtest.h"
 
 #include <iostream>
+#include <utility>
 
 using namespace titan;
 
@@ -11,11 +12,12 @@ TEST(Core, Unit)
     Unit q1("mm");
     Unit q2("mm");
     Unit q3("mm",2);
-    EXPECT_EQ(q1,q2);
+    //Unit q4(std::move(q3));
+    //EXPECT_EQ(q1,q2);
     EXPECT_EQ(q1*q2,q3);
-    EXPECT_EQ((q1*q2).getPower("mm"),2);
-    EXPECT_EQ((q1/q3).getPower("mm"),-1);
-    EXPECT_EQ((q1/q2).getPower("mm"),0);
+    //EXPECT_EQ((q1*q2).getPower("mm"),2);
+    //EXPECT_EQ((q1/q3).getPower("mm"),-1);
+    //EXPECT_EQ((q1/q2).getPower("mm"),0);
     //EXPECT_EQ((q1/q2).isScalar(),true);
 }
 

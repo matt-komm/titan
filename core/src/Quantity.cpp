@@ -14,7 +14,7 @@ Unit::Unit(std::string name,int32 power)
 	_units[name]=power;
 }
 
-Unit Unit::operator*(const Unit& unit)
+Unit Unit::operator*(const Unit& unit) const
 {
 	Unit result(*this);
 	for (std::map<std::string,int32>::const_iterator it = unit._units.begin(); it!= unit._units.end();++it)
@@ -36,7 +36,7 @@ Unit Unit::operator*(const Unit& unit)
 	return std::move(result);
 }
 
-Unit Unit::operator/(const Unit& unit)
+Unit Unit::operator/(const Unit& unit) const
 {
 	Unit result(*this);
 	for (std::map<std::string,int32>::const_iterator it = unit._units.begin(); it!= unit._units.end();++it)
@@ -55,7 +55,7 @@ Unit Unit::operator/(const Unit& unit)
 			result._units[it->first]=-it->second;
 		}
 	}
-	return result;
+	return std::move(result);
 }
 
 Unit& Unit::operator*=(const Unit& unit)

@@ -11,8 +11,7 @@ namespace titan
 {
 
 class Line:
-	public DrawType,
-	public Serializable<Line>
+	public DrawType
 {
     protected:
         Quantity _x1, _x2, _y1, _y2;
@@ -48,7 +47,6 @@ class Line:
 
 }
 
-make_serializable(titan::Line)
 
 #endif
 
