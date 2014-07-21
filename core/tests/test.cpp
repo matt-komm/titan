@@ -13,7 +13,9 @@ TEST(Core, Unit)
     Unit q3("mm",2);
     EXPECT_EQ(q1,q2);
     EXPECT_EQ(q1*q2,q3);
-    std::cout<<"power: "<<(q1/q3).getPower("mm")<<std::endl;
+    EXPECT_EQ((q1*q2).getPower("mm"),2);
+    EXPECT_EQ((q1/q3).getPower("mm"),-1);
+    EXPECT_EQ((q1/q2).getPower("mm"),0);
     //EXPECT_EQ((q1/q2).isScalar(),true);
 }
 

@@ -14,46 +14,48 @@ Unit::Unit(std::string name,int32 power)
 	_units[name]=power;
 }
 
-Unit& Unit::operator*(const Unit& unit)
+Unit Unit::operator*(const Unit& unit)
 {
+	Unit result(*this);
 	for (std::map<std::string,int32>::const_iterator it = unit._units.begin(); it!= unit._units.end();++it)
 	{
-		if (_units.find(it->first)!=_units.end())
+		if (result._units.find(it->first)!=result._units.end())
 		{
-			int32& power = _units[it->first];
+			int32& power = result._units[it->first];
 			power+=it->second;
 			if (power==0)
 			{
-				_units.erase(it);
+				result._units.erase(it->first);
 			}
 		}
 		else
 		{
-			_units[it->first]=it->second;
+			result._units[it->first]=it->second;
 		}
 	}
-	return *this;
+	return std::move(result);
 }
 
-Unit& Unit::operator/(const Unit& unit)
+Unit Unit::operator/(const Unit& unit)
 {
+	Unit result(*this);
 	for (std::map<std::string,int32>::const_iterator it = unit._units.begin(); it!= unit._units.end();++it)
 	{
-		if (_units.find(it->first)!=_units.end())
+		if (result._units.find(it->first)!=result._units.end())
 		{
-			int32& power = _units[it->first];
+			int32& power = result._units[it->first];
 			power-=it->second;
 			if (power==0)
 			{
-				_units.erase(it);
+				result._units.erase(it->first);
 			}
 		}
 		else
 		{
-			_units[it->first]=-it->second;
+			result._units[it->first]=-it->second;
 		}
 	}
-	return *this;
+	return result;
 }
 
 Unit& Unit::operator*=(const Unit& unit)
@@ -66,7 +68,7 @@ Unit& Unit::operator*=(const Unit& unit)
 			power+=it->second;
 			if (power==0)
 			{
-				_units.erase(it);
+				_units.erase(it->first);
 			}
 		}
 		else
@@ -87,7 +89,7 @@ Unit& Unit::operator/=(const Unit& unit)
 			power-=it->second;
 			if (power==0)
 			{
-				_units.erase(it);
+				_units.erase(it->first);
 			}
 		}
 		else

@@ -49,14 +49,14 @@ class Unit
         inline int32 getPower(std::string unitName)
         {
         	std::map<std::string,int32>::const_iterator it = _units.find(unitName);
-        	if (it==_units.end())
+        	if (it!=_units.end())
         	{
-        		return 0;
+        		return _units[unitName];
         	}
-        	return _units[unitName];
+        	return 0;
         }
-        Unit& operator*(const Unit& unit);
-        Unit& operator/(const Unit& unit);
+        Unit operator*(const Unit& unit);
+        Unit operator/(const Unit& unit);
         Unit& operator*=(const Unit& unit);
         Unit& operator/=(const Unit& unit);
         bool operator==(const Unit& unit) const;
