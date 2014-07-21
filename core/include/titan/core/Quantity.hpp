@@ -65,7 +65,7 @@ class Unit
 
         }
         Unit(Unit&& unit):
-        	_units(unit._units)
+        	_units(std::move(unit._units))
         {
         }
 
@@ -86,8 +86,7 @@ class Unit
         }
         Unit& operator=(Unit&& unit)
 		{
-			_units.clear();
-
+        	_units.clear();
 			_units=std::move(unit._units);
 			return *this;
 		}
@@ -112,6 +111,30 @@ class SingleQuantity
             _unit(unit)
         {
         }
+        SingleQuantity(const SingleQuantity& sq):
+        	_value(sq._value),
+        	_unit(sq._unit)
+        {
+        }
+        SingleQuantity(SingleQuantity&& sq):
+			_value(sq._value),
+			_unit(std::move(sq._unit))
+		{
+		}
+
+        SingleQuantity& operator=(const SingleQuantity& sq)
+		{
+        	_value=sq._value;
+        	_unit=sq._unit;
+        	return *this;
+		}
+        SingleQuantity& operator=(SingleQuantity&& sq)
+		{
+			_value=sq._value;
+			_unit=std::move(sq._unit);
+			return *this;
+		}
+
         SingleQuantity operator*(float32 factor) const
         {
         	SingleQuantity sq(*this);
@@ -157,17 +180,15 @@ class SingleQuantity
             return *this;
         }
 
-        SingleQuantity& operator*(const SingleQuantity& sq)
+        SingleQuantity operator*(const SingleQuantity& singleQuantity) const
 		{
-			_value*=sq.getValue();
-			_unit*=sq.getUnit();
-			return *this;
+        	SingleQuantity sq(_value*singleQuantity.getValue(),_unit*singleQuantity._unit);
+			return std::move(sq);
 		}
-		SingleQuantity& operator/(const SingleQuantity& sq)
+		SingleQuantity operator/(const SingleQuantity& singleQuantity) const
 		{
-			_value*=sq.getValue();
-			_unit*=sq.getUnit();
-			return *this;
+			SingleQuantity sq(_value/singleQuantity.getValue(),_unit/singleQuantity._unit);
+			return std::move(sq);
 		}
 		SingleQuantity& operator*=(const SingleQuantity& sq)
 		{
@@ -182,36 +203,14 @@ class SingleQuantity
 			return *this;
 		}
 
-
-		SingleQuantity operator*(const SingleQuantity& sq) const
-		{
-			SingleQuantity tmp(*this);
-			tmp._value*=sq.getValue();
-			tmp._unit*=sq.getUnit();
-			return std::move(tmp);
-		}
-		SingleQuantity operator/(const SingleQuantity& sq) const
-		{
-			SingleQuantity tmp(*this);
-			tmp._value/=sq.getValue();
-			tmp._unit/=sq.getUnit();
-			return std::move(tmp);
-		}
 		SingleQuantity operator*=(const SingleQuantity& sq) const
 		{
-			SingleQuantity tmp(*this);
-			tmp._value*=sq.getValue();
-			tmp._unit*=sq.getUnit();
-			return std::move(tmp);
+			return std::move((*this)*sq);
 		}
 		SingleQuantity operator/=(const SingleQuantity& sq) const
 		{
-			SingleQuantity tmp(*this);
-			tmp._value/=sq.getValue();
-			tmp._unit/=sq.getUnit();
-			return std::move(tmp);
+			return std::move((*this)/sq);
 		}
-
 
         inline const Unit& getUnit() const
         {
@@ -240,38 +239,30 @@ class Quantity
         }
         Quantity(float32 value, const Unit& unit)
         {
-            _singles.push_back(SingleQuantity(value,unit));
+            _singles.push_back(std::move(SingleQuantity(value,unit)));
         }
         Quantity(const SingleQuantity& singleQuantity)
         {
             _singles.push_back(singleQuantity);
         }
-        Quantity& operator+(const SingleQuantity& singleQuantity)
-        {
-            for (unsigned int i = 0; i < _singles.size(); ++i)
-            {
-                if (_singles[i].getUnit()==singleQuantity.getUnit())
-                {
-                    _singles[i].getValue()+=singleQuantity.getValue();
-                    return *this;
-                }
-            }
-            _singles.push_back(singleQuantity);
-            return *this;
-        }
-        Quantity& operator-(const SingleQuantity& singleQuantity)
-        {
-            for (unsigned int i = 0; i < _singles.size(); ++i)
-            {
-                if (_singles[i].getUnit()==singleQuantity.getUnit())
-                {
-                    _singles[i].getValue()-=singleQuantity.getValue();
-                    return *this;
-                }
-            }
-            _singles.push_back(singleQuantity);
-            return *this;
-        }
+        Quantity(const Quantity& quantity):
+			_singles(quantity._singles)
+		{
+		}
+        Quantity(Quantity&& quantity):
+			_singles(std::move(quantity._singles))
+		{
+		}
+        Quantity& operator=(const Quantity& quantity)
+		{
+        	_singles=quantity._singles;
+			return *this;
+		}
+        Quantity& operator=(Quantity&& quantity)
+		{
+        	_singles=std::move(quantity._singles);
+			return *this;
+		}
         Quantity& operator+=(const SingleQuantity& singleQuantity)
         {
             for (unsigned int i = 0; i < _singles.size(); ++i)
@@ -298,61 +289,68 @@ class Quantity
             _singles.push_back(singleQuantity);
             return *this;
         }
-        Quantity& operator+(const Quantity& quantity)
+        Quantity operator+(const Quantity& quantity)
         {
+        	Quantity q(*this);
             for (unsigned int i = 0; i < quantity._singles.size(); ++i)
             {
-                *this+=quantity._singles[i];
+                q+=quantity._singles[i];
             }
-            return *this;
+            return std::move(q);
         }
-        Quantity& operator-(const Quantity& quantity)
+        Quantity operator-(const Quantity& quantity)
         {
-            for (unsigned int i = 0; i < quantity._singles.size(); ++i)
-            {
-                *this-=quantity._singles[i];
-            }
-            return *this;
-        }
-        Quantity& operator*(float32 factor)
-        {
-            for (unsigned int i = 0; i < _singles.size(); ++i)
-            {
-                _singles[i]*=factor;
-            }
-            return *this;
-        }
-        Quantity& operator/(float32 factor)
-        {
-            for (unsigned int i = 0; i < _singles.size(); ++i)
-            {
-                _singles[i]/=factor;
-            }
-            return *this;
-        }
-        Quantity& operator*(const Unit& unit)
-        {
-            for (unsigned int i = 0; i < _singles.size(); ++i)
-            {
-                _singles[i]*=unit;
-            }
-            return *this;
-        }
-        Quantity& operator/(const Unit& unit)
-        {
-            for (unsigned int i = 0; i < _singles.size(); ++i)
-            {
-                _singles[i]/=unit;
-            }
-            return *this;
+        	Quantity q(*this);
+			for (unsigned int i = 0; i < quantity._singles.size(); ++i)
+			{
+				q-=quantity._singles[i];
+			}
+			return std::move(q);
         }
 
-        uint32 getNumberOfSingleQuantities() const
+        Quantity operator*(float32 factor) const
+        {
+        	Quantity q(*this);
+            for (unsigned int i = 0; i < q._singles.size(); ++i)
+            {
+                q._singles[i]*=factor;
+            }
+            return std::move(q);
+        }
+        Quantity operator/(float32 factor) const
+        {
+        	Quantity q(*this);
+            for (unsigned int i = 0; i < q._singles.size(); ++i)
+            {
+            	q._singles[i]/=factor;
+            }
+            return std::move(q);
+        }
+        Quantity operator*(const Unit& unit) const
+        {
+        	Quantity q(*this);
+            for (unsigned int i = 0; i < q._singles.size(); ++i)
+            {
+            	q._singles[i]*=unit;
+            }
+            return std::move(q);
+        }
+        Quantity operator/(const Unit& unit) const
+        {
+        	Quantity q(*this);
+            for (unsigned int i = 0; i < q._singles.size(); ++i)
+            {
+            	q._singles[i]/=unit;
+            }
+            return std::move(q);
+        }
+
+        inline uint32 getNumberOfSingleQuantities() const
         {
         	return _singles.size();
         }
 
-        const SingleQuantity& getSingleQuantity(uint32 index) const
+        inline const SingleQuantity& getSingleQuantity(uint32 index) const
         {
         	return _singles[index];
         }

@@ -244,35 +244,35 @@ Quantity::~Quantity()
 
 SingleQuantity operator*(float32 magnitude, const Unit& unit)
 {
-    return SingleQuantity(magnitude,unit);
+    return std::move(SingleQuantity(magnitude,unit));
 }
 
 SingleQuantity operator*(float32 factor, const SingleQuantity& quantity)
 {
     SingleQuantity q(quantity);
-    return q*factor;
+    return std::move(q*factor);
 }
 
 Quantity operator+(const SingleQuantity& quantity1, const SingleQuantity& quantity2)
 {
     Quantity q(quantity1);
-    return q+quantity2;
+    return std::move(q+quantity2);
 }
 
 Quantity operator-(const SingleQuantity& quantity1, const SingleQuantity& quantity2)
 {
     Quantity q(quantity1);
-    return q-quantity2;
+    return std::move(q-quantity2);
 }
 
 Quantity operator+(const SingleQuantity& singleQuantity, Quantity& quantity)
 {
-    return quantity+singleQuantity;
+    return std::move(quantity+singleQuantity);
 }
 
 Quantity operator-(const SingleQuantity& singleQuantity, Quantity& quantity)
 {
-    return quantity-singleQuantity;
+    return std::move(quantity-singleQuantity);
 }
 
 
