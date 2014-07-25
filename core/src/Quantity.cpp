@@ -247,9 +247,20 @@ SingleQuantity operator*(float32 magnitude, const Unit& unit)
     return std::move(SingleQuantity(magnitude,unit));
 }
 
+SingleQuantity operator/(float32 magnitude, const Unit& unit)
+{
+    return std::move(SingleQuantity(magnitude,unit.invert()));
+}
+
 SingleQuantity operator*(float32 factor, const SingleQuantity& quantity)
 {
     SingleQuantity q(quantity);
+    return std::move(q*factor);
+}
+
+SingleQuantity operator/(float32 factor, const SingleQuantity& quantity)
+{
+    SingleQuantity q(1.0/quantity.getValue(),quantity.getUnit().invert());
     return std::move(q*factor);
 }
 

@@ -69,6 +69,25 @@ class Unit
         {
         }
 
+        Unit& invert()
+        {
+        	for (std::map<std::string,int32>::const_iterator it =_units.begin(); it != _units.end();++it)
+			{
+				_units[it->first]=-it->second;
+			}
+			return *this;
+        }
+
+        Unit invert() const
+		{
+        	Unit u;
+			for (std::map<std::string,int32>::const_iterator it =_units.begin(); it != _units.end();++it)
+			{
+				u._units[it->first]=-it->second;
+			}
+			return std::move(u);
+		}
+
         Unit operator*(const Unit& unit) const;
         Unit operator/(const Unit& unit) const;
         Unit& operator*=(const Unit& unit);
@@ -362,7 +381,9 @@ class Quantity
 
 
 SingleQuantity operator*(float32 magnitude, const Unit& unit);
+SingleQuantity operator/(float32 magnitude, const Unit& unit);
 SingleQuantity operator*(float32 factor, const SingleQuantity& quantity);
+SingleQuantity operator/(float32 factor, const SingleQuantity& quantity);
 
 Quantity operator+(const SingleQuantity& quantity1, const SingleQuantity& quantity2);
 Quantity operator-(const SingleQuantity& quantity1, const SingleQuantity& quantity2);

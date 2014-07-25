@@ -31,13 +31,13 @@ class Point
 
 template<uint32 N>
 class QPoint:
-	Point<Quantity,N>
+	public Point<Quantity,N>
 {
 };
 
 template<uint32 N>
 class PxPoint:
-	Point<float32,N>
+	public Point<float32,N>
 {
 };
 
@@ -45,9 +45,7 @@ template<uint32 N>
 class Coordinate
 {
 	public:
-		Coordinate();
 		virtual PxPoint<N> toPixel(const QPoint<N>& quantity) = 0;
-		virtual ~Coordinate();
 };
 
 template<uint32 N>
@@ -72,7 +70,7 @@ class CartesianCoordiante:
 
 					const SingleQuantity sq_result =sq_point/_resolution;
 
-					if (sq_result.getUnit()==Unit("mm"))
+					if (sq_result.getUnit()==Unit("px"))
 					{
 						result[idim]=sq_result.getValue();
 					}
