@@ -3,6 +3,7 @@
 
 #include "titan/core/Types.hpp"
 #include "titan/core/Unit.hpp"
+#include "titan/core/SingleQuantity.hpp"
 
 #include <map>
 #include <vector>
@@ -16,139 +17,6 @@
 namespace titan
 {
 
-class SingleQuantity
-{
-    protected:
-        float32 _value;
-        Unit _unit;
-    public:
-        SingleQuantity():
-            _value(0.0),
-            _unit("")  
-        {
-        }
-        SingleQuantity(float32 value, const Unit& unit):
-            _value(value),
-            _unit(unit)
-        {
-        }
-        SingleQuantity(const SingleQuantity& sq):
-        	_value(sq._value),
-        	_unit(sq._unit)
-        {
-        }
-        SingleQuantity(SingleQuantity&& sq):
-			_value(sq._value),
-			_unit(std::move(sq._unit))
-		{
-		}
-
-        SingleQuantity& operator=(const SingleQuantity& sq)
-		{
-        	_value=sq._value;
-        	_unit=sq._unit;
-        	return *this;
-		}
-        SingleQuantity& operator=(SingleQuantity&& sq)
-		{
-			_value=sq._value;
-			_unit=std::move(sq._unit);
-			return *this;
-		}
-
-        SingleQuantity operator*(float32 factor) const
-        {
-        	SingleQuantity sq(*this);
-        	sq._value*=factor;
-            return std::move(sq);
-        }
-        SingleQuantity operator/(float32 factor) const
-        {
-        	SingleQuantity sq(*this);
-        	sq._value/=factor;
-            return std::move(sq);
-        }
-        SingleQuantity operator*(const Unit& unit) const
-        {
-        	SingleQuantity sq(*this);
-        	sq._unit*=unit;
-        	return std::move(sq);
-        }
-        SingleQuantity operator/(const Unit& unit) const
-        {
-        	SingleQuantity sq(*this);
-        	sq._unit/=unit;
-            return std::move(sq);
-        }
-        SingleQuantity& operator*=(float32 factor)
-        {
-            _value*=factor;
-            return *this;
-        }
-        SingleQuantity& operator/=(float32 factor)
-        {
-            _value/=factor;
-            return *this;
-        }
-        SingleQuantity& operator*=(const Unit& unit)
-        {
-            _unit*=unit;
-            return *this;
-        }
-        SingleQuantity& operator/=(const Unit& unit)
-        {
-            _unit/=unit;
-            return *this;
-        }
-
-        SingleQuantity operator*(const SingleQuantity& singleQuantity) const
-		{
-        	SingleQuantity sq(_value*singleQuantity.getValue(),_unit*singleQuantity._unit);
-			return std::move(sq);
-		}
-		SingleQuantity operator/(const SingleQuantity& singleQuantity) const
-		{
-			SingleQuantity sq(_value/singleQuantity.getValue(),_unit/singleQuantity._unit);
-			return std::move(sq);
-		}
-		SingleQuantity& operator*=(const SingleQuantity& sq)
-		{
-			_value*=sq.getValue();
-			_unit*=sq.getUnit();
-			return *this;
-		}
-		SingleQuantity& operator/=(const SingleQuantity& sq)
-		{
-			_value*=sq.getValue();
-			_unit*=sq.getUnit();
-			return *this;
-		}
-
-		SingleQuantity operator*=(const SingleQuantity& sq) const
-		{
-			return std::move((*this)*sq);
-		}
-		SingleQuantity operator/=(const SingleQuantity& sq) const
-		{
-			return std::move((*this)/sq);
-		}
-
-        inline const Unit& getUnit() const
-        {
-            return _unit;
-        }
-        inline float32 getValue() const
-        {
-            return _value;
-        }
-        inline float32& getValue()
-        {
-            return _value;
-        }
-        ~SingleQuantity()
-        {
-        }
-};
 
 class Quantity
 {
