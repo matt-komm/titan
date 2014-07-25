@@ -2,6 +2,7 @@ include_directories(${PROJECT_SOURCE_DIR}/core/include)
 
 add_library(titan-core SHARED
     src/Config.cpp
+    src/Unit.cpp
     src/Quantity.cpp
 )
 

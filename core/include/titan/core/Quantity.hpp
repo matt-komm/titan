@@ -1,7 +1,8 @@
-#ifndef __UNIT_H__
-#define __UNIT_H__
+#ifndef __QUANTITY_H__
+#define __QUANTITY_H__
 
 #include "titan/core/Types.hpp"
+#include "titan/core/Unit.hpp"
 
 #include <map>
 #include <vector>
@@ -14,105 +15,6 @@
 
 namespace titan
 {
-
-class Unit
-{
-    protected:
-        std::map<std::string,int32> _units;
-    public:
-        class cmp
-        {
-        	public:
-				inline bool operator()(const Unit& u1, const Unit& u2)
-				{
-					for (std::map<std::string,int32>::const_iterator it1 =u1._units.begin(); it1 != u1._units.end();++it1)
-					{
-						std::map<std::string,int32>::const_iterator it2 = u2._units.find(it1->first);
-						if (it2==u2._units.end())
-						{
-							return false;
-						}
-						if (it2->second!=it1->second)
-						{
-							return false;
-						}
-					}
-					return true;
-				}
-
-        };
-        Unit();
-        Unit(std::string name,int32 power=1);
-        inline bool isScalar()
-        {
-        	return _units.empty();
-        }
-        inline int32 getPower(std::string unitName) const
-        {
-        	std::map<std::string,int32>::const_iterator it = _units.find(unitName);
-        	if (it!=_units.end())
-        	{
-        		return _units.at(unitName);
-        	}
-        	return 0;
-        }
-        Unit(const Unit& unit)
-        {
-        	for (std::map<std::string,int32>::const_iterator it =unit._units.begin(); it != unit._units.end();++it)
-        	{
-        		_units[it->first]=it->second;
-        	}
-
-        }
-        Unit(Unit&& unit):
-        	_units(std::move(unit._units))
-        {
-        }
-
-        Unit& invert()
-        {
-        	for (std::map<std::string,int32>::const_iterator it =_units.begin(); it != _units.end();++it)
-			{
-				_units[it->first]=-it->second;
-			}
-			return *this;
-        }
-
-        Unit invert() const
-		{
-        	Unit u;
-			for (std::map<std::string,int32>::const_iterator it =_units.begin(); it != _units.end();++it)
-			{
-				u._units[it->first]=-it->second;
-			}
-			return std::move(u);
-		}
-
-        Unit operator*(const Unit& unit) const;
-        Unit operator/(const Unit& unit) const;
-        Unit& operator*=(const Unit& unit);
-        Unit& operator/=(const Unit& unit);
-        bool operator==(const Unit& unit) const;
-
-        Unit& operator=(const Unit& unit)
-        {
-        	_units.clear();
-        	for (std::map<std::string,int32>::const_iterator it =unit._units.begin(); it != unit._units.end();++it)
-			{
-        		_units[it->first]=it->second;
-			}
-			return *this;
-        }
-        Unit& operator=(Unit&& unit)
-		{
-        	_units.clear();
-			_units=std::move(unit._units);
-			return *this;
-		}
-
-        std::string toString() const;
-        ~Unit();
-};
 
 class SingleQuantity
 {

@@ -5,137 +5,263 @@
 namespace titan
 {
 
-Unit::Unit()
-{
-}
-
-Unit::Unit(std::string name,int32 power)
-{
-	_units[name]=power;
-}
-
-Unit Unit::operator*(const Unit& unit) const
-{
-	Unit result(*this);
-	for (std::map<std::string,int32>::const_iterator it = unit._units.begin(); it!= unit._units.end();++it)
-	{
-		if (result._units.find(it->first)!=result._units.end())
+/*
+        SingleQuantity():
+            _value(0.0),
+            _unit("")
+        {
+        }
+        SingleQuantity(float32 value, const Unit& unit):
+            _value(value),
+            _unit(unit)
+        {
+        }
+        SingleQuantity(const SingleQuantity& sq):
+        	_value(sq._value),
+        	_unit(sq._unit)
+        {
+        }
+        SingleQuantity(SingleQuantity&& sq):
+			_value(sq._value),
+			_unit(std::move(sq._unit))
 		{
-			int32& power = result._units[it->first];
-			power+=it->second;
-			if (power==0)
+		}
+
+        SingleQuantity& operator=(const SingleQuantity& sq)
+		{
+        	_value=sq._value;
+        	_unit=sq._unit;
+        	return *this;
+		}
+        SingleQuantity& operator=(SingleQuantity&& sq)
+		{
+			_value=sq._value;
+			_unit=std::move(sq._unit);
+			return *this;
+		}
+
+        SingleQuantity operator*(float32 factor) const
+        {
+        	SingleQuantity sq(*this);
+        	sq._value*=factor;
+            return std::move(sq);
+        }
+        SingleQuantity operator/(float32 factor) const
+        {
+        	SingleQuantity sq(*this);
+        	sq._value/=factor;
+            return std::move(sq);
+        }
+        SingleQuantity operator*(const Unit& unit) const
+        {
+        	SingleQuantity sq(*this);
+        	sq._unit*=unit;
+        	return std::move(sq);
+        }
+        SingleQuantity operator/(const Unit& unit) const
+        {
+        	SingleQuantity sq(*this);
+        	sq._unit/=unit;
+            return std::move(sq);
+        }
+        SingleQuantity& operator*=(float32 factor)
+        {
+            _value*=factor;
+            return *this;
+        }
+        SingleQuantity& operator/=(float32 factor)
+        {
+            _value/=factor;
+            return *this;
+        }
+        SingleQuantity& operator*=(const Unit& unit)
+        {
+            _unit*=unit;
+            return *this;
+        }
+        SingleQuantity& operator/=(const Unit& unit)
+        {
+            _unit/=unit;
+            return *this;
+        }
+
+        SingleQuantity operator*(const SingleQuantity& singleQuantity) const
+		{
+        	SingleQuantity sq(_value*singleQuantity.getValue(),_unit*singleQuantity._unit);
+			return std::move(sq);
+		}
+		SingleQuantity operator/(const SingleQuantity& singleQuantity) const
+		{
+			SingleQuantity sq(_value/singleQuantity.getValue(),_unit/singleQuantity._unit);
+			return std::move(sq);
+		}
+		SingleQuantity& operator*=(const SingleQuantity& sq)
+		{
+			_value*=sq.getValue();
+			_unit*=sq.getUnit();
+			return *this;
+		}
+		SingleQuantity& operator/=(const SingleQuantity& sq)
+		{
+			_value*=sq.getValue();
+			_unit*=sq.getUnit();
+			return *this;
+		}
+
+		SingleQuantity operator*=(const SingleQuantity& sq) const
+		{
+			return std::move((*this)*sq);
+		}
+		SingleQuantity operator/=(const SingleQuantity& sq) const
+		{
+			return std::move((*this)/sq);
+		}
+
+        inline const Unit& getUnit() const
+        {
+            return _unit;
+        }
+        inline float32 getValue() const
+        {
+            return _value;
+        }
+        inline float32& getValue()
+        {
+            return _value;
+        }
+        ~SingleQuantity()
+        {
+        }
+
+
+
+        Quantity()
+        {
+        }
+        Quantity(float32 value, const Unit& unit)
+        {
+            _singles.push_back(std::move(SingleQuantity(value,unit)));
+        }
+        Quantity(const SingleQuantity& singleQuantity)
+        {
+            _singles.push_back(singleQuantity);
+        }
+        Quantity(const Quantity& quantity):
+			_singles(quantity._singles)
+		{
+		}
+        Quantity(Quantity&& quantity):
+			_singles(std::move(quantity._singles))
+		{
+		}
+        Quantity& operator=(const Quantity& quantity)
+		{
+        	_singles=quantity._singles;
+			return *this;
+		}
+        Quantity& operator=(Quantity&& quantity)
+		{
+        	_singles=std::move(quantity._singles);
+			return *this;
+		}
+        Quantity& operator+=(const SingleQuantity& singleQuantity)
+        {
+            for (unsigned int i = 0; i < _singles.size(); ++i)
+            {
+                if (_singles[i].getUnit()==singleQuantity.getUnit())
+                {
+                    _singles[i].getValue()+=singleQuantity.getValue();
+                    return *this;
+                }
+            }
+            _singles.push_back(singleQuantity);
+            return *this;
+        }
+        Quantity& operator-=(const SingleQuantity& singleQuantity)
+        {
+            for (unsigned int i = 0; i < _singles.size(); ++i)
+            {
+                if (_singles[i].getUnit()==singleQuantity.getUnit())
+                {
+                    _singles[i].getValue()-=singleQuantity.getValue();
+                    return *this;
+                }
+            }
+            _singles.push_back(singleQuantity);
+            return *this;
+        }
+        Quantity operator+(const Quantity& quantity)
+        {
+        	Quantity q(*this);
+            for (unsigned int i = 0; i < quantity._singles.size(); ++i)
+            {
+                q+=quantity._singles[i];
+            }
+            return std::move(q);
+        }
+        Quantity operator-(const Quantity& quantity)
+        {
+        	Quantity q(*this);
+			for (unsigned int i = 0; i < quantity._singles.size(); ++i)
 			{
-				result._units.erase(it->first);
+				q-=quantity._singles[i];
 			}
-		}
-		else
-		{
-			result._units[it->first]=it->second;
-		}
-	}
-	return std::move(result);
-}
+			return std::move(q);
+        }
 
-Unit Unit::operator/(const Unit& unit) const
-{
-	Unit result(*this);
-	for (std::map<std::string,int32>::const_iterator it = unit._units.begin(); it!= unit._units.end();++it)
-	{
-		if (result._units.find(it->first)!=result._units.end())
-		{
-			int32& power = result._units[it->first];
-			power-=it->second;
-			if (power==0)
-			{
-				result._units.erase(it->first);
-			}
-		}
-		else
-		{
-			result._units[it->first]=-it->second;
-		}
-	}
-	return std::move(result);
-}
+        Quantity operator*(float32 factor) const
+        {
+        	Quantity q(*this);
+            for (unsigned int i = 0; i < q._singles.size(); ++i)
+            {
+                q._singles[i]*=factor;
+            }
+            return std::move(q);
+        }
+        Quantity operator/(float32 factor) const
+        {
+        	Quantity q(*this);
+            for (unsigned int i = 0; i < q._singles.size(); ++i)
+            {
+            	q._singles[i]/=factor;
+            }
+            return std::move(q);
+        }
+        Quantity operator*(const Unit& unit) const
+        {
+        	Quantity q(*this);
+            for (unsigned int i = 0; i < q._singles.size(); ++i)
+            {
+            	q._singles[i]*=unit;
+            }
+            return std::move(q);
+        }
+        Quantity operator/(const Unit& unit) const
+        {
+        	Quantity q(*this);
+            for (unsigned int i = 0; i < q._singles.size(); ++i)
+            {
+            	q._singles[i]/=unit;
+            }
+            return std::move(q);
+        }
 
-Unit& Unit::operator*=(const Unit& unit)
-{
-	for (std::map<std::string,int32>::const_iterator it = unit._units.begin(); it!= unit._units.end();++it)
-	{
-		if (_units.find(it->first)!=_units.end())
-		{
-			int32& power = _units[it->first];
-			power+=it->second;
-			if (power==0)
-			{
-				_units.erase(it->first);
-			}
-		}
-		else
-		{
-			_units[it->first]=it->second;
-		}
-	}
-	return *this;
-}
+        inline uint32 getNumberOfSingleQuantities() const
+        {
+        	return _singles.size();
+        }
 
-Unit& Unit::operator/=(const Unit& unit)
-{
-	for (std::map<std::string,int32>::const_iterator it = unit._units.begin(); it!= unit._units.end();++it)
-	{
-		if (_units.find(it->first)!=_units.end())
-		{
-			int32& power = _units[it->first];
-			power-=it->second;
-			if (power==0)
-			{
-				_units.erase(it->first);
-			}
-		}
-		else
-		{
-			_units[it->first]=-it->second;
-		}
-	}
-	return *this;
-}
+        inline const SingleQuantity& getSingleQuantity(uint32 index) const
+        {
+        	return _singles[index];
+        }
 
-bool Unit::operator==(const Unit& unit) const
-{
-	for (std::map<std::string,int32>::const_iterator it = unit._units.begin(); it!= unit._units.end();++it)
-	{
-		//check unit name
-		if (_units.find(it->first)==_units.end())
-		{
-			return false;
-		}
-		else
-		{
-			//check unit power
-			if (_units.at(it->first)!=it->second)
-			{
-				return false;
-			}
-		}
-	}
-	return true;
-}
+        std::string toString();
 
-std::string Unit::toString() const
-{
-	std::stringstream ss;
-	for (std::map<std::string,int32>::const_iterator it = _units.begin(); it!= _units.end();++it)
-	{
-		ss<<it->first<<"^"<<it->second<<"*";
-	}
-	std::string ret=ss.str();
-	ret.erase(ret.end()-1,ret.end());
-	return ret;
-}
+        ~Quantity();
 
-Unit::~Unit()
-{
-}
+
+
 
 
 /*
@@ -219,6 +345,7 @@ Quantity& Quantity::operator/(const Unit& unit)
 	_values=values;
 	return *this;
 }
+
 */
 std::string Quantity::toString()
 {
