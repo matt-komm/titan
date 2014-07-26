@@ -5,38 +5,48 @@
 #include <iostream>
 #include <utility>
 
-using namespace titan;
+
 
 TEST(Core, Unit)
 {
+	using namespace titan;
     Unit q1("mm");
     Unit q2("mm");
     Unit q3("mm",2);
-    //Unit q4(std::move(q3));
-    //EXPECT_EQ(q1,q2);
+    EXPECT_EQ(q1,q2);
     EXPECT_EQ(q1*q2,q3);
-    //EXPECT_EQ((q1*q2).getPower("mm"),2);
-    //EXPECT_EQ((q1/q3).getPower("mm"),-1);
-    //EXPECT_EQ((q1/q2).getPower("mm"),0);
-    //EXPECT_EQ((q1/q2).isScalar(),true);
+    EXPECT_EQ((q1*q2).getPower("mm"),2);
+    EXPECT_EQ((q1*q3).getPower("mm"),3);
+    EXPECT_EQ((q1/q3).getPower("mm"),-1);
+    EXPECT_EQ((q1/q2).getPower("mm"),0);
+    EXPECT_EQ((q1/q2).isScalar(),true);
+    q3*=q1;
+    EXPECT_EQ(q3.getPower("mm"),3);
+    EXPECT_EQ(q1.getPower("mm"),1);
+    q2/=q3;
+    EXPECT_EQ(q2.getPower("mm"),-2);
+	EXPECT_EQ(q3.getPower("mm"),3);
 }
 
 
 TEST(Core, Quantity)
 {
-	Quantity q = 4324.53*mm+964.34*px;
+	using namespace titan;
+	SingleQuantity sq1(4324.53,Unit("mm"));
+	SingleQuantity sq2(4324.53,Unit("px"));
+	Quantity q = sq1+sq2;
 	EXPECT_EQ(q.getNumberOfSingleQuantities(),(unsigned int)2);
-	if (q.getSingleQuantity(0).getUnit()==Unit("mm"))
+	if (q.getSingleQuantity(0).getUnit()==sq1.getUnit())
 	{
-		EXPECT_FLOAT_EQ(q.getSingleQuantity(0).getValue(),4324.53);
-		EXPECT_EQ(q.getSingleQuantity(1).getUnit(),Unit("px"));
-		EXPECT_FLOAT_EQ(q.getSingleQuantity(1).getValue(),964.34);
+		EXPECT_FLOAT_EQ(q.getSingleQuantity(0).getValue(),sq1.getValue());
+		EXPECT_EQ(q.getSingleQuantity(1).getUnit(),sq2.getUnit());
+		EXPECT_FLOAT_EQ(q.getSingleQuantity(1).getValue(),sq2.getValue());
 	}
 	else
 	{
-		EXPECT_FLOAT_EQ(q.getSingleQuantity(0).getValue(),9564.34);
-		EXPECT_EQ(q.getSingleQuantity(1).getUnit(),Unit("mm"));
-		EXPECT_FLOAT_EQ(q.getSingleQuantity(1).getValue(),4324.53);
+		EXPECT_FLOAT_EQ(q.getSingleQuantity(0).getValue(),sq2.getValue());
+		EXPECT_EQ(q.getSingleQuantity(1).getUnit(),sq1.getUnit());
+		EXPECT_FLOAT_EQ(q.getSingleQuantity(1).getValue(),sq1.getValue());
 	}
 
 }
