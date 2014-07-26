@@ -14,9 +14,9 @@ add_library(titan-cairoplugin SHARED
 )
 target_link_libraries(titan-cairoplugin titan-core titan-drawing ${CAIRO_LIBRARIES})
 
-add_executable(titan-addons-cairo-test
-    test/test.cpp
-)
-target_link_libraries(titan-addons-cairo-test titan-cairoplugin titan-core titan-drawing titan-xml ${CAIRO_LIBRARIES})
+#add_executable(titan-addons-cairo-test
+#    test/test.cpp
+#)
+#target_link_libraries(titan-addons-cairo-test titan-cairoplugin titan-core titan-drawing titan-xml ${CAIRO_LIBRARIES})
 
 installlib(titan-cairoplugin)

@@ -34,12 +34,14 @@ class SPoint:
 	public Point<SingleQuantity,N>
 {
 };
+typedef SPoint<2> SPoint2d;
 
 template<uint32 N>
 class PxPoint:
 	public Point<float32,N>
 {
 };
+typedef PxPoint<2> PxPoint2d;
 
 template<uint32 N>
 class Coordinate
@@ -77,6 +79,7 @@ class CartesianCoordiante:
 
 		}
 };
+typedef CartesianCoordiante<2> CartesianCoordiante2d;
 
 template<uint32 N>
 class Atlas
@@ -88,6 +91,8 @@ class Atlas
 		void addChart(const Coordinate<N>* coordiante);
 		~Atlas();
 };
+typedef Atlas<2> Atlas2d;
+
 
 }
 

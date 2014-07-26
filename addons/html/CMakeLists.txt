@@ -6,10 +6,10 @@ include_directories(${PROJECT_SOURCE_DIR}/xml/include)
 
 set(CMAKE_MODULE_PATH  "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_MODULE_PATH}")
 
-add_library(titan-addons-htmlplugin SHARED
+add_library(titan-htmlplugin SHARED
     src/HTMLCanvas.cpp
     src/HTMLContext.cpp
 )
-target_link_libraries(titan-addons-htmlplugin titan-core titan-drawing)
+target_link_libraries(titan-htmlplugin titan-core titan-drawing)
 
-installlib(titan-addons-htmlplugin)
+installlib(titan-htmlplugin)
