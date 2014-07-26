@@ -31,13 +31,9 @@ Unit::Unit(std::string name,int32 power)
 	_units[name]=power;
 }
 
-Unit::Unit(const Unit& unit)
+Unit::Unit(const Unit& unit):
+	_units(unit._units)
 {
-	for (std::map<std::string,int32>::const_iterator it =unit._units.begin(); it != unit._units.end();++it)
-	{
-		_units[it->first]=it->second;
-	}
-
 }
 
 Unit::Unit(Unit&& unit):

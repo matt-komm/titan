@@ -9,7 +9,7 @@ TEST(Drawing, CartesianCoordiante)
 {
 	using namespace titan;
 	CartesianCoordiante<2> coords(0.1*mm/px);
-	QPoint<2> qpoint;
+	SPoint<2> qpoint;
 	qpoint[0]=1.0*cm;
 	qpoint[1]=4.0*cm;
 	PxPoint<2> pxpoint = coords.toPixel(qpoint);
