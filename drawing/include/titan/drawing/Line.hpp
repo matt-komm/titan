@@ -2,7 +2,7 @@
 #define __LINE_H__
 
 #include "titan/core/Quantity.hpp"
-#include "titan/drawing/Canvas.hpp"
+#include "titan/drawing/CanvasInterface.hpp"
 #include "titan/drawing/DrawType.hpp"
 #include "titan/drawing/Stroke.hpp"
 #include "titan/xml/Serializable.hpp"
@@ -40,7 +40,7 @@ class Line:
         	_y2=y2;
         	_boundingBox.setY2(y2);
         }
-        virtual void draw(Canvas& canvas);
+        virtual void draw(CanvasInterface& canvas);
         virtual const BoundingBox& getBoundingBox() const;
         ~Line();
 };

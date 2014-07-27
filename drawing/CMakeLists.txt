@@ -8,8 +8,6 @@ add_library(titan-drawing SHARED
     src/Line.cpp
     src/Rect.cpp
     src/Color.cpp
-    src/Canvas.cpp
-    src/Context.cpp
     src/Font.cpp
     src/Coordinate.cpp
     src/BoundingBox.cpp

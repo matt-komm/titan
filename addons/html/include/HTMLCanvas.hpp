@@ -1,7 +1,7 @@
 #ifndef __HTMLCANVAS_H__
 #define __HTMLCANVAS_H__
 
-#include "titan/drawing/Canvas.hpp"
+#include "titan/drawing/CanvasInterface.hpp"
 #include "HTMLContext.hpp"
 
 namespace titan
@@ -11,7 +11,7 @@ namespace plugins
 
 
 class HTMLCanvas:
-	public titan::Canvas
+	public titan::CanvasInterface
 {
     protected:
 		HTMLContext* _htmlContext;
@@ -20,7 +20,7 @@ class HTMLCanvas:
         ~HTMLCanvas();
 
 
-        virtual Context& getContext();
+        virtual ContextInterface& getContext();
 
         virtual void freeSurface();
 

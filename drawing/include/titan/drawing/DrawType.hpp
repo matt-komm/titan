@@ -2,7 +2,7 @@
 #define __DRAWABLETYPE_H__
 
 #include "titan/core/Types.hpp"
-#include "titan/drawing/Canvas.hpp"
+#include "titan/drawing/CanvasInterface.hpp"
 #include "titan/drawing/BoundingBox.hpp"
 
 namespace titan
@@ -27,7 +27,7 @@ class DrawType
         	_zIndex=zIndex;
         }
 
-        virtual void draw(Canvas& canvas) = 0;
+        virtual void draw(CanvasInterface& canvas) = 0;
         virtual const BoundingBox& getBoundingBox() const = 0;
         virtual ~DrawType()
         {

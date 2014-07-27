@@ -1,7 +1,7 @@
 #ifndef __HTMLContext_H__
 #define __HTMLContext_H__
 
-#include "titan/drawing/Context.hpp"
+#include "titan/drawing/ContextInterface.hpp"
 #include "titan/core/Types.hpp"
 
 
@@ -13,7 +13,7 @@ namespace plugins
 class HTMLCanvas;
 
 class HTMLContext:
-	public Context
+	public titan::ContextInterface
 {
     protected:
 		HTMLCanvas& _htmlCanvas;

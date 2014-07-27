@@ -1,7 +1,7 @@
 #ifndef __CAIROCANVAS_H__
 #define __CAIROCANVAS_H__
 
-#include "titan/drawing/Canvas.hpp"
+#include "titan/drawing/CanvasInterface.hpp"
 #include "CairoContext.hpp"
 
 #include <cairo.h>
@@ -13,7 +13,7 @@ namespace plugins
 
 
 class CairoCanvas:
-	public titan::Canvas
+	public titan::CanvasInterface
 {
     protected:
 		CairoContext* _cairoContext;
@@ -27,7 +27,7 @@ class CairoCanvas:
         	return _cairo_surface;
         }
 
-        virtual Context& getContext();
+        virtual ContextInterface& getContext();
 
         virtual void freeSurface();
 

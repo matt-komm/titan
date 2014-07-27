@@ -11,7 +11,7 @@ namespace plugins
 {
 
 CairoCanvas::CairoCanvas(uint32 pxWidth, uint32 pxHeight, const std::string& outputName, OutputType::type outputType, ColorType::type colorType):
-	Canvas(pxWidth,pxHeight,outputName,outputType,colorType),
+	CanvasInterface(pxWidth,pxHeight,outputName,outputType,colorType),
 	_cairoContext(nullptr),
 	_cairo_surface(nullptr)
 {
@@ -63,7 +63,7 @@ CairoCanvas::~CairoCanvas()
 	cairo_surface_destroy(_cairo_surface);
 }
 
-Context& CairoCanvas::getContext()
+ContextInterface& CairoCanvas::getContext()
 {
 	if (!_cairoContext)
 	{

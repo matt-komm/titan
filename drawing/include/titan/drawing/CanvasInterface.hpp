@@ -3,14 +3,14 @@
 
 #include "titan/core/Types.hpp"
 #include "titan/core/Quantity.hpp"
-#include "titan/drawing/Context.hpp"
+#include "titan/drawing/ContextInterface.hpp"
 
 #include <memory>
 
 namespace titan
 {
 
-class Canvas
+class CanvasInterface
 {
     public:
 
@@ -20,12 +20,12 @@ class Canvas
         const std::string _outputName;
         const OutputType::type _outputType;
         const ColorType::type _colorType;
-        Canvas(uint32 pxWidth, uint32 pxHeight, const std::string& outputName, OutputType::type outputType, ColorType::type colorType=ColorType::OUTPUTDEFAULT);
+        CanvasInterface(uint32 pxWidth, uint32 pxHeight, const std::string& outputName, OutputType::type outputType, ColorType::type colorType=ColorType::OUTPUTDEFAULT);
     public:
     
-        virtual ~Canvas();
+        virtual ~CanvasInterface();
 
-        virtual Context& getContext() = 0;
+        virtual ContextInterface& getContext() = 0;
         inline uint32 getPixelWidth() const
         {
         	return _pxWidth;

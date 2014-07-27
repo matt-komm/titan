@@ -3,7 +3,7 @@
 namespace titan
 {
 
-Canvas::Canvas(
+CanvasInterface::CanvasInterface(
 	uint32 pxWidth,
 	uint32 pxHeight,
 	const std::string& outputName,
@@ -18,7 +18,7 @@ Canvas::Canvas(
 {
 }
 
-Canvas::~Canvas()
+CanvasInterface::~CanvasInterface()
 {
 }
 

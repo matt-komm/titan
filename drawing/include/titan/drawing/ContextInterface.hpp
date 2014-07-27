@@ -12,12 +12,12 @@
 namespace titan
 {
 
-class Context
+class ContextInterface
 {
     protected:
-		Context();
+		ContextInterface();
     public:
-        virtual ~Context();
+        virtual ~ContextInterface();
 
         virtual void setAntialising(Antialising::type antialising) = 0;
         virtual void setStroke(const Stroke& stroke) = 0;

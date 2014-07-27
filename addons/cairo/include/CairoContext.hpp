@@ -1,7 +1,7 @@
 #ifndef __CairoContext_H__
 #define __CairoContext_H__
 
-#include "titan/drawing/Context.hpp"
+#include "titan/drawing/ContextInterface.hpp"
 #include "titan/core/Types.hpp"
 
 #include "cairo.h"
@@ -16,7 +16,7 @@ namespace plugins
 class CairoCanvas;
 
 class CairoContext:
-	public Context
+	public titan::ContextInterface
 {
     protected:
 		CairoCanvas& _cairoCanvas;
