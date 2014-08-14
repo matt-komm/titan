@@ -11,6 +11,7 @@ add_library(titan-drawing SHARED
     src/Font.cpp
     src/Coordinate.cpp
     src/BoundingBox.cpp
+    src/Drawing.cpp
 )
 
 installheaders(drawing)

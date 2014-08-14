@@ -5,6 +5,7 @@ add_library(titan-core SHARED
     src/Unit.cpp
     src/SingleQuantity.cpp
     src/Quantity.cpp
+    src/PluginFactory.cpp
 )
 
 installheaders(core)

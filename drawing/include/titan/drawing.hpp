@@ -1,6 +1,7 @@
 #include "titan/drawing/CanvasInterface.hpp"
 #include "titan/drawing/Color.hpp"
 #include "titan/drawing/ContextInterface.hpp"
+#include "titan/drawing/Drawing.hpp"
 #include "titan/drawing/DrawType.hpp"
 #include "titan/drawing/DrawProperty.hpp"
 #include "titan/drawing/Fill.hpp"
