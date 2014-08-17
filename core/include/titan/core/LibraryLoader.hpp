@@ -53,13 +53,12 @@ namespace titan
 #include <iostream>
 #include <string>
 
-namespace titan
-{
 
 #define REGISTER_PLUGIN(BASECLASS,USERCLASS) \
 	/*std::cout<<"REGISTER_PLUGIN: "<< #BASECLASS <<","<< #USERCLASS <<std::endl;*/ \
-	static ConcretePlugin<BASECLASS,USERCLASS>  _ ## BASECLASS ## ## USERCLASS ## plugin(#USERCLASS, #BASECLASS); \
-	PluginFactory::getInstance()->registerPlugin(&_ ## BASECLASS ## ## USERCLASS ## plugin); \
+	static ConcretePlugin<BASECLASS,USERCLASS>  _ ## BASECLASS ## USERCLASS ## plugin(#USERCLASS, #BASECLASS); \
+	titan::PluginFactory::getInstance()->registerPlugin(&_ ## BASECLASS ## USERCLASS ## plugin); \
+
 
 #define INIT(PLUGINS) \
 	extern "C" \
@@ -73,4 +72,4 @@ namespace titan
 
 #endif
 
-}
+

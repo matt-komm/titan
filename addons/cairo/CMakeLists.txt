@@ -11,6 +11,7 @@ include_directories(${CAIRO_INCLUDE_DIRS})
 add_library(titan-cairoplugin SHARED
     src/CairoCanvas.cpp
     src/CairoContext.cpp
+    src/CairoPlugin.cpp
 )
 target_link_libraries(titan-cairoplugin titan-core titan-drawing ${CAIRO_LIBRARIES})
 
