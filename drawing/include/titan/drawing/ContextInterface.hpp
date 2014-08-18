@@ -15,10 +15,10 @@ namespace titan
 class ContextInterface
 {
     protected:
-		ContextInterface();
     public:
-        virtual ~ContextInterface();
-
+        virtual ~ContextInterface()
+        {
+        }
         virtual void setAntialising(Antialising::type antialising) = 0;
         virtual void setStroke(const Stroke& stroke) = 0;
 		virtual void setFill(const Fill& stroke) = 0;

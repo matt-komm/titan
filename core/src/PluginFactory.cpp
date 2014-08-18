@@ -36,25 +36,6 @@ void PluginFactory::registerPlugin(AbstractPlugin* producer)
 	}
 }
 
-template<class BASECLASS>
-Plugin<BASECLASS>* PluginFactory::getPlugin(std::string pluginName)
-{
-	if (_producers.find(pluginName)!=_producers.end())
-	{
-		Plugin<BASECLASS>* plugin = dynamic_cast<Plugin<BASECLASS>*>(_producers[pluginName]);
-		if (!plugin)
-		{
-			throw std::string("plugin with name '"+pluginName+"' is of type '"+_producers[pluginName]->getPluginBaseName()+"'");
-		}
-		return plugin;
-	}
-	else
-	{
-		throw std::string("plugin with name '"+pluginName+"' not found");
-	}
-}
-
-
 void PluginFactory::loadPluginsFromFile(std::string file)
 {
 	_libLoader.loadLibrary(file);

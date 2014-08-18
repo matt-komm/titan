@@ -1,5 +1,5 @@
 #include "titan/core/LibraryLoader.hpp"
-#include "titan/drawing/DrawingBackendInteface.hpp"
+#include "titan/drawing/DrawingBackendInterface.hpp"
 #include "CairoCanvas.hpp"
 
 namespace titan
@@ -8,7 +8,7 @@ namespace plugins
 {
 
 class CairoDrawingBackend:
-	public titan::DrawingBackendInteface
+	public titan::DrawingBackendInterface
 {
     protected:
     public:
@@ -19,7 +19,7 @@ class CairoDrawingBackend:
 };
 
 INIT(
-	REGISTER_PLUGIN(DrawingBackendInteface,CairoDrawingBackend)
+	REGISTER_PLUGIN(DrawingBackendInterface,CairoDrawingBackend)
 )
 
 

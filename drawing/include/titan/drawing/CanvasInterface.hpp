@@ -20,10 +20,27 @@ class CanvasInterface
         const std::string _outputName;
         const OutputType::type _outputType;
         const ColorType::type _colorType;
-        CanvasInterface(uint32 pxWidth, uint32 pxHeight, const std::string& outputName, OutputType::type outputType, ColorType::type colorType=ColorType::OUTPUTDEFAULT);
+        CanvasInterface(
+        		uint32 pxWidth,
+        		uint32 pxHeight,
+        		const std::string& outputName,
+        		OutputType::type outputType,
+        		ColorType::type colorType=ColorType::OUTPUTDEFAULT
+			):
+            _pxWidth(pxWidth),
+            _pxHeight(pxHeight),
+            _outputName(outputName),
+            _outputType(outputType),
+        	_colorType(colorType)
+
+        {
+
+        }
     public:
     
-        virtual ~CanvasInterface();
+        virtual ~CanvasInterface()
+        {
+        }
 
         virtual ContextInterface& getContext() = 0;
         inline uint32 getPixelWidth() const

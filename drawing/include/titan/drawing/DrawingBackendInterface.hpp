@@ -9,7 +9,7 @@
 namespace titan
 {
 
-class DrawingBackendInteface
+class DrawingBackendInterface
 {
     protected:
     public:

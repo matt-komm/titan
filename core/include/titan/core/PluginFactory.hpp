@@ -22,7 +22,22 @@ class PluginFactory
 		static PluginFactory* getInstance();
 		std::vector<std::string> getRegisteredPluginNames();
         void registerPlugin(AbstractPlugin* producer);
-        template<class BASECLASS> Plugin<BASECLASS>* getPlugin(std::string pluginName);
+        template<class BASECLASS> Plugin<BASECLASS>* getPlugin(std::string pluginName)
+		{
+			if (_producers.find(pluginName)!=_producers.end())
+			{
+				Plugin<BASECLASS>* plugin = dynamic_cast<Plugin<BASECLASS>*>(_producers[pluginName]);
+				if (!plugin)
+				{
+					throw std::string("plugin with name '"+pluginName+"' is of type '"+_producers[pluginName]->getPluginBaseName()+"'");
+				}
+				return plugin;
+			}
+			else
+			{
+				throw std::string("plugin with name '"+pluginName+"' not found");
+			}
+		}
 		void loadPluginsFromFile(std::string file);
 
 		inline bool hasPlugin(std::string name)

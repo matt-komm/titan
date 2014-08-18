@@ -8,6 +8,18 @@ add_library(titan-core SHARED
     src/PluginFactory.cpp
 )
 
+if (${OSNAME} MATCHES "LINUX")
+    target_link_libraries(titan-core dl)
+endif (${OSNAME} MATCHES "LINUX")
+
+if (${OSNAME} MATCHES "MACOSX")
+    target_link_libraries(titan-core dl)
+endif (${OSNAME} MATCHES "MACOSX")
+
+if (${OSNAME} MATCHES "WINDOWS")
+    #target_link_libraries(titan-core dl)
+endif (${OSNAME} MATCHES "WINDOWS")
+
 installheaders(core)
 
 installlib(titan-core)
