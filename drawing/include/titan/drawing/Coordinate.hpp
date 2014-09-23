@@ -44,23 +44,29 @@ class PxPoint:
 typedef PxPoint<2> PxPoint2d;
 
 template<uint32 N>
-class Coordinate
+class CoordinateSystem
 {
 	public:
 		virtual PxPoint<N> toPixel(const SPoint<N>& sqPoint) = 0;
 };
 
 template<uint32 N>
-class CartesianCoordiante:
-	public Coordinate<N>
+class CartesianCoordinates:
+	public CoordinateSystem<N>
 {
 	protected:
 		SingleQuantity _resolution;
 	public:
-		CartesianCoordiante(SingleQuantity resolution):
+		CartesianCoordinates(SingleQuantity resolution):
 			_resolution(resolution)
 		{
 		}
+		
+		virtual const Unit& getUnit() const
+		{
+		    return (_resolution*px).getUnit();
+		}
+		
 		virtual PxPoint<N> toPixel(const SPoint<N>& sqPoint)
 		{
 			PxPoint<N> result;
@@ -74,22 +80,43 @@ class CartesianCoordiante:
 			}
 			return result;
 		}
-		virtual ~CartesianCoordiante()
+		virtual ~CartesianCoordinates()
 		{
 
 		}
 };
-typedef CartesianCoordiante<2> CartesianCoordiante2d;
+typedef CartesianCoordinates<2> CartesianCoordinate2d;
 
 template<uint32 N>
 class Atlas
 {
 	protected:
-		std::vector<Coordinate<N>*> _coordinates;
+		std::map<std::string,const CoordinateSystem<N>*> _coordinates;
 	public:
-		Atlas(Coordinate<N>* basis);
-		void addChart(const Coordinate<N>* coordiante);
-		~Atlas();
+		Atlas()
+		{
+		}
+		
+		void addChart(const CoordinateSystem<N>* coordinate, const std::string& name)
+		{
+		    if (_coordinates.find(name)!=_coordinates.end())
+		    {
+		        throw std::string("Coordinate system with unit '"+name+"' already exists in atlas");
+		    }
+		    else
+		    {
+		        _coordinates[name]=coordinate;
+		    }
+		}
+		
+		~Atlas()
+		{
+		    for (std::pair<std::string,const CoordinateSystem<N>*> coord: _coordinates)
+		    {
+		        delete coord.second;
+		    }
+		    _coordinates.clear();
+		}
 };
 typedef Atlas<2> Atlas2d;
 

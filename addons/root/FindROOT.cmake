@@ -7,8 +7,8 @@
 # ROOT_LIBRARY_DIR    PATH to the library directory 
 
 
-find_program(ROOT_CONFIG_
-  EXECUTABLE root-config
+find_program(ROOT_CONFIG_EXECUTABLE 
+  root-config
   PATHS $ENV{ROOTSYS}/bin
   QUIET
 )

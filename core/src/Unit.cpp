@@ -193,7 +193,7 @@ std::string Unit::toString() const
 	}
 	std::string ret=ss.str();
 	ret.erase(ret.end()-1,ret.end());
-	return ret;
+	return std::move(ret);
 }
 
 Unit::~Unit()
