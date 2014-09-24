@@ -1,12 +1,12 @@
 #ifndef __DRAWING_H__
 #define __DRAWING_H__
 
-#include "titan/drawing/DrawType.hpp"
-
 #include <vector>
 
 namespace titan
 {
+
+class DrawType;
 
 class Drawing
 {
@@ -15,7 +15,7 @@ class Drawing
     public:
 		Drawing();
 
-		void add(const DrawType& drawType);
+		void add( DrawType* drawType);
 		void render();
 		/*
         Class(const Class& c);

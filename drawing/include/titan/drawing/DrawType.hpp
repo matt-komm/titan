@@ -1,9 +1,10 @@
-#ifndef __DRAWABLETYPE_H__
-#define __DRAWABLETYPE_H__
+#ifndef __DRAWTYPE_H__
+#define __DRAWTYPE_H__
 
 #include "titan/core/Types.hpp"
 #include "titan/drawing/CanvasInterface.hpp"
 #include "titan/drawing/BoundingBox.hpp"
+#include "titan/drawing/Drawing.hpp"
 
 
 namespace titan
@@ -14,6 +15,11 @@ class DrawType
     protected:
 		int32 _zIndex;
     public:
+
+		struct less
+		{
+			bool operator()(const titan::DrawType* dt1, const titan::DrawType* dt2) const;
+		};
 
 		DrawType():
         	_zIndex(0)
@@ -29,7 +35,7 @@ class DrawType
         	_zIndex=zIndex;
         }
 
-        virtual void draw(CanvasInterface& canvas) = 0;
+        virtual void draw(const Drawing& drawing, CanvasInterface& canvas) = 0;
         virtual const BoundingBox& getBoundingBox() const = 0;
         virtual ~DrawType()
         {
@@ -37,21 +43,6 @@ class DrawType
 };
 
 }
-
-namespace std
-{
-template<>
-struct less<titan::DrawType*>
-{
-	bool operator()(const titan::DrawType* dt1, const titan::DrawType* dt2) const
-	{
-		return	dt1->getZIndex()<dt1->getZIndex();
-	}
-};
-}
-
-
-
 
 #endif
 

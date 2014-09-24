@@ -40,7 +40,7 @@ class Line:
         	_y2=y2;
         	_boundingBox.setY2(y2);
         }
-        virtual void draw(CanvasInterface& canvas);
+        virtual void draw(const Drawing& drawing, CanvasInterface& canvas);
         virtual const BoundingBox& getBoundingBox() const;
         ~Line();
 };
