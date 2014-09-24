@@ -50,3 +50,19 @@ TEST(Core, Quantity)
 	}
 
 }
+
+TEST(Core, GenericType)
+{
+	using namespace titan;
+	GenericType strType = GenericType("bla");
+	EXPECT_STREQ(strType.toString().c_str(),"bla");
+
+	GenericType intType = GenericType(24134);
+	EXPECT_STREQ(intType.toString().c_str(),"24134");
+
+	GenericType floatType = GenericType(5345.334);
+	EXPECT_STREQ(floatType.toString().c_str(),"5345.345");
+
+	GenericType boolType = GenericType(true);
+	EXPECT_STREQ(boolType.toString().c_str(),"true");
+}

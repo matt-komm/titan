@@ -2,6 +2,8 @@
 #define __TYPES_H__
 
 #include <inttypes.h>
+#include <string>
+#include <sstream>
 
 namespace titan
 {
@@ -51,6 +53,142 @@ struct Antialising
 struct FontStyle
 {
 	enum type {NORMAL,BOLD,ITALIC,BOLDITALIC};
+};
+
+class GenericType
+{
+	private:
+		union Data {
+			std::string* _str;
+			int32* _int;
+			float32* _float;
+			bool* _bool;
+		};
+		Data _data;
+
+		enum class DataType {STRING, INT, FLOAT, BOOL};
+		DataType _type;
+
+	public:
+		GenericType(const char* str):
+			_type(DataType::STRING)
+		{
+			_data._str = new std::string(str);
+		}
+
+		GenericType(int32 value):
+			_type(DataType::INT)
+		{
+			_data._int = new int32(value);
+		}
+
+		GenericType(float32 value):
+			_type(DataType::FLOAT)
+		{
+			_data._float = new float32(value);
+		}
+
+		GenericType(bool boolean):
+			_type(DataType::BOOL)
+		{
+			_data._bool = new bool(boolean);
+		}
+
+		static GenericType asString(std::string str)
+		{
+			return std::move(GenericType(str.c_str()));
+		}
+
+		static GenericType asInt(std::string str)
+		{
+			return std::move(GenericType((int32)std::stoi(str)));
+		}
+
+		static GenericType asFloat(std::string str)
+		{
+			return std::move(GenericType((float32)std::stod(str)));
+		}
+
+		static GenericType asBool(std::string str)
+		{
+			return std::move(GenericType(str=="true"));
+		}
+
+		inline bool isString() const
+		{
+			return _type==DataType::STRING;
+		}
+
+		inline bool isInt() const
+		{
+			return _type==DataType::INT;
+		}
+
+		inline bool isFloat() const
+		{
+			return _type==DataType::FLOAT;
+		}
+
+		inline bool isBool() const
+		{
+			return _type==DataType::BOOL;
+		}
+
+		std::string toString() const
+		{
+			std::stringstream ss;
+			switch (_type)
+			{
+				case DataType::STRING:
+				{
+					ss << (*_data._str).c_str();
+					break;
+				}
+				case DataType::INT:
+				{
+					ss << *_data._int;
+					break;
+				}
+				case DataType::FLOAT:
+				{
+					ss << *_data._float;
+					break;
+				}
+				case DataType::BOOL:
+				{
+					ss << ((*_data._bool) ? "true" : "false");
+					break;
+				}
+
+			}
+
+			return std::move(ss.str());
+		}
+
+		~GenericType()
+		{
+			/*
+			switch (_type)
+			{
+				case DataType::STRING:
+				{
+					delete _data._str;
+				}
+				case DataType::INT:
+				{
+					delete _data._int;
+				}
+				case DataType::FLOAT:
+				{
+					delete _data._float;
+				}
+				case DataType::BOOL:
+				{
+					delete _data._bool;
+				}
+			}*/
+		}
+
 };
 
 }
