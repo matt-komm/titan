@@ -9,7 +9,6 @@ add_library(titan-drawing SHARED
     src/Rect.cpp
     src/Color.cpp
     src/Font.cpp
-    src/Coordinate.cpp
     src/BoundingBox.cpp
     src/Drawing.cpp
 )

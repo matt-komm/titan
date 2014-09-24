@@ -5,10 +5,10 @@
 
 #include <iostream>
 
-TEST(Drawing, CartesianCoordiante)
+TEST(Drawing, CartesianCoordiantes)
 {
 	using namespace titan;
-	CartesianCoordiante2d  coords(0.1*mm/px);
+	CartesianCoordinates2d  coords(0.1*mm/px);
 	SPoint2d qpoint;
 	qpoint[0]=1.0*cm;
 	qpoint[1]=4.0*cm;
