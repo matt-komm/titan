@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <utility>
+#include <string>
 
 
 
@@ -54,15 +55,18 @@ TEST(Core, Quantity)
 TEST(Core, GenericType)
 {
 	using namespace titan;
-	GenericType strType = GenericType("bla");
-	EXPECT_STREQ(strType.toString().c_str(),"bla");
+	GenericType strType = GenericType::fromValue<std::string>("aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ`1234567890-=[]\\;',./~!@#$%^&*()_+{}|:\"<>? ");
+	EXPECT_STREQ(strType.toString().c_str(),"aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ`1234567890-=[]\\;',./~!@#$%^&*()_+{}|:\"<>? ");
+	GenericType intType = GenericType::fromValue<int32>(1234567890);
+	EXPECT_STREQ(intType.toString().c_str(),"1234567890");
+	EXPECT_EQ(std::stoi(intType.toString()),1234567890);
+	GenericType floatType = GenericType::fromValue<float32>(1234567890);
+	EXPECT_FLOAT_EQ(std::stof(floatType.toString()),1234567890);
 
-	GenericType intType = GenericType(24134);
-	EXPECT_STREQ(intType.toString().c_str(),"24134");
+	EXPECT_THROW(GenericType::fromBoolString("bal"),std::string);
+	EXPECT_THROW(GenericType::fromInt32String("bal"),std::string);
+	EXPECT_THROW(GenericType::fromUInt32String("bal"),std::string);
+	EXPECT_THROW(GenericType::fromFloat32String("bal"),std::string);
+	EXPECT_THROW(GenericType::fromFloat64String("bal"),std::string);
 
-	GenericType floatType = GenericType(5345.334);
-	EXPECT_STREQ(floatType.toString().c_str(),"5345.345");
-
-	GenericType boolType = GenericType(true);
-	EXPECT_STREQ(boolType.toString().c_str(),"true");
 }

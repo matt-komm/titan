@@ -4,6 +4,10 @@
 #include <inttypes.h>
 #include <string>
 #include <sstream>
+#include <iostream>
+#include <iomanip>
+#include <algorithm>
+#include <stdexcept>
 
 namespace titan
 {
@@ -35,6 +39,8 @@ static_assert(sizeof(float32)==4, "float32 is not of required size: 4");
 static_assert(sizeof(float64)==8, "float64 is not of required size: 8");
 static_assert(sizeof(float128)==16, "float128 is not of required size: 16");
 
+
+//TODO: use enum class here
 struct ColorType
 {
 	enum type {ARGB32,RGB24,OUTPUTDEFAULT};
@@ -50,146 +56,200 @@ struct Antialising
 	enum type {NONE,DEFAULT,SIMPLE,BEST};
 };
 
+//TODO: use bitmask
 struct FontStyle
 {
 	enum type {NORMAL,BOLD,ITALIC,BOLDITALIC};
 };
 
-class GenericType
+class Type
+{
+	public:
+		virtual Type* clone() const = 0;
+		virtual std::string toString(std::ios_base::fmtflags mask = std::ios_base::boolalpha | std::ios_base::dec | std::ios_base::scientific) const = 0;
+		virtual ~Type()
+		{
+		}
+};
+
+template<class TYPE>
+class TypeTmpl:
+	public Type
 {
 	private:
-		union Data {
-			std::string* _str;
-			int32* _int;
-			float32* _float;
-			bool* _bool;
-		};
-		Data _data;
-
-		enum class DataType {STRING, INT, FLOAT, BOOL};
-		DataType _type;
-
+		TYPE* _value;
 	public:
-		GenericType(const char* str):
-			_type(DataType::STRING)
+		TypeTmpl(TYPE value):
+			_value(new TYPE(value))
 		{
-			_data._str = new std::string(str);
 		}
 
-		GenericType(int32 value):
-			_type(DataType::INT)
+		virtual Type* clone() const
 		{
-			_data._int = new int32(value);
+			return new TypeTmpl<TYPE>(*_value);
 		}
 
-		GenericType(float32 value):
-			_type(DataType::FLOAT)
-		{
-			_data._float = new float32(value);
-		}
-
-		GenericType(bool boolean):
-			_type(DataType::BOOL)
-		{
-			_data._bool = new bool(boolean);
-		}
-
-		static GenericType asString(std::string str)
-		{
-			return std::move(GenericType(str.c_str()));
-		}
-
-		static GenericType asInt(std::string str)
-		{
-			return std::move(GenericType((int32)std::stoi(str)));
-		}
-
-		static GenericType asFloat(std::string str)
-		{
-			return std::move(GenericType((float32)std::stod(str)));
-		}
-
-		static GenericType asBool(std::string str)
-		{
-			return std::move(GenericType(str=="true"));
-		}
-
-		inline bool isString() const
-		{
-			return _type==DataType::STRING;
-		}
-
-		inline bool isInt() const
-		{
-			return _type==DataType::INT;
-		}
-
-		inline bool isFloat() const
-		{
-			return _type==DataType::FLOAT;
-		}
-
-		inline bool isBool() const
-		{
-			return _type==DataType::BOOL;
-		}
-
-		std::string toString() const
+		virtual std::string toString(std::ios_base::fmtflags mask = std::ios_base::boolalpha | std::ios_base::dec | std::ios_base::scientific) const
 		{
 			std::stringstream ss;
-			switch (_type)
-			{
-				case DataType::STRING:
-				{
-					ss << (*_data._str).c_str();
-					break;
-				}
-				case DataType::INT:
-				{
-					ss << *_data._int;
-					break;
-				}
-				case DataType::FLOAT:
-				{
-					ss << *_data._float;
-					break;
-				}
-				case DataType::BOOL:
-				{
-					ss << ((*_data._bool) ? "true" : "false");
-					break;
-				}
-
-			}
-
+			ss << std::setiosflags(mask) << *_value;
 			return std::move(ss.str());
 		}
 
-		~GenericType()
+		virtual ~TypeTmpl()
 		{
-			/*
-			switch (_type)
+			delete _value;
+		}
+};
+
+template<> std::string TypeTmpl<std::string>::toString(std::ios_base::fmtflags mask) const;
+
+
+
+class GenericType
+{
+	private:
+		Type* _type;
+	public:
+		GenericType(Type* type):
+			_type(type)
+		{
+		}
+		GenericType(const GenericType& genericType):
+			_type(genericType._type->clone())
+		{
+		}
+
+		GenericType& operator=(const GenericType& genericType)
+		{
+			delete _type;
+			_type=genericType._type->clone();
+			return *this;
+		}
+
+		GenericType(GenericType&& genericType):
+			_type(genericType._type)
+		{
+			genericType._type = nullptr;
+		}
+
+		GenericType& operator=(GenericType&& genericType)
+		{
+			delete _type;
+			_type=genericType._type;
+			genericType._type=nullptr;
+			return *this;
+		}
+
+		template<class TYPE> static GenericType fromValue(TYPE value);
+
+
+		//TODO: make those conversion methods test the limits or check the default int/fp type sizes above
+		static GenericType fromBoolString(std::string str)
+		{
+			std::transform(str.begin(), str.end(), str.begin(), (int (*)(int))std::toupper);
+			if (str=="TRUE")
 			{
-				case DataType::STRING:
-				{
-					delete _data._str;
-				}
-				case DataType::INT:
-				{
-					delete _data._int;
-				}
-				case DataType::FLOAT:
-				{
-					delete _data._float;
-				}
-				case DataType::BOOL:
-				{
-					delete _data._bool;
-				}
-			}*/
+				GenericType gt = GenericType(new TypeTmpl<bool>(true));
+				return std::move(gt);
+			}
+			else if (str=="FALSE")
+			{
+				GenericType gt = GenericType(new TypeTmpl<bool>(false));
+				return std::move(gt);
+			}
+			else
+			{
+				throw std::string("Error during conversion of '"+str+"' to bool.");
+			}
+		}
+
+		static GenericType fromInt32String(std::string str)
+		{
+			try
+			{
+				GenericType gt = GenericType(new TypeTmpl<int32>(std::stoi(str)));
+				return std::move(gt);
+			}
+			catch (std::invalid_argument ex)
+			{
+				throw std::string("Invalid argument '"+str+"' during converting to int32.");
+			}
+			catch (std::out_of_range ex)
+			{
+				throw std::string("Out-of-range during converting '"+str+"' to int32.");
+			}
+		}
+
+		static GenericType fromUInt32String(std::string str)
+		{
+			try
+			{
+				GenericType gt = GenericType(new TypeTmpl<uint32>(std::stoul(str)));
+				return std::move(gt);
+			}
+			catch (std::invalid_argument ex)
+			{
+				throw std::string("Invalid argument '"+str+"' during converting to uint32.");
+			}
+			catch (std::out_of_range ex)
+			{
+				throw std::string("Out-of-range during converting '"+str+"' to uint32.");
+			}
+		}
+
+		static GenericType fromFloat32String(std::string str)
+		{
+			try
+			{
+				GenericType gt = GenericType(new TypeTmpl<float32>(std::stof(str)));
+				return std::move(gt);
+			}
+			catch (std::invalid_argument ex)
+			{
+				throw std::string("Invalid argument '"+str+"' during converting to float32.");
+			}
+			catch (std::out_of_range ex)
+			{
+				throw std::string("Out-of-range during converting '"+str+"' to float32.");
+			}
+		}
+
+		static GenericType fromFloat64String(std::string str)
+		{
+			try
+			{
+				GenericType gt = GenericType(new TypeTmpl<float64>(std::stod(str)));
+				return std::move(gt);
+			}
+			catch (std::invalid_argument ex)
+			{
+				throw std::string("Invalid argument '"+str+"' during converting to float64.");
+			}
+			catch (std::out_of_range ex)
+			{
+				throw std::string("Out-of-range during converting '"+str+"' to float64.");
+			}
+		}
+
+		inline std::string toString(std::ios_base::fmtflags mask = std::ios_base::boolalpha | std::ios_base::dec | std::ios_base::scientific) const
+		{
+			return std::move(_type->toString(mask));
+		}
+
+		virtual ~GenericType()
+		{
+			delete _type;
 		}
 
 };
+
+
+template<class TYPE> GenericType GenericType::fromValue(TYPE value)
+{
+	GenericType gt = GenericType(new TypeTmpl<TYPE>(value));
+	return std::move(gt);
+}
 
 }
 
