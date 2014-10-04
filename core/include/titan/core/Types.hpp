@@ -66,6 +66,8 @@ class Type
 {
 	public:
 		virtual Type* clone() const = 0;
+		virtual bool operator==(const Type* type) const= 0;
+		virtual bool operator!=(const Type* type) const= 0;
 		virtual std::string toString(std::ios_base::fmtflags mask = std::ios_base::boolalpha | std::ios_base::dec | std::ios_base::scientific) const = 0;
 		virtual ~Type()
 		{
@@ -82,6 +84,26 @@ class TypeTmpl:
 		TypeTmpl(TYPE value):
 			_value(new TYPE(value))
 		{
+		}
+
+		virtual bool operator==(const Type* type) const
+		{
+			const TypeTmpl<TYPE>* otherType = dynamic_cast<const TypeTmpl<TYPE>*>(type);
+			if (!otherType)
+			{
+				return false;
+			}
+			return ((*_value)==(*otherType->_value));
+		}
+
+		virtual bool operator!=(const Type* type) const
+		{
+			const TypeTmpl<TYPE>* otherType = dynamic_cast<const TypeTmpl<TYPE>*>(type);
+			if (!otherType)
+			{
+				return true;
+			}
+			return ((*_value)!=(*otherType->_value));
 		}
 
 		virtual Type* clone() const
@@ -141,10 +163,26 @@ class GenericType
 			return *this;
 		}
 
+		inline bool operator==(const GenericType& genericType) const
+		{
+			return (*_type)==genericType._type;
+		}
+
+		inline bool operator!=(const GenericType& genericType) const
+		{
+			return (*_type)!=genericType._type;
+		}
+
 		template<class TYPE> static GenericType fromValue(TYPE value);
 
 
 		//TODO: make those conversion methods test the limits or check the default int/fp type sizes above
+
+		static GenericType fromString(const std::string& str)
+		{
+			return std::move(GenericType(new TypeTmpl<std::string>(str)));
+		}
+
 		static GenericType fromBoolString(std::string str)
 		{
 			std::transform(str.begin(), str.end(), str.begin(), (int (*)(int))std::toupper);
@@ -171,11 +209,11 @@ class GenericType
 				GenericType gt = GenericType(new TypeTmpl<int32>(std::stoi(str)));
 				return std::move(gt);
 			}
-			catch (std::invalid_argument ex)
+			catch (std::invalid_argument& ex)
 			{
 				throw std::string("Invalid argument '"+str+"' during converting to int32.");
 			}
-			catch (std::out_of_range ex)
+			catch (std::out_of_range& ex)
 			{
 				throw std::string("Out-of-range during converting '"+str+"' to int32.");
 			}
@@ -188,11 +226,11 @@ class GenericType
 				GenericType gt = GenericType(new TypeTmpl<uint32>(std::stoul(str)));
 				return std::move(gt);
 			}
-			catch (std::invalid_argument ex)
+			catch (std::invalid_argument& ex)
 			{
 				throw std::string("Invalid argument '"+str+"' during converting to uint32.");
 			}
-			catch (std::out_of_range ex)
+			catch (std::out_of_range& ex)
 			{
 				throw std::string("Out-of-range during converting '"+str+"' to uint32.");
 			}
@@ -205,11 +243,11 @@ class GenericType
 				GenericType gt = GenericType(new TypeTmpl<float32>(std::stof(str)));
 				return std::move(gt);
 			}
-			catch (std::invalid_argument ex)
+			catch (std::invalid_argument& ex)
 			{
 				throw std::string("Invalid argument '"+str+"' during converting to float32.");
 			}
-			catch (std::out_of_range ex)
+			catch (std::out_of_range& ex)
 			{
 				throw std::string("Out-of-range during converting '"+str+"' to float32.");
 			}
@@ -222,11 +260,11 @@ class GenericType
 				GenericType gt = GenericType(new TypeTmpl<float64>(std::stod(str)));
 				return std::move(gt);
 			}
-			catch (std::invalid_argument ex)
+			catch (std::invalid_argument& ex)
 			{
 				throw std::string("Invalid argument '"+str+"' during converting to float64.");
 			}
-			catch (std::out_of_range ex)
+			catch (std::out_of_range& ex)
 			{
 				throw std::string("Out-of-range during converting '"+str+"' to float64.");
 			}

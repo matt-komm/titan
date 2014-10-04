@@ -69,4 +69,18 @@ TEST(Core, GenericType)
 	EXPECT_THROW(GenericType::fromFloat32String("bal"),std::string);
 	EXPECT_THROW(GenericType::fromFloat64String("bal"),std::string);
 
+	EXPECT_EQ(GenericType::fromString("bla"),GenericType::fromValue<std::string>("bla"));
+	EXPECT_EQ(GenericType::fromBoolString("true"),GenericType::fromValue<bool>(true));
+	EXPECT_EQ(GenericType::fromInt32String("12345"),GenericType::fromValue<int32>(12345));
+	EXPECT_EQ(GenericType::fromUInt32String("12345"),GenericType::fromValue<uint32>(12345));
+	EXPECT_EQ(GenericType::fromFloat32String("123.45"),GenericType::fromValue<float32>(123.45));
+	EXPECT_EQ(GenericType::fromFloat64String("123.45"),GenericType::fromValue<float64>(123.45));
+
+	EXPECT_NE(GenericType::fromString("bla"),GenericType::fromValue<std::string>("blub"));
+	EXPECT_NE(GenericType::fromBoolString("true"),GenericType::fromValue<int32>(0));
+	EXPECT_NE(GenericType::fromValue<bool>(true),GenericType::fromValue<bool>(false));
+	EXPECT_NE(GenericType::fromValue<int32>(2),GenericType::fromValue<int32>(0));
+	EXPECT_NE(GenericType::fromValue<uint32>(0),GenericType::fromValue<int32>(0));
+	EXPECT_NE(GenericType::fromValue<float32>(0),GenericType::fromValue<int32>(0));
+	EXPECT_NE(GenericType::fromValue<float64>(0),GenericType::fromValue<int32>(0));
 }
