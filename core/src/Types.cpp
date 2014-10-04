@@ -5,8 +5,6 @@
 namespace titan
 {
 
-//TODO: get spezialization working!
-
 template<>
 std::string TypeTmpl<std::string>::toString(std::ios_base::fmtflags mask) const
 {

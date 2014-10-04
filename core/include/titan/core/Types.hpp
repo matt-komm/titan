@@ -164,7 +164,7 @@ class GenericType
 			}
 		}
 
-		static GenericType fromInt32String(std::string str)
+		static GenericType fromInt32String(const std::string& str)
 		{
 			try
 			{
@@ -181,7 +181,7 @@ class GenericType
 			}
 		}
 
-		static GenericType fromUInt32String(std::string str)
+		static GenericType fromUInt32String(const std::string& str)
 		{
 			try
 			{
@@ -198,7 +198,7 @@ class GenericType
 			}
 		}
 
-		static GenericType fromFloat32String(std::string str)
+		static GenericType fromFloat32String(const std::string& str)
 		{
 			try
 			{
@@ -215,7 +215,7 @@ class GenericType
 			}
 		}
 
-		static GenericType fromFloat64String(std::string str)
+		static GenericType fromFloat64String(const std::string& str)
 		{
 			try
 			{
