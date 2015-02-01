@@ -66,21 +66,26 @@ TEST(Core, Quantity)
 	SingleQuantity sq1(44.53,Unit("mm"));
 	SingleQuantity sq2(4324.53,Unit("px"));
 
-	Quantity q1 = sq1+sq2;
-	EXPECT_EQ(q1.getNumberOfSingleQuantities(),(unsigned int)2);
-	testQuantity(q1,{sq1,sq2});
+	Quantity q1 = sq1+sq2+sq2;
+	q1.shrink();
+	testQuantity(q1,{sq1,2*sq2});
 
 	q1 += sq1;
-    EXPECT_EQ(q1.getNumberOfSingleQuantities(),(unsigned int)2);
-    testQuantity(q1,{sq1*2,sq2});
+	q1.shrink();
+    testQuantity(q1,{sq1*2,2*sq2});
 
     q1 -= sq2;
-    EXPECT_EQ(q1.getNumberOfSingleQuantities(),(unsigned int)2);
-    testQuantity(q1,{sq1*2,sq2*0});
+    q1.shrink();
+    testQuantity(q1,{sq1*2,sq2});
+
+    q1 -= q1;
+    q1.shrink();
+    testQuantity(q1,{});
 
     Quantity q3 = q1-q1;
-    EXPECT_EQ(q3.getNumberOfSingleQuantities(),(unsigned int)4);
-    testQuantity(q3,{sq1*0,sq2*0});
+    q3.shrink();
+    std::cout<<q3.toString()<<std::endl;
+    testQuantity(q3,{});
 
 }
 

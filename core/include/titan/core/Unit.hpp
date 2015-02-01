@@ -12,7 +12,14 @@ namespace titan
 class Unit
 {
     protected:
+        uint64 _hashValue;
         std::map<std::string,int32> _units;
+
+        inline void updateHash()
+        {
+            _hashValue=Unit::hash()(*this);
+        }
+
     public:
         struct eq
         {
@@ -50,10 +57,11 @@ class Unit
 
         ~Unit();
 
-        inline bool isScalar()
+        inline bool isScalar() const
         {
         	return _units.empty();
         }
+
         inline int32 getPower(std::string unitName) const
         {
         	std::map<std::string,int32>::const_iterator it = _units.find(unitName);

@@ -41,6 +41,36 @@ Quantity& Quantity::operator=(Quantity&& quantity)
 	return *this;
 }
 
+Quantity Quantity::operator+(const SingleQuantity& singleQuantity) const
+{
+    Quantity result(*this);
+    for (unsigned int i = 0; i < result._singles.size(); ++i)
+    {
+        if (result._singles[i].getUnit()==singleQuantity.getUnit())
+        {
+            result._singles[i].getValue()+=singleQuantity.getValue();
+            return std::move(result);
+        }
+    }
+    result._singles.push_back(singleQuantity);
+    return std::move(result);
+}
+
+Quantity Quantity::operator-(const SingleQuantity& singleQuantity) const
+{
+    Quantity result(*this);
+    for (unsigned int i = 0; i < result._singles.size(); ++i)
+    {
+        if (result._singles[i].getUnit()==singleQuantity.getUnit())
+        {
+            result._singles[i].getValue()-=singleQuantity.getValue();
+            return std::move(result);
+        }
+    }
+    result._singles.push_back(-1.0*singleQuantity);
+    return std::move(result);
+}
+
 Quantity& Quantity::operator+=(const SingleQuantity& singleQuantity)
 {
 	for (unsigned int i = 0; i < _singles.size(); ++i)
@@ -71,6 +101,11 @@ Quantity& Quantity::operator-=(const SingleQuantity& singleQuantity)
 
 Quantity& Quantity::operator+=(const Quantity& quantity)
 {
+    if (this==&quantity)
+    {
+        (*this)*=2.0;
+        return *this;
+    }
     for (unsigned int i = 0; i < quantity._singles.size(); ++i)
     {
         _singles.push_back(quantity._singles[i]);
@@ -80,6 +115,11 @@ Quantity& Quantity::operator+=(const Quantity& quantity)
 
 Quantity& Quantity::operator-=(const Quantity& quantity)
 {
+    if (this==&quantity)
+    {
+        _singles.clear();
+        return *this;
+    }
     for (unsigned int i = 0; i < quantity._singles.size(); ++i)
     {
         _singles.push_back(-1.0*quantity._singles[i]);
@@ -87,13 +127,14 @@ Quantity& Quantity::operator-=(const Quantity& quantity)
     return *this;
 }
 
-Quantity Quantity::operator+(const Quantity& quantity)
+Quantity Quantity::operator+(const Quantity& quantity) const
 {
 	Quantity q(*this);
 	q+=quantity;
 	return std::move(q);
 }
-Quantity Quantity::operator-(const Quantity& quantity)
+
+Quantity Quantity::operator-(const Quantity& quantity) const
 {
 	Quantity q(*this);
 	q-=quantity;
@@ -137,6 +178,39 @@ Quantity Quantity::operator/(const Unit& unit) const
 	return std::move(q);
 }
 
+Quantity Quantity::operator*=(float32 factor)
+{
+    for (unsigned int i = 0; i < _singles.size(); ++i)
+    {
+        _singles[i]*=factor;
+    }
+    return *this;
+}
+Quantity Quantity::operator/=(float32 factor)
+{
+    for (unsigned int i = 0; i < _singles.size(); ++i)
+    {
+        _singles[i]/=factor;
+    }
+    return *this;
+}
+Quantity Quantity::operator*=(const Unit& unit)
+{
+    for (unsigned int i = 0; i < _singles.size(); ++i)
+    {
+        _singles[i]*=unit;
+    }
+    return *this;
+}
+Quantity Quantity::operator/=(const Unit& unit)
+{
+    for (unsigned int i = 0; i < _singles.size(); ++i)
+    {
+        _singles[i]/=unit;
+    }
+    return *this;
+}
+
 std::string Quantity::toString() const
 {
     if (_singles.size()==0)
@@ -149,6 +223,32 @@ std::string Quantity::toString() const
 		ss<<_singles[i].toString();
 	}
 	return std::move(ss.str());
+}
+
+void Quantity::shrink()
+{
+    std::map<Unit,SingleQuantity,Unit::less> shrinkMap;
+    for (uint32 i = 0; i < _singles.size(); ++i)
+    {
+        const SingleQuantity& sq = _singles[i];
+        std::map<Unit,SingleQuantity,Unit::less>::iterator it = shrinkMap.find(sq.getUnit());
+        if (it!=shrinkMap.end())
+        {
+            it->second.getValue()+=sq.getValue();
+        }
+        else
+        {
+            shrinkMap[sq.getUnit()]=sq;
+        }
+    }
+    _singles.clear();
+    for (std::map<Unit,SingleQuantity,Unit::less>::const_iterator it = shrinkMap.cbegin(); it != shrinkMap.cend(); ++it)
+    {
+        if (it->second.getValue()!=0.0)
+        {
+            _singles.emplace_back(it->second);
+        }
+    }
 }
 
 Quantity::~Quantity()

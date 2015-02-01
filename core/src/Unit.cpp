@@ -25,29 +25,33 @@ bool Unit::eq::operator()(const Unit& u1, const Unit& u2) const
     {
         return false;
     }
-	return Unit::hash()(u1)==Unit::hash()(u2);
+	return u1._hashValue==u2._hashValue;
 }
 
 bool Unit::less::operator()(const Unit& u1, const Unit& u2) const
 {
-    return Unit::hash()(u1)<Unit::hash()(u2);
+    return u1._hashValue<u2._hashValue;
 }
 
 Unit::Unit()
 {
+    updateHash();
 }
 
 Unit::Unit(std::string name,int32 power)
 {
 	_units[name]=power;
+	updateHash();
 }
 
 Unit::Unit(const Unit& unit):
 	_units(unit._units)
 {
+    updateHash();
 }
 
 Unit::Unit(Unit&& unit):
+    _hashValue(unit._hashValue),
 	_units(std::move(unit._units))
 {
 }
@@ -58,6 +62,7 @@ Unit& Unit::invert()
 	{
 		_units[it->first]=-it->second;
 	}
+	updateHash();
 	return *this;
 }
 
@@ -68,6 +73,7 @@ Unit Unit::invert() const
 	{
 		u._units[it->first]=-it->second;
 	}
+	u.updateHash();
 	return std::move(u);
 }
 
@@ -79,12 +85,14 @@ Unit& Unit::operator=(const Unit& unit)
 	{
 		_units[it->first]=it->second;
 	}
+	updateHash();
 	return *this;
 }
 Unit& Unit::operator=(Unit&& unit)
 {
 	_units.clear();
 	_units=std::move(unit._units);
+	_hashValue=unit._hashValue;
 	return *this;
 }
 
@@ -107,6 +115,7 @@ Unit Unit::operator*(const Unit& unit) const
 			result._units[it->first]=it->second;
 		}
 	}
+	result.updateHash();
 	return std::move(result);
 }
 
@@ -129,6 +138,7 @@ Unit Unit::operator/(const Unit& unit) const
 			result._units[it->first]=-it->second;
 		}
 	}
+	result.updateHash();
 	return std::move(result);
 }
 
@@ -150,6 +160,7 @@ Unit& Unit::operator*=(const Unit& unit)
 			_units[it->first]=it->second;
 		}
 	}
+	updateHash();
 	return *this;
 }
 
@@ -171,6 +182,7 @@ Unit& Unit::operator/=(const Unit& unit)
 			_units[it->first]=-it->second;
 		}
 	}
+	updateHash();
 	return *this;
 }
 
