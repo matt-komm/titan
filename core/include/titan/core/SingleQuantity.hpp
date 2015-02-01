@@ -34,6 +34,8 @@ class SingleQuantity
 		SingleQuantity operator*=(const SingleQuantity& singleQuantity) const;
 		SingleQuantity operator/=(const SingleQuantity& singleQuantity) const;
 
+		std::string toString() const;
+
         ~SingleQuantity();
 
         inline SingleQuantity& operator*=(float32 factor)

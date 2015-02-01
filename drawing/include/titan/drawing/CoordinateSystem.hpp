@@ -21,18 +21,23 @@ class CartesianCoordinates:
 	public CoordinateSystem<N>
 {
 	protected:
-		SingleQuantity _resolution;
+		const SingleQuantity _resolution;
 	public:
-		CartesianCoordinates(SingleQuantity resolution):
+		CartesianCoordinates(const SingleQuantity& resolution):
 			_resolution(resolution)
 		{
 		}
 		
-		virtual const Unit& getUnit() const
+		inline const Unit& getUnit() const
 		{
-		    return (_resolution*px).getUnit();
+		    return (_resolution).getUnit();
 		}
 		
+		inline const SingleQuantity& getResolution() const
+		{
+		    return _resolution;
+		}
+
 		virtual PxPoint<N> toPixel(const SPoint<N>& sqPoint)
 		{
 			PxPoint<N> result;

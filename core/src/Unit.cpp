@@ -1,25 +1,36 @@
 #include "titan/core/Unit.hpp"
 
 #include <sstream>
+#include <functional>
 
 namespace titan
 {
 
-bool Unit::cmp::operator()(const Unit& u1, const Unit& u2)
+uint64 Unit::hash::operator()(const Unit& u) const
 {
-	for (std::map<std::string,int32>::const_iterator it1 =u1._units.begin(); it1 != u1._units.end();++it1)
-	{
-		std::map<std::string,int32>::const_iterator it2 = u2._units.find(it1->first);
-		if (it2==u2._units.end())
-		{
-			return false;
-		}
-		if (it2->second!=it1->second)
-		{
-			return false;
-		}
-	}
-	return true;
+    uint64 h = 0;
+    int n=1;
+    for (std::map<std::string,int32>::const_iterator it =u._units.cbegin(); it != u._units.cend();++it)
+    {
+        h+=std::hash<std::string>()(it->first)*n*it->second;
+        ++n;
+    }
+    return h;
+}
+
+
+bool Unit::eq::operator()(const Unit& u1, const Unit& u2) const
+{
+    if (u1._units.size()!=u2._units.size())
+    {
+        return false;
+    }
+	return Unit::hash()(u1)==Unit::hash()(u2);
+}
+
+bool Unit::less::operator()(const Unit& u1, const Unit& u2) const
+{
+    return Unit::hash()(u1)<Unit::hash()(u2);
 }
 
 Unit::Unit()
@@ -43,7 +54,7 @@ Unit::Unit(Unit&& unit):
 
 Unit& Unit::invert()
 {
-	for (std::map<std::string,int32>::const_iterator it =_units.begin(); it != _units.end();++it)
+	for (std::map<std::string,int32>::const_iterator it =_units.cbegin(); it != _units.cend();++it)
 	{
 		_units[it->first]=-it->second;
 	}
@@ -53,7 +64,7 @@ Unit& Unit::invert()
 Unit Unit::invert() const
 {
 	Unit u;
-	for (std::map<std::string,int32>::const_iterator it =_units.begin(); it != _units.end();++it)
+	for (std::map<std::string,int32>::const_iterator it =_units.cbegin(); it != _units.cend();++it)
 	{
 		u._units[it->first]=-it->second;
 	}
@@ -64,7 +75,7 @@ Unit Unit::invert() const
 Unit& Unit::operator=(const Unit& unit)
 {
 	_units.clear();
-	for (std::map<std::string,int32>::const_iterator it =unit._units.begin(); it != unit._units.end();++it)
+	for (std::map<std::string,int32>::const_iterator it =unit._units.cbegin(); it != unit._units.cend();++it)
 	{
 		_units[it->first]=it->second;
 	}
@@ -80,9 +91,9 @@ Unit& Unit::operator=(Unit&& unit)
 Unit Unit::operator*(const Unit& unit) const
 {
 	Unit result(*this);
-	for (std::map<std::string,int32>::const_iterator it = unit._units.begin(); it!= unit._units.end();++it)
+	for (std::map<std::string,int32>::const_iterator it = unit._units.cbegin(); it!= unit._units.cend();++it)
 	{
-		if (result._units.find(it->first)!=result._units.end())
+		if (result._units.find(it->first)!=result._units.cend())
 		{
 			int32& power = result._units[it->first];
 			power+=it->second;
@@ -102,9 +113,9 @@ Unit Unit::operator*(const Unit& unit) const
 Unit Unit::operator/(const Unit& unit) const
 {
 	Unit result(*this);
-	for (std::map<std::string,int32>::const_iterator it = unit._units.begin(); it!= unit._units.end();++it)
+	for (std::map<std::string,int32>::const_iterator it = unit._units.cbegin(); it!= unit._units.cend();++it)
 	{
-		if (result._units.find(it->first)!=result._units.end())
+		if (result._units.find(it->first)!=result._units.cend())
 		{
 			int32& power = result._units[it->first];
 			power-=it->second;
@@ -123,9 +134,9 @@ Unit Unit::operator/(const Unit& unit) const
 
 Unit& Unit::operator*=(const Unit& unit)
 {
-	for (std::map<std::string,int32>::const_iterator it = unit._units.begin(); it!= unit._units.end();++it)
+	for (std::map<std::string,int32>::const_iterator it = unit._units.cbegin(); it!= unit._units.cend();++it)
 	{
-		if (_units.find(it->first)!=_units.end())
+		if (_units.find(it->first)!=_units.cend())
 		{
 			int32& power = _units[it->first];
 			power+=it->second;
@@ -144,9 +155,9 @@ Unit& Unit::operator*=(const Unit& unit)
 
 Unit& Unit::operator/=(const Unit& unit)
 {
-	for (std::map<std::string,int32>::const_iterator it = unit._units.begin(); it!= unit._units.end();++it)
+	for (std::map<std::string,int32>::const_iterator it = unit._units.cbegin(); it!= unit._units.cend();++it)
 	{
-		if (_units.find(it->first)!=_units.end())
+		if (_units.find(it->first)!=_units.cend())
 		{
 			int32& power = _units[it->first];
 			power-=it->second;
@@ -165,10 +176,10 @@ Unit& Unit::operator/=(const Unit& unit)
 
 bool Unit::operator==(const Unit& unit) const
 {
-	for (std::map<std::string,int32>::const_iterator it = unit._units.begin(); it!= unit._units.end();++it)
+	for (std::map<std::string,int32>::const_iterator it = unit._units.cbegin(); it!= unit._units.cend();++it)
 	{
 		//check unit name
-		if (_units.find(it->first)==_units.end())
+		if (_units.find(it->first)==_units.cend())
 		{
 			return false;
 		}
@@ -187,7 +198,7 @@ bool Unit::operator==(const Unit& unit) const
 std::string Unit::toString() const
 {
 	std::stringstream ss;
-	for (std::map<std::string,int32>::const_iterator it = _units.begin(); it!= _units.end();++it)
+	for (std::map<std::string,int32>::const_iterator it = _units.cbegin(); it!= _units.cend();++it)
 	{
 		ss<<it->first<<"^"<<it->second<<"*";
 	}

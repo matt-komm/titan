@@ -14,9 +14,19 @@ class Unit
     protected:
         std::map<std::string,int32> _units;
     public:
-        struct cmp
+        struct eq
         {
-			bool operator()(const Unit& u1, const Unit& u2);
+			bool operator()(const Unit& u1, const Unit& u2) const;
+        };
+
+        struct less
+        {
+            bool operator()(const Unit& u1, const Unit& u2) const;
+        };
+
+        struct hash
+        {
+            uint64 operator()(const Unit& u) const;
         };
 
         Unit();

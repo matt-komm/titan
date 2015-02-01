@@ -28,6 +28,8 @@ class Quantity
         Quantity& operator=(Quantity&& quantity);
         Quantity& operator+=(const SingleQuantity& singleQuantity);
         Quantity& operator-=(const SingleQuantity& singleQuantity);
+        Quantity& operator+=(const Quantity& quantity);
+        Quantity& operator-=(const Quantity& quantity);
         Quantity operator+(const Quantity& quantity);
         Quantity operator-(const Quantity& quantity);
 
@@ -36,7 +38,7 @@ class Quantity
         Quantity operator*(const Unit& unit) const;
         Quantity operator/(const Unit& unit) const;
 
-        std::string toString();
+        std::string toString() const;
 
         ~Quantity();
 

@@ -5,6 +5,8 @@
 #include <iostream>
 #include <utility>
 #include <string>
+#include <vector>
+#include <set>
 
 
 
@@ -29,26 +31,56 @@ TEST(Core, Unit)
 	EXPECT_EQ(q3.getPower("mm"),3);
 }
 
+void testQuantity(const titan::Quantity& quantity, std::vector<titan::SingleQuantity> singles)
+{
+    using namespace titan;
+    std::set<Unit,Unit::less> nUnits;
+    for (uint32 iquantity = 0; iquantity < quantity.getNumberOfSingleQuantities(); ++iquantity)
+    {
+        const SingleQuantity& sq = quantity.getSingleQuantity(iquantity);
+        nUnits.insert(sq.getUnit());
+    }
+    EXPECT_EQ(nUnits.size(),singles.size());
+    for (uint32 isingle = 0; isingle < singles.size(); ++isingle)
+    {
+        bool found = false;
+        float32 totalValue = 0.0;
+
+        for (uint32 iquantity = 0; iquantity < quantity.getNumberOfSingleQuantities(); ++iquantity)
+        {
+            const SingleQuantity& sq = quantity.getSingleQuantity(iquantity);
+            if (sq.getUnit()==singles[isingle].getUnit())
+            {
+                totalValue+=sq.getValue();
+                found=true;
+            }
+        }
+        EXPECT_EQ(found,true);
+        EXPECT_FLOAT_EQ(totalValue,singles[isingle].getValue());
+    }
+}
 
 TEST(Core, Quantity)
 {
 	using namespace titan;
-	SingleQuantity sq1(4324.53,Unit("mm"));
+	SingleQuantity sq1(44.53,Unit("mm"));
 	SingleQuantity sq2(4324.53,Unit("px"));
-	Quantity q = sq1+sq2;
-	EXPECT_EQ(q.getNumberOfSingleQuantities(),(unsigned int)2);
-	if (q.getSingleQuantity(0).getUnit()==sq1.getUnit())
-	{
-		EXPECT_FLOAT_EQ(q.getSingleQuantity(0).getValue(),sq1.getValue());
-		EXPECT_EQ(q.getSingleQuantity(1).getUnit(),sq2.getUnit());
-		EXPECT_FLOAT_EQ(q.getSingleQuantity(1).getValue(),sq2.getValue());
-	}
-	else
-	{
-		EXPECT_FLOAT_EQ(q.getSingleQuantity(0).getValue(),sq2.getValue());
-		EXPECT_EQ(q.getSingleQuantity(1).getUnit(),sq1.getUnit());
-		EXPECT_FLOAT_EQ(q.getSingleQuantity(1).getValue(),sq1.getValue());
-	}
+
+	Quantity q1 = sq1+sq2;
+	EXPECT_EQ(q1.getNumberOfSingleQuantities(),(unsigned int)2);
+	testQuantity(q1,{sq1,sq2});
+
+	q1 += sq1;
+    EXPECT_EQ(q1.getNumberOfSingleQuantities(),(unsigned int)2);
+    testQuantity(q1,{sq1*2,sq2});
+
+    q1 -= sq2;
+    EXPECT_EQ(q1.getNumberOfSingleQuantities(),(unsigned int)2);
+    testQuantity(q1,{sq1*2,sq2*0});
+
+    Quantity q3 = q1-q1;
+    EXPECT_EQ(q3.getNumberOfSingleQuantities(),(unsigned int)4);
+    testQuantity(q3,{sq1*0,sq2*0});
 
 }
 

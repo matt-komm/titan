@@ -108,6 +108,23 @@ SingleQuantity SingleQuantity::operator/=(const SingleQuantity& singleQuantity) 
 	return std::move(result);
 }
 
+std::string SingleQuantity::toString() const
+{
+    char* buf = new char[11];
+    if (_value<1000.0 && _value > 0.01)
+    {
+        sprintf(buf,"%+5.2f",_value);
+    }
+    else
+    {
+        sprintf(buf,"%+5.4E",_value);
+    }
+    std::string s(buf);
+    delete buf;
+    s+="*"+_unit.toString();
+    return std::move(s);
+}
+
 SingleQuantity::~SingleQuantity()
 {
 }

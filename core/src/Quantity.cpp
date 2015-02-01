@@ -65,25 +65,38 @@ Quantity& Quantity::operator-=(const SingleQuantity& singleQuantity)
 			return *this;
 		}
 	}
-	_singles.push_back(std::move(SingleQuantity(-singleQuantity.getValue(),singleQuantity.getUnit())));
+	_singles.push_back(-1.0*singleQuantity);
 	return *this;
 }
+
+Quantity& Quantity::operator+=(const Quantity& quantity)
+{
+    for (unsigned int i = 0; i < quantity._singles.size(); ++i)
+    {
+        _singles.push_back(quantity._singles[i]);
+    }
+    return *this;
+}
+
+Quantity& Quantity::operator-=(const Quantity& quantity)
+{
+    for (unsigned int i = 0; i < quantity._singles.size(); ++i)
+    {
+        _singles.push_back(-1.0*quantity._singles[i]);
+    }
+    return *this;
+}
+
 Quantity Quantity::operator+(const Quantity& quantity)
 {
 	Quantity q(*this);
-	for (unsigned int i = 0; i < quantity._singles.size(); ++i)
-	{
-		q+=quantity._singles[i];
-	}
+	q+=quantity;
 	return std::move(q);
 }
 Quantity Quantity::operator-(const Quantity& quantity)
 {
 	Quantity q(*this);
-	for (unsigned int i = 0; i < quantity._singles.size(); ++i)
-	{
-		q-=quantity._singles[i];
-	}
+	q-=quantity;
 	return std::move(q);
 }
 
@@ -124,7 +137,7 @@ Quantity Quantity::operator/(const Unit& unit) const
 	return std::move(q);
 }
 
-std::string Quantity::toString()
+std::string Quantity::toString() const
 {
     if (_singles.size()==0)
     {
@@ -133,11 +146,9 @@ std::string Quantity::toString()
 	std::stringstream ss;
 	for (unsigned int i = 0; i < _singles.size(); ++i)
 	{
-		ss<<_singles[i].getValue()<<"*"<<_singles[i].getUnit().toString()<<"+";
+		ss<<_singles[i].toString();
 	}
-	std::string ret=ss.str();
-	ret.erase(ret.end()-1,ret.end());
-	return ret;
+	return std::move(ss.str());
 }
 
 Quantity::~Quantity()

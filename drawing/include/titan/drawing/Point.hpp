@@ -18,6 +18,44 @@ class Point
 		{
 		}
 
+		inline Point<TYPE,N>& operator+=(const Point<TYPE,N>& p)
+        {
+		    for (uint32 i = 0; i < N; ++i)
+		    {
+		        _x[i]+=p[i];
+		    }
+		    return *this;
+        }
+
+		inline Point<TYPE,N>& operator-=(const Point<TYPE,N>& p)
+        {
+            for (uint32 i = 0; i < N; ++i)
+            {
+                _x[i]-=p[i];
+            }
+            return *this;
+        }
+
+		inline Point<TYPE,N> operator+(const Point<TYPE,N>& p) const
+        {
+		    Point<TYPE,N> newPoint;
+            for (uint32 i = 0; i < N; ++i)
+            {
+                //newPoint[i]=_x+p[i];
+            }
+            return std::move(newPoint);
+        }
+
+        inline Point<TYPE,N> operator-(const Point<TYPE,N>& p) const
+        {
+            Point<TYPE,N> newPoint;
+            for (uint32 i = 0; i < N; ++i)
+            {
+                //newPoint[i]=_x-p[i];
+            }
+            return std::move(newPoint);
+        }
+
 		inline const TYPE& operator[](uint32 index) const
 		{
 			return _x[index];

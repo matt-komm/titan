@@ -5,6 +5,23 @@
 
 #include <iostream>
 
+TEST(Drawing, Point)
+{
+    using namespace titan;
+    typedef Quantity TESTTYPE;
+    Point<TESTTYPE,2> p1;
+    p1[0]=1*cm;
+    p1[1]=4*cm;
+    Point<TESTTYPE,2> p2;
+    p2[0]=1*cm;
+    p2[1]=4*cm;
+    p2+=p1;
+    Point<TESTTYPE,2> p3 = p1+p2;
+    p3-=p1;
+    Point<TESTTYPE,2> p4 = p2-p3;
+
+}
+
 TEST(Drawing, CartesianCoordiantes)
 {
 	using namespace titan;

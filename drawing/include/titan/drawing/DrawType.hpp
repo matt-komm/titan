@@ -21,8 +21,8 @@ class DrawType
 			bool operator()(const titan::DrawType* dt1, const titan::DrawType* dt2) const;
 		};
 
-		DrawType():
-        	_zIndex(0)
+		DrawType(int32 zIndex=0):
+        	_zIndex(zIndex)
     	{
     	}
         inline int32 getZIndex() const
