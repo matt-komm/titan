@@ -4,6 +4,7 @@
 #include "titan/core/Quantity.hpp"
 
 #include <array>
+#include <initializer_list>
 
 namespace titan
 {
@@ -17,6 +18,62 @@ class Point
 		Point()
 		{
 		}
+
+		Point(const Point& p):
+		    _x(p._x)
+		{
+		}
+
+		Point(Point&& p):
+            _x(std::move(p._x))
+        {
+        }
+
+		Point& operator=(const Point& p)
+        {
+		    for (uint32 i = 0; i < N; ++i)
+		    {
+		        _x[i]=p._x[i];
+		    }
+		    return *this;
+        }
+
+		Point& operator=(Point&& p)
+        {
+            _x=std::move(p._x);
+        }
+
+		template<typename... TT>
+		Point(TT&&... x):
+		    _x{{std::forward<TT>(x)...}}
+		{
+		}
+
+		Point(const std::initializer_list<TYPE>& x)
+        {
+		    for (const TYPE* value = x.begin(); value != x.end(); ++value)
+		    {
+		        int i = value-x.begin();
+		        _x[i]=*value;
+		    }
+        }
+
+		template<typename... TT>
+        inline Point& operator=(TT&&... x)
+        {
+		    _x={{std::forward<TT>(x)...}};
+		    return *this;
+        }
+
+
+		Point& operator=(std::initializer_list<TYPE&&>&& x)
+        {
+            for (TYPE&& value = x.begin(); value != x.end(); ++value)
+            {
+                int i = value-x.begin();
+                _x[i]=value;
+            }
+        }
 
 		inline Point<TYPE,N>& operator+=(const Point<TYPE,N>& p)
         {

@@ -129,9 +129,6 @@ SingleQuantity::~SingleQuantity()
 {
 }
 
-
-
-
 SingleQuantity operator*(float32 magnitude, const Unit& unit)
 {
     return std::move(SingleQuantity(magnitude,unit));
