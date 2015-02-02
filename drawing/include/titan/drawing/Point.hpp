@@ -22,17 +22,17 @@ class Point:
 		{
 		}
 
-		Point(const Point& p):
+		Point(const Point<TYPE,N>& p):
 		    _x(p._x)
 		{
 		}
 
-		Point(Point&& p):
+		Point(Point<TYPE,N>&& p):
             _x(std::move(p._x))
         {
         }
 
-		Point& operator=(const Point& p)
+		Point& operator=(const Point<TYPE,N>& p)
         {
 		    for (uint32 i = 0; i < N; ++i)
 		    {
@@ -41,80 +41,199 @@ class Point:
 		    return *this;
         }
 
-		Point& operator=(Point&& p)
+		Point& operator=(Point<TYPE,N>&& p)
         {
             _x=std::move(p._x);
+            return *this;
         }
-
-		template<typename... TT>
-		Point(TT&&... x):
-		    _x{{std::forward<TT>(x)...}}
-		{
-		}
-
 
 		Point(const std::initializer_list<TYPE>& x)
         {
 		    for (const TYPE* value = x.begin(); value != x.end(); ++value)
 		    {
 		        int i = value-x.begin();
-		        _x[i]=*value;
+		        _x[i]=(*value);
 		    }
         }
 
-		template<typename... TT>
-        inline Point& operator=(TT&&... x)
+		Point& operator=(const std::initializer_list<TYPE>& x)
         {
-		    _x={{std::forward<TT>(x)...}};
-		    return *this;
-        }
-
-		Point& operator=(std::initializer_list<TYPE&&>&& x)
-        {
-            for (TYPE&& value = x.begin(); value != x.end(); ++value)
+            for (TYPE* value = x.begin(); value != x.end(); ++value)
             {
                 int i = value-x.begin();
-                _x[i]=value;
+                _x[i]=(*value);
             }
         }
 
-		inline Point<TYPE,N>& operator+=(const Point<TYPE,N>& p)
-        {
-		    for (uint32 i = 0; i < N; ++i)
-		    {
-		        _x[i]+=p[i];
-		    }
-		    return *this;
-        }
-
-		inline Point<TYPE,N>& operator-=(const Point<TYPE,N>& p)
+        template<class TT>
+        Point<TYPE,N>& operator+=(const TT& t)
         {
             for (uint32 i = 0; i < N; ++i)
             {
-                _x[i]-=p[i];
+                _x[i]+=t;
             }
             return *this;
         }
 
-		inline Point<TYPE,N> operator+(const Point<TYPE,N>& p) const
+        template<class TT>
+        Point<TYPE,N>& operator+=(const Point<TT,N>& t)
         {
-		    Point<TYPE,N> newPoint;
             for (uint32 i = 0; i < N; ++i)
             {
-                newPoint[i]=_x+p[i];
+               _x[i]+=t[i];
+            }
+            return *this;
+        }
+
+        template<class TT>
+        auto operator-(const TT& t) const -> Point<decltype(_x[0] + t),N>
+        {
+            Point<decltype(_x[0] + t),N> newPoint;
+            for (uint32 i = 0; i < N; ++i)
+            {
+                newPoint[i]=_x[i]+t;
             }
             return std::move(newPoint);
         }
 
-        inline Point<TYPE,N> operator-(const Point<TYPE,N>& p) const
+        template<class TT>
+        auto operator+(const Point<TT,N>& p) const -> Point<decltype(_x[0] + p[0]),N>
         {
-            Point<TYPE,N> newPoint;
+            Point<decltype(_x[0] + p[0]),N> newPoint;
             for (uint32 i = 0; i < N; ++i)
             {
-                newPoint[i]=_x-p[i];
+                newPoint[i]=_x[i]+p[i];
             }
             return std::move(newPoint);
         }
+
+
+        template<class TT>
+        Point<TYPE,N>& operator-=(const TT& t)
+        {
+            for (uint32 i = 0; i < N; ++i)
+            {
+                _x[i]-=t;
+            }
+            return *this;
+        }
+
+        template<class TT>
+        Point<TYPE,N>& operator-=(const Point<TT,N>& t)
+        {
+            for (uint32 i = 0; i < N; ++i)
+            {
+               _x[i]-=t[i];
+            }
+            return *this;
+        }
+
+        template<class TT>
+        auto operator-(const TT& t) const -> Point<decltype(_x[0] - t),N>
+        {
+            Point<decltype(_x[0] - t),N> newPoint;
+            for (uint32 i = 0; i < N; ++i)
+            {
+                newPoint[i]=_x[i]-t;
+            }
+            return std::move(newPoint);
+        }
+
+        template<class TT>
+        auto operator-(const Point<TT,N>& p) const -> Point<decltype(_x[0] - p[0]),N>
+        {
+            Point<decltype(_x[0] - p[0]),N> newPoint;
+            for (uint32 i = 0; i < N; ++i)
+            {
+                newPoint[i]=_x[i]-p[i];
+            }
+            return std::move(newPoint);
+        }
+
+        template<class TT>
+        Point<TYPE,N>& operator*=(const TT& t)
+        {
+            for (uint32 i = 0; i < N; ++i)
+            {
+                _x[i]*=t;
+            }
+            return *this;
+        }
+
+        template<class TT>
+        Point<TYPE,N>& operator*=(const Point<TT,N>& t)
+        {
+            for (uint32 i = 0; i < N; ++i)
+            {
+               _x[i]*=t[i];
+            }
+            return *this;
+        }
+
+        template<class TT>
+        auto operator*(const TT& t) const -> Point<decltype(_x[0] * t),N>
+        {
+            Point<decltype(_x[0] * t),N> newPoint;
+            for (uint32 i = 0; i < N; ++i)
+            {
+                newPoint[i]=_x[i]*t;
+            }
+            return std::move(newPoint);
+        }
+
+        template<class TT>
+        auto operator*(const Point<TT,N>& p) const -> Point<decltype(_x[0] * p[0]),N>
+        {
+            Point<decltype(_x[0] * p[0]),N> newPoint;
+            for (uint32 i = 0; i < N; ++i)
+            {
+                newPoint[i]=_x[i]*p[i];
+            }
+            return std::move(newPoint);
+        }
+
+        template<class TT>
+        Point<TYPE,N>& operator/=(const TT& t)
+        {
+            for (uint32 i = 0; i < N; ++i)
+            {
+                _x[i]/=t;
+            }
+            return *this;
+        }
+
+        template<class TT>
+        Point<TYPE,N>& operator/=(const Point<TT,N>& t)
+        {
+            for (uint32 i = 0; i < N; ++i)
+            {
+               _x[i]/=t[i];
+            }
+            return *this;
+        }
+
+        template<class TT>
+        auto operator/(const TT& t) const -> Point<decltype(_x[0] / t),N>
+        {
+            Point<decltype(_x[0] / t),N> newPoint;
+            for (uint32 i = 0; i < N; ++i)
+            {
+                newPoint[i]=_x[i]/t;
+            }
+            return std::move(newPoint);
+        }
+
+        template<class TT>
+        auto operator/(const Point<TT,N>& p) const -> Point<decltype(_x[0] / p[0]),N>
+        {
+            Point<decltype(_x[0] / p[0]),N> newPoint;
+            for (uint32 i = 0; i < N; ++i)
+            {
+                newPoint[i]=_x[i]/p[i];
+            }
+            return std::move(newPoint);
+        }
+
 
 		inline const TYPE& operator[](uint32 index) const
 		{

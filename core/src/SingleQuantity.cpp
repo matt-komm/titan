@@ -111,7 +111,7 @@ SingleQuantity SingleQuantity::operator/=(const SingleQuantity& singleQuantity) 
 std::string SingleQuantity::toString() const
 {
     char* buf = new char[11];
-    if (_value<1000.0 && _value > 0.01)
+    if (fabs(_value)<1000.0 && fabs(_value) > 0.01)
     {
         sprintf(buf,"%+5.2f",_value);
     }

@@ -11,7 +11,7 @@ namespace titan
 {
 
 class Unit:
-    StreamInterface
+    public StreamInterface
 {
     protected:
         uint64 _hashValue;

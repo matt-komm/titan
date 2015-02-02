@@ -4,17 +4,26 @@
 #include "gtest/gtest.h"
 
 #include <iostream>
-
+#include <array>
 
 TEST(Drawing, Point)
 {
     using namespace titan;
-    Point<Quantity,2> p1(1*px,4*px);
-    std::cout<<p1<<std::endl;
+    Point<float32,2> pFloats{{0.5,3.0}};
+    Point<Unit,2> pUnits{{Unit("px"),Unit("px",2)}};
+    Point<SingleQuantity,2> pSQ{{1*px,4*px}};
+    Point<Quantity,2> pQ{{1*px+4*mm,4*px-2*mm}};
+
+
+    Point<SingleQuantity,2> cpSQ = pFloats*pUnits;
+    std::cout<<cpSQ<<std::endl;
+    std::cout<<pQ+cpSQ<<std::endl;
+
+    //std::array<Quantity,2> test{;
+    //p1=p2-p1;
+
     /*
-    Point<TESTTYPE,2> p2;
-    p2[0]=1*cm;
-    p2[1]=4*cm;
+
     Point<TESTTYPE,2> p3{{-4*cm, 2*cm}};
     p2+=p1;
     Point<TESTTYPE,2> p4 = {1*cm,4*cm};
