@@ -178,7 +178,7 @@ Quantity Quantity::operator/(const Unit& unit) const
 	return std::move(q);
 }
 
-Quantity Quantity::operator*=(float32 factor)
+Quantity& Quantity::operator*=(float32 factor)
 {
     for (unsigned int i = 0; i < _singles.size(); ++i)
     {
@@ -186,7 +186,7 @@ Quantity Quantity::operator*=(float32 factor)
     }
     return *this;
 }
-Quantity Quantity::operator/=(float32 factor)
+Quantity& Quantity::operator/=(float32 factor)
 {
     for (unsigned int i = 0; i < _singles.size(); ++i)
     {
@@ -194,7 +194,7 @@ Quantity Quantity::operator/=(float32 factor)
     }
     return *this;
 }
-Quantity Quantity::operator*=(const Unit& unit)
+Quantity& Quantity::operator*=(const Unit& unit)
 {
     for (unsigned int i = 0; i < _singles.size(); ++i)
     {
@@ -202,7 +202,7 @@ Quantity Quantity::operator*=(const Unit& unit)
     }
     return *this;
 }
-Quantity Quantity::operator/=(const Unit& unit)
+Quantity& Quantity::operator/=(const Unit& unit)
 {
     for (unsigned int i = 0; i < _singles.size(); ++i)
     {
@@ -210,6 +210,40 @@ Quantity Quantity::operator/=(const Unit& unit)
     }
     return *this;
 }
+
+
+Quantity Quantity::operator*(const SingleQuantity& singleQuantity) const
+{
+    Quantity result(*this);
+    result*=singleQuantity;
+    return std::move(result);
+}
+
+Quantity Quantity::operator/(const SingleQuantity& singleQuantity) const
+{
+    Quantity result(*this);
+    result/=singleQuantity;
+    return std::move(result);
+}
+
+Quantity& Quantity::operator*=(const SingleQuantity& singleQuantity)
+{
+    for (unsigned int i = 0; i < _singles.size(); ++i)
+    {
+        _singles[i]*=singleQuantity;
+    }
+    return *this;
+}
+
+Quantity& Quantity::operator/=(const SingleQuantity& singleQuantity)
+{
+    for (unsigned int i = 0; i < _singles.size(); ++i)
+    {
+        _singles[i]/=singleQuantity;
+    }
+    return *this;
+}
+
 
 std::string Quantity::toString() const
 {
@@ -281,5 +315,14 @@ Quantity operator-(const SingleQuantity& singleQuantity, Quantity& quantity)
     return std::move(quantity-singleQuantity);
 }
 
+Quantity operator*(const SingleQuantity& singleQuantity, Quantity& quantity)
+{
+    return std::move(quantity*singleQuantity);
+}
+
+Quantity operator/(const SingleQuantity& singleQuantity, Quantity& quantity)
+{
+    return std::move(quantity/singleQuantity);
+}
 
 }

@@ -39,13 +39,21 @@ class Quantity
 
         Quantity operator*(float32 factor) const;
         Quantity operator/(float32 factor) const;
+        Quantity& operator*=(float32 factor);
+        Quantity& operator/=(float32 factor);
+
         Quantity operator*(const Unit& unit) const;
         Quantity operator/(const Unit& unit) const;
+        Quantity& operator*=(const Unit& unit);
+        Quantity& operator/=(const Unit& unit);
 
-        Quantity operator*=(float32 factor);
-        Quantity operator/=(float32 factor);
-        Quantity operator*=(const Unit& unit);
-        Quantity operator/=(const Unit& unit);
+        Quantity operator*(const SingleQuantity& singleQuantity) const;
+        Quantity operator/(const SingleQuantity& singleQuantity) const;
+        Quantity& operator*=(const SingleQuantity& singleQuantity);
+        Quantity& operator/=(const SingleQuantity& singleQuantity);
+
+
+
 
         void shrink();
 
@@ -72,6 +80,9 @@ Quantity operator-(const SingleQuantity& quantity1, const SingleQuantity& quanti
 
 Quantity operator+(const SingleQuantity& singleQuantity, Quantity& quantity);
 Quantity operator-(const SingleQuantity& singleQuantity, Quantity& quantity);
+
+Quantity operator*(const SingleQuantity& singleQuantity, Quantity& quantity);
+Quantity operator/(const SingleQuantity& singleQuantity, Quantity& quantity);
 
 
 
