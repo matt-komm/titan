@@ -4,6 +4,7 @@
 #include "titan/core/Types.hpp"
 #include "titan/core/Unit.hpp"
 #include "titan/core/SingleQuantity.hpp"
+#include "titan/core/StreamInterface.hpp"
 
 #include <map>
 #include <vector>
@@ -13,7 +14,8 @@ namespace titan
 {
 
 
-class Quantity
+class Quantity:
+    public StreamInterface
 {
     protected:
         std::vector<SingleQuantity> _singles;
@@ -57,7 +59,7 @@ class Quantity
 
         void shrink();
 
-        std::string toString() const;
+        virtual std::string toString() const;
 
         ~Quantity();
 

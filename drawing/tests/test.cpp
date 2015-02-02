@@ -5,11 +5,13 @@
 
 #include <iostream>
 
+
 TEST(Drawing, Point)
 {
     using namespace titan;
-    typedef Quantity TESTTYPE;
-    Point<TESTTYPE,2> p1(1*cm, 4*cm);
+    Point<Quantity,2> p1(1*px,4*px);
+    std::cout<<p1<<std::endl;
+    /*
     Point<TESTTYPE,2> p2;
     p2[0]=1*cm;
     p2[1]=4*cm;
@@ -18,6 +20,7 @@ TEST(Drawing, Point)
     Point<TESTTYPE,2> p4 = {1*cm,4*cm};
     p3-=p1;
     Point<TESTTYPE,2> p5 = (1*cm,4*cm);
+    */
 }
 
 TEST(Drawing, CartesianCoordiantes)

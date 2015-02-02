@@ -2,15 +2,18 @@
 #define __POINT_H__
 
 #include "titan/core/Quantity.hpp"
+#include "titan/core/StreamInterface.hpp"
 
 #include <array>
 #include <initializer_list>
+#include <sstream>
 
 namespace titan
 {
 
-template<class TYPE, uint32 N>
-class Point
+template<class TYPE, titan::uint32 N>
+class Point:
+    public StreamInterface
 {
 	protected:
 		std::array<TYPE,N> _x;
@@ -49,6 +52,7 @@ class Point
 		{
 		}
 
+
 		Point(const std::initializer_list<TYPE>& x)
         {
 		    for (const TYPE* value = x.begin(); value != x.end(); ++value)
@@ -64,7 +68,6 @@ class Point
 		    _x={{std::forward<TT>(x)...}};
 		    return *this;
         }
-
 
 		Point& operator=(std::initializer_list<TYPE&&>&& x)
         {
@@ -98,7 +101,7 @@ class Point
 		    Point<TYPE,N> newPoint;
             for (uint32 i = 0; i < N; ++i)
             {
-                //newPoint[i]=_x+p[i];
+                newPoint[i]=_x+p[i];
             }
             return std::move(newPoint);
         }
@@ -108,7 +111,7 @@ class Point
             Point<TYPE,N> newPoint;
             for (uint32 i = 0; i < N; ++i)
             {
-                //newPoint[i]=_x-p[i];
+                newPoint[i]=_x-p[i];
             }
             return std::move(newPoint);
         }
@@ -121,6 +124,19 @@ class Point
 		inline TYPE& operator[](uint32 index)
 		{
 			return _x[index];
+		}
+
+		virtual std::string toString() const
+		{
+		    std::stringstream ss;
+		    ss<<"[";
+		    for (uint32 i=0; i<N-1; ++i)
+		    {
+		        ss<<"["<<_x[i]<<"],";
+		    }
+		    ss<<"["<<_x[N-1]<<"]";
+		    ss<<"]";
+		    return ss.str();
 		}
 };
 

@@ -3,11 +3,13 @@
 
 #include "titan/core/Types.hpp"
 #include "titan/core/Unit.hpp"
+#include "titan/core/StreamInterface.hpp"
 
 namespace titan
 {
 
-class SingleQuantity
+class SingleQuantity:
+    public StreamInterface
 {
     protected:
         float32 _value;
@@ -34,7 +36,7 @@ class SingleQuantity
 		SingleQuantity operator*=(const SingleQuantity& singleQuantity) const;
 		SingleQuantity operator/=(const SingleQuantity& singleQuantity) const;
 
-		std::string toString() const;
+		virtual std::string toString() const;
 
         ~SingleQuantity();
 

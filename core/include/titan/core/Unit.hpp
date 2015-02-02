@@ -2,6 +2,7 @@
 #define __UNIT_H__
 
 #include "titan/core/Types.hpp"
+#include "titan/core/StreamInterface.hpp"
 
 #include <map>
 #include <string>
@@ -9,7 +10,8 @@
 namespace titan
 {
 
-class Unit
+class Unit:
+    StreamInterface
 {
     protected:
         uint64 _hashValue;
@@ -53,7 +55,7 @@ class Unit
         Unit& operator=(const Unit& unit);
         Unit& operator=(Unit&& unit);
 
-        std::string toString() const;
+        virtual std::string toString() const;
 
         ~Unit();
 

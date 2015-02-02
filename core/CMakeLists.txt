@@ -7,6 +7,7 @@ add_library(titan-core SHARED
     src/SingleQuantity.cpp
     src/Quantity.cpp
     src/PluginFactory.cpp
+    src/StreamInterface.cpp
 )
 
 if (${OSNAME} MATCHES "LINUX")
