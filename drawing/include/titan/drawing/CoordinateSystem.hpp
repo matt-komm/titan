@@ -9,13 +9,13 @@
 namespace titan
 {
 
-template<uint32 N>
 class CoordinateSystem
 {
 	public:
-		virtual PxPoint<N> toPixel(const SPoint<N>& sqPoint) = 0;
+		virtual PxPoint toPixel(const QPoint& qPoint) = 0;
 };
 
+/*
 template<uint32 N>
 class CartesianCoordinates:
 	public CoordinateSystem<N>
@@ -57,7 +57,7 @@ class CartesianCoordinates:
 		}
 };
 typedef CartesianCoordinates<2> CartesianCoordinates2d;
-
+*/
 }
 
 #endif

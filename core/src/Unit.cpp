@@ -186,26 +186,6 @@ Unit& Unit::operator/=(const Unit& unit)
 	return *this;
 }
 
-bool Unit::operator==(const Unit& unit) const
-{
-	for (std::map<std::string,int32>::const_iterator it = unit._units.cbegin(); it!= unit._units.cend();++it)
-	{
-		//check unit name
-		if (_units.find(it->first)==_units.cend())
-		{
-			return false;
-		}
-		else
-		{
-			//check unit power
-			if (_units.at(it->first)!=it->second)
-			{
-				return false;
-			}
-		}
-	}
-	return true;
-}
 
 std::string Unit::toString() const
 {

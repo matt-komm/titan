@@ -244,6 +244,46 @@ Quantity& Quantity::operator/=(const SingleQuantity& singleQuantity)
     return *this;
 }
 
+//TODO: this is quite inefficient!!!!!
+bool Quantity::operator==(const Quantity& quantity) const
+{
+    Quantity q1(*this);
+    q1.shrink();
+    Quantity q2(quantity);
+    q2.shrink();
+    if (q1.getNumberOfSingleQuantities()!=q2.getNumberOfSingleQuantities())
+    {
+        return false;
+    }
+    for (uint32 i = 0; i <q1.getNumberOfSingleQuantities(); ++i)
+    {
+        if (q1.getSingleQuantity(i)!=q2.getSingleQuantity(i))
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool Quantity::operator!=(const Quantity& quantity) const
+{
+    Quantity q1(*this);
+    q1.shrink();
+    Quantity q2(quantity);
+    q2.shrink();
+    if (q1.getNumberOfSingleQuantities()==q2.getNumberOfSingleQuantities())
+    {
+        return false;
+    }
+    for (uint32 i = 0; i <q1.getNumberOfSingleQuantities(); ++i)
+    {
+        if (q1.getSingleQuantity(i)==q2.getSingleQuantity(i))
+        {
+            return false;
+        }
+    }
+    return true;
+}
 
 std::string Quantity::toString() const
 {

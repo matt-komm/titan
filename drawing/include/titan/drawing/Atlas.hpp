@@ -9,7 +9,7 @@
 
 namespace titan
 {
-
+/*
 template<uint32 N>
 class Atlas
 {
@@ -42,7 +42,7 @@ class Atlas
 		}
 };
 typedef Atlas<2> Atlas2d;
-
+*/
 
 }
 

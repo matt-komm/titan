@@ -50,7 +50,16 @@ class Unit:
         Unit operator/(const Unit& unit) const;
         Unit& operator*=(const Unit& unit);
         Unit& operator/=(const Unit& unit);
-        bool operator==(const Unit& unit) const;
+
+        bool operator==(const Unit& unit) const
+        {
+            return _hashValue==unit._hashValue;
+        }
+        bool operator!=(const Unit& unit) const
+        {
+            return _hashValue!=unit._hashValue;
+        }
+
 
         Unit& operator=(const Unit& unit);
         Unit& operator=(Unit&& unit);

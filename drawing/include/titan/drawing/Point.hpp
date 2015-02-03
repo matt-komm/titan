@@ -4,50 +4,59 @@
 #include "titan/core/Quantity.hpp"
 #include "titan/core/StreamInterface.hpp"
 
-#include <array>
+#include <vector>
 #include <initializer_list>
 #include <sstream>
+#include <stdexcept>
 
 namespace titan
 {
 
-template<class TYPE, titan::uint32 N>
+template<class TYPE>
 class Point:
     public StreamInterface
 {
 	protected:
-		std::array<TYPE,N> _x;
+		std::vector<TYPE> _x;
 	public:
-		Point()
+		Point(uint32 size=0):
+		    _x(size)
 		{
 		}
 
-		Point(const Point<TYPE,N>& p):
+		Point(const Point<TYPE>& p):
 		    _x(p._x)
 		{
 		}
 
-		Point(Point<TYPE,N>&& p):
+		Point(Point<TYPE>&& p):
             _x(std::move(p._x))
         {
         }
 
-		Point& operator=(const Point<TYPE,N>& p)
+		inline uint32 size() const
+		{
+		    return _x.size();
+		}
+
+		Point<TYPE>& operator=(const Point<TYPE>& p)
         {
-		    for (uint32 i = 0; i < N; ++i)
+            _x.resize(p.size());
+		    for (uint32 i = 0; i < _x.size(); ++i)
 		    {
 		        _x[i]=p._x[i];
 		    }
 		    return *this;
         }
 
-		Point& operator=(Point<TYPE,N>&& p)
+		Point<TYPE>& operator=(Point<TYPE>&& p)
         {
             _x=std::move(p._x);
             return *this;
         }
 
-		Point(const std::initializer_list<TYPE>& x)
+		Point(const std::initializer_list<TYPE>& x):
+		    _x(x.size())
         {
 		    for (const TYPE* value = x.begin(); value != x.end(); ++value)
 		    {
@@ -56,19 +65,21 @@ class Point:
 		    }
         }
 
-		Point& operator=(const std::initializer_list<TYPE>& x)
+		Point<TYPE>& operator=(const std::initializer_list<TYPE>& x)
         {
+		    _x.resize(x.size());
             for (TYPE* value = x.begin(); value != x.end(); ++value)
             {
                 int i = value-x.begin();
                 _x[i]=(*value);
             }
+            return *this;
         }
 
         template<class TT>
-        Point<TYPE,N>& operator+=(const TT& t)
+        Point<TYPE>& operator+=(const TT& t)
         {
-            for (uint32 i = 0; i < N; ++i)
+            for (uint32 i = 0; i < _x.size(); ++i)
             {
                 _x[i]+=t;
             }
@@ -76,9 +87,9 @@ class Point:
         }
 
         template<class TT>
-        Point<TYPE,N>& operator+=(const Point<TT,N>& t)
+        Point<TYPE>& operator+=(const Point<TT>& t)
         {
-            for (uint32 i = 0; i < N; ++i)
+            for (uint32 i = 0; i < _x.size(); ++i)
             {
                _x[i]+=t[i];
             }
@@ -86,10 +97,10 @@ class Point:
         }
 
         template<class TT>
-        auto operator-(const TT& t) const -> Point<decltype(_x[0] + t),N>
+        auto operator-(const TT& t) const -> Point<decltype(_x[0] + t)>
         {
-            Point<decltype(_x[0] + t),N> newPoint;
-            for (uint32 i = 0; i < N; ++i)
+            Point<decltype(_x[0] + t)> newPoint(_x.size());
+            for (uint32 i = 0; i < _x.size(); ++i)
             {
                 newPoint[i]=_x[i]+t;
             }
@@ -97,10 +108,14 @@ class Point:
         }
 
         template<class TT>
-        auto operator+(const Point<TT,N>& p) const -> Point<decltype(_x[0] + p[0]),N>
+        auto operator+(const Point<TT>& p) const -> Point<decltype(_x[0] + p[0])>
         {
-            Point<decltype(_x[0] + p[0]),N> newPoint;
-            for (uint32 i = 0; i < N; ++i)
+            if (_x.size()!=p.size())
+            {
+                throw std::runtime_error("Points to add differ in size");
+            }
+            Point<decltype(_x[0] + p[0])> newPoint(_x.size());
+            for (uint32 i = 0; i < _x.size(); ++i)
             {
                 newPoint[i]=_x[i]+p[i];
             }
@@ -109,9 +124,9 @@ class Point:
 
 
         template<class TT>
-        Point<TYPE,N>& operator-=(const TT& t)
+        Point<TYPE>& operator-=(const TT& t)
         {
-            for (uint32 i = 0; i < N; ++i)
+            for (uint32 i = 0; i < _x.size(); ++i)
             {
                 _x[i]-=t;
             }
@@ -119,9 +134,9 @@ class Point:
         }
 
         template<class TT>
-        Point<TYPE,N>& operator-=(const Point<TT,N>& t)
+        Point<TYPE>& operator-=(const Point<TT>& t)
         {
-            for (uint32 i = 0; i < N; ++i)
+            for (uint32 i = 0; i < _x.size(); ++i)
             {
                _x[i]-=t[i];
             }
@@ -129,10 +144,10 @@ class Point:
         }
 
         template<class TT>
-        auto operator-(const TT& t) const -> Point<decltype(_x[0] - t),N>
+        auto operator-(const TT& t) const -> Point<decltype(_x[0] - t)>
         {
-            Point<decltype(_x[0] - t),N> newPoint;
-            for (uint32 i = 0; i < N; ++i)
+            Point<decltype(_x[0] - t)> newPoint(_x.size());
+            for (uint32 i = 0; i < _x.size(); ++i)
             {
                 newPoint[i]=_x[i]-t;
             }
@@ -140,10 +155,14 @@ class Point:
         }
 
         template<class TT>
-        auto operator-(const Point<TT,N>& p) const -> Point<decltype(_x[0] - p[0]),N>
+        auto operator-(const Point<TT>& p) const -> Point<decltype(_x[0] - p[0])>
         {
-            Point<decltype(_x[0] - p[0]),N> newPoint;
-            for (uint32 i = 0; i < N; ++i)
+            if (_x.size()!=p.size())
+            {
+                throw std::runtime_error("Points to subtract differ in size");
+            }
+            Point<decltype(_x[0] - p[0])> newPoint(_x.size());
+            for (uint32 i = 0; i < _x.size(); ++i)
             {
                 newPoint[i]=_x[i]-p[i];
             }
@@ -151,9 +170,9 @@ class Point:
         }
 
         template<class TT>
-        Point<TYPE,N>& operator*=(const TT& t)
+        Point<TYPE>& operator*=(const TT& t)
         {
-            for (uint32 i = 0; i < N; ++i)
+            for (uint32 i = 0; i < _x.size(); ++i)
             {
                 _x[i]*=t;
             }
@@ -161,9 +180,9 @@ class Point:
         }
 
         template<class TT>
-        Point<TYPE,N>& operator*=(const Point<TT,N>& t)
+        Point<TYPE>& operator*=(const Point<TT>& t)
         {
-            for (uint32 i = 0; i < N; ++i)
+            for (uint32 i = 0; i < _x.size(); ++i)
             {
                _x[i]*=t[i];
             }
@@ -171,10 +190,10 @@ class Point:
         }
 
         template<class TT>
-        auto operator*(const TT& t) const -> Point<decltype(_x[0] * t),N>
+        auto operator*(const TT& t) const -> Point<decltype(_x[0] * t)>
         {
-            Point<decltype(_x[0] * t),N> newPoint;
-            for (uint32 i = 0; i < N; ++i)
+            Point<decltype(_x[0] * t)> newPoint(_x.size());
+            for (uint32 i = 0; i < _x.size(); ++i)
             {
                 newPoint[i]=_x[i]*t;
             }
@@ -182,10 +201,15 @@ class Point:
         }
 
         template<class TT>
-        auto operator*(const Point<TT,N>& p) const -> Point<decltype(_x[0] * p[0]),N>
+        auto operator*(const Point<TT>& p) const -> Point<decltype(_x[0] * p[0])>
         {
-            Point<decltype(_x[0] * p[0]),N> newPoint;
-            for (uint32 i = 0; i < N; ++i)
+            if (_x.size()!=p.size())
+            {
+                throw std::runtime_error("Points to multiply differ in size");
+            }
+            Point<decltype(_x[0] * p[0])> newPoint(_x.size());
+
+            for (uint32 i = 0; i < _x.size(); ++i)
             {
                 newPoint[i]=_x[i]*p[i];
             }
@@ -193,9 +217,9 @@ class Point:
         }
 
         template<class TT>
-        Point<TYPE,N>& operator/=(const TT& t)
+        Point<TYPE>& operator/=(const TT& t)
         {
-            for (uint32 i = 0; i < N; ++i)
+            for (uint32 i = 0; i < _x.size(); ++i)
             {
                 _x[i]/=t;
             }
@@ -203,9 +227,9 @@ class Point:
         }
 
         template<class TT>
-        Point<TYPE,N>& operator/=(const Point<TT,N>& t)
+        Point<TYPE>& operator/=(const Point<TT>& t)
         {
-            for (uint32 i = 0; i < N; ++i)
+            for (uint32 i = 0; i < _x.size(); ++i)
             {
                _x[i]/=t[i];
             }
@@ -213,10 +237,10 @@ class Point:
         }
 
         template<class TT>
-        auto operator/(const TT& t) const -> Point<decltype(_x[0] / t),N>
+        auto operator/(const TT& t) const -> Point<decltype(_x[0] / t)>
         {
-            Point<decltype(_x[0] / t),N> newPoint;
-            for (uint32 i = 0; i < N; ++i)
+            Point<decltype(_x[0] / t)> newPoint(_x.size());
+            for (uint32 i = 0; i < _x.size(); ++i)
             {
                 newPoint[i]=_x[i]/t;
             }
@@ -224,10 +248,14 @@ class Point:
         }
 
         template<class TT>
-        auto operator/(const Point<TT,N>& p) const -> Point<decltype(_x[0] / p[0]),N>
+        auto operator/(const Point<TT>& p) const -> Point<decltype(_x[0] / p[0])>
         {
-            Point<decltype(_x[0] / p[0]),N> newPoint;
-            for (uint32 i = 0; i < N; ++i)
+            if (_x.size()!=p.size())
+            {
+                throw std::runtime_error("Points to divide differ in size");
+            }
+            Point<decltype(_x[0] / p[0])> newPoint(_x.size());
+            for (uint32 i = 0; i < _x.size(); ++i)
             {
                 newPoint[i]=_x[i]/p[i];
             }
@@ -249,29 +277,18 @@ class Point:
 		{
 		    std::stringstream ss;
 		    ss<<"[";
-		    for (uint32 i=0; i<N-1; ++i)
+		    for (uint32 i=0; i<_x.size()-1; ++i)
 		    {
 		        ss<<"["<<_x[i]<<"],";
 		    }
-		    ss<<"["<<_x[N-1]<<"]";
+		    ss<<"["<<_x[_x.size()-1]<<"]";
 		    ss<<"]";
 		    return ss.str();
 		}
 };
 
-template<uint32 N>
-class SPoint:
-	public Point<SingleQuantity,N>
-{
-};
-typedef SPoint<2> SPoint2d;
-
-template<uint32 N>
-class PxPoint:
-	public Point<float32,N>
-{
-};
-typedef PxPoint<2> PxPoint2d;
+typedef Point<Quantity> QPoint;
+typedef Point<float32> PxPoint;
 
 
 }

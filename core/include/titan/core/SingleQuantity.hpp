@@ -36,6 +36,16 @@ class SingleQuantity:
 		SingleQuantity operator*=(const SingleQuantity& singleQuantity) const;
 		SingleQuantity operator/=(const SingleQuantity& singleQuantity) const;
 
+		inline bool operator==(const SingleQuantity& singleQuantity) const
+        {
+            return (_unit==singleQuantity.getUnit()) && (_value==singleQuantity.getValue());
+        }
+
+		inline bool operator!=(const SingleQuantity& singleQuantity) const
+        {
+            return (_unit!=singleQuantity.getUnit()) || (_value!=singleQuantity.getValue());
+        }
+
 		virtual std::string toString() const;
 
         ~SingleQuantity();

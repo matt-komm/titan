@@ -54,7 +54,8 @@ class Quantity:
         Quantity& operator*=(const SingleQuantity& singleQuantity);
         Quantity& operator/=(const SingleQuantity& singleQuantity);
 
-
+        bool operator==(const Quantity& quantity) const;
+        bool operator!=(const Quantity& quantity) const;
 
 
         void shrink();
