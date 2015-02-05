@@ -97,9 +97,9 @@ class Point:
         }
 
         template<class TT>
-        auto operator-(const TT& t) const -> Point<decltype(_x[0] + t)>
+        auto operator-(const TT& t) const -> Point<decltype(TYPE()+TT())>
         {
-            Point<decltype(_x[0] + t)> newPoint(_x.size());
+            Point<decltype(TYPE()+TT())> newPoint(_x.size());
             for (uint32 i = 0; i < _x.size(); ++i)
             {
                 newPoint[i]=_x[i]+t;
@@ -108,13 +108,13 @@ class Point:
         }
 
         template<class TT>
-        auto operator+(const Point<TT>& p) const -> Point<decltype(_x[0] + p[0])>
+        auto operator+(const Point<TT>& p) const -> Point<decltype(TYPE()+TT())>
         {
             if (_x.size()!=p.size())
             {
                 throw std::runtime_error("Points to add differ in size");
             }
-            Point<decltype(_x[0] + p[0])> newPoint(_x.size());
+            Point<decltype(TYPE()+TT())> newPoint(_x.size());
             for (uint32 i = 0; i < _x.size(); ++i)
             {
                 newPoint[i]=_x[i]+p[i];
@@ -144,9 +144,9 @@ class Point:
         }
 
         template<class TT>
-        auto operator-(const TT& t) const -> Point<decltype(_x[0] - t)>
+        auto operator-(const TT& t) const -> Point<decltype(TYPE()-TT())>
         {
-            Point<decltype(_x[0] - t)> newPoint(_x.size());
+            Point<decltype(TYPE()-TT())> newPoint(_x.size());
             for (uint32 i = 0; i < _x.size(); ++i)
             {
                 newPoint[i]=_x[i]-t;
@@ -155,13 +155,13 @@ class Point:
         }
 
         template<class TT>
-        auto operator-(const Point<TT>& p) const -> Point<decltype(_x[0] - p[0])>
+        auto operator-(const Point<TT>& p) const -> Point<decltype(TYPE()-TT())>
         {
             if (_x.size()!=p.size())
             {
                 throw std::runtime_error("Points to subtract differ in size");
             }
-            Point<decltype(_x[0] - p[0])> newPoint(_x.size());
+            Point<decltype(TYPE()-TT())> newPoint(_x.size());
             for (uint32 i = 0; i < _x.size(); ++i)
             {
                 newPoint[i]=_x[i]-p[i];
@@ -190,9 +190,9 @@ class Point:
         }
 
         template<class TT>
-        auto operator*(const TT& t) const -> Point<decltype(_x[0] * t)>
+        auto operator*(const TT& t) const -> Point<decltype(TYPE()*TT())>
         {
-            Point<decltype(_x[0] * t)> newPoint(_x.size());
+            Point<decltype(TYPE()*TT())> newPoint(_x.size());
             for (uint32 i = 0; i < _x.size(); ++i)
             {
                 newPoint[i]=_x[i]*t;
@@ -201,13 +201,13 @@ class Point:
         }
 
         template<class TT>
-        auto operator*(const Point<TT>& p) const -> Point<decltype(_x[0] * p[0])>
+        auto operator*(const Point<TT>& p) const -> Point<decltype(TYPE()*TT())>
         {
             if (_x.size()!=p.size())
             {
                 throw std::runtime_error("Points to multiply differ in size");
             }
-            Point<decltype(_x[0] * p[0])> newPoint(_x.size());
+            Point<decltype(TYPE()*TT())> newPoint(_x.size());
 
             for (uint32 i = 0; i < _x.size(); ++i)
             {
@@ -237,9 +237,9 @@ class Point:
         }
 
         template<class TT>
-        auto operator/(const TT& t) const -> Point<decltype(_x[0] / t)>
+        auto operator/(const TT& t) const -> Point<decltype(TYPE()/TT())>
         {
-            Point<decltype(_x[0] / t)> newPoint(_x.size());
+            Point<decltype(TYPE()/TT())> newPoint(_x.size());
             for (uint32 i = 0; i < _x.size(); ++i)
             {
                 newPoint[i]=_x[i]/t;
@@ -248,13 +248,13 @@ class Point:
         }
 
         template<class TT>
-        auto operator/(const Point<TT>& p) const -> Point<decltype(_x[0] / p[0])>
+        auto operator/(const Point<TT>& p) const -> Point<decltype(TYPE()/TT())>
         {
             if (_x.size()!=p.size())
             {
                 throw std::runtime_error("Points to divide differ in size");
             }
-            Point<decltype(_x[0] / p[0])> newPoint(_x.size());
+            Point<decltype(TYPE()/TT())> newPoint(_x.size());
             for (uint32 i = 0; i < _x.size(); ++i)
             {
                 newPoint[i]=_x[i]/p[i];

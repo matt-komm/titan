@@ -47,16 +47,19 @@ TEST(Drawing, Point)
     compare(pUnits,{Unit("px"),Unit("px",2)});
     compare(pSQ,{1*px,4*px});
     compare(pQ,{1*px+4*mm,4*px-2*mm});
+    
+    std::cout<<pFloats+pFloats<<std::endl;
 
     Point<SingleQuantity> cpSQ = pFloats*pUnits;
-    //std::cout<<cpSQ<<std::endl;
-    //std::cout<<pQ+cpSQ<<std::endl;
+    //std::cout<<cpSQ<<std::
+    std::cout<<pQ+cpSQ<<std::endl;
 
     //std::array<Quantity,2> test{;
     //p1=p2-p1;
 
+    
     /*
-
+    
     Point<TESTTYPE,2> p3{{-4*cm, 2*cm}};
     p2+=p1;
     Point<TESTTYPE,2> p4 = {1*cm,4*cm};
