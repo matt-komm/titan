@@ -18,7 +18,21 @@ class Quantity:
     public StreamInterface
 {
     protected:
+        uint64 _hashValue;
         std::vector<SingleQuantity> _singles;
+
+        inline void updateHash()
+        {
+            _hashValue=0;
+            if (_singles.size()>0)
+            {
+                _hashValue=_singles[0].getHash();
+                for (uint32 i = 1; i < _singles.size(); ++i)
+                {
+                    _hashValue|=_singles[i].getHash();
+                }
+            }
+        }
     public:
         Quantity();
         Quantity(float32 value, const Unit& unit);
@@ -57,12 +71,14 @@ class Quantity:
         bool operator==(const Quantity& quantity) const;
         bool operator!=(const Quantity& quantity) const;
 
-
-        void shrink();
-
         virtual std::string toString() const;
 
         ~Quantity();
+
+        inline uint64 getHash() const
+        {
+            return _hashValue;
+        }
 
         inline uint32 getNumberOfSingleQuantities() const
         {

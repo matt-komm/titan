@@ -51,6 +51,11 @@ class Unit:
         Unit& operator*=(const Unit& unit);
         Unit& operator/=(const Unit& unit);
 
+        inline uint64 getHash() const
+        {
+            return _hashValue;
+        }
+
         bool operator==(const Unit& unit) const
         {
             return _hashValue==unit._hashValue;

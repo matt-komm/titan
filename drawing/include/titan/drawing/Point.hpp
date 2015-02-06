@@ -287,8 +287,10 @@ class Point:
 		}
 };
 
-typedef Point<Quantity> QPoint;
+typedef Point<Unit> UPoint;
+typedef Point<SingleQuantity> SQPoint;
 typedef Point<float32> PxPoint;
+typedef Point<Quantity> QPoint;
 
 
 }

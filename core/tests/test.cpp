@@ -71,38 +71,37 @@ TEST(Core, Quantity)
 	Quantity q3 = q1+q2;
 	Quantity q4 = q1-q2;
 
-	Quantity q5 = q3*0.3;
+    std::cout<<sq1.getHash()<<std::endl;
+
+	Quantity q5 = q3*3;
+	//std::cout<<q3.getHash()<<std::endl;
+	//std::cout<<q5.getHash()<<std::endl;
     Quantity q6 = q3/2.0;
 
 	Quantity q7 = q3*sq1;
 	Quantity q8 = q3/sq1;
 
-	q1.shrink();
 	{
         SCOPED_TRACE("add SQ by copy");
         testQuantity(q1,{sq1,2*sq2});
 	}
 	q1 += sq1;
-	q1.shrink();
 	{
         SCOPED_TRACE("add SQ by ref");
         testQuantity(q1,{sq1*2,2*sq2});
 	}
     q1 -= sq2;
-    q1.shrink();
     {
         SCOPED_TRACE("sub SQ by ref");
         testQuantity(q1,{sq1*2,sq2});
     }
 
     q1 -= q1;
-    q1.shrink();
     {
         SCOPED_TRACE("sub to empty");
         testQuantity(q1,{});
     }
 
-    q3.shrink();
     {
         SCOPED_TRACE("add Q by copy");
         testQuantity(q3,{2*sq1,sq2});

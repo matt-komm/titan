@@ -1,10 +1,10 @@
 #ifndef __COORDINATESYSTEM_H__
 #define __COORDINATESYSTEM_H__
 
+#include "titan/core/Types.hpp"
 #include "titan/core/Quantity.hpp"
 #include "titan/drawing/Point.hpp"
 
-#include <array>
 
 namespace titan
 {
@@ -12,13 +12,15 @@ namespace titan
 class CoordinateSystem
 {
 	public:
-		virtual PxPoint toPixel(const QPoint& qPoint) = 0;
+		virtual const PxPoint& toPixel(const SQPoint& sqPoint) const = 0;
+		virtual ~CoordinateSystem()
+		{
+		}
 };
 
 /*
-template<uint32 N>
 class CartesianCoordinates:
-	public CoordinateSystem<N>
+	public CoordinateSystem
 {
 	protected:
 		const SingleQuantity _resolution;
@@ -27,21 +29,18 @@ class CartesianCoordinates:
 			_resolution(resolution)
 		{
 		}
-		
+
 		inline const Unit& getUnit() const
 		{
 		    return (_resolution).getUnit();
 		}
 		
-		inline const SingleQuantity& getResolution() const
-		{
-		    return _resolution;
-		}
 
-		virtual PxPoint<N> toPixel(const SPoint<N>& sqPoint)
+
+		virtual const PxPoint& toPixel(const SQPoint& sqPoint) const
 		{
-			PxPoint<N> result;
-			for (uint32 idim = 0; idim < N; ++idim)
+			PxPoint result(sqPoint.size());
+			for (uint32 idim = 0; idim < sqPoint.size(); ++idim)
 			{
 				const SingleQuantity& sq_result = sqPoint[idim]/_resolution;
 				if (sq_result.getUnit()==Unit("px"))
@@ -53,10 +52,9 @@ class CartesianCoordinates:
 		}
 		virtual ~CartesianCoordinates()
 		{
-
 		}
 };
-typedef CartesianCoordinates<2> CartesianCoordinates2d;
+
 */
 }
 

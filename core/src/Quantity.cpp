@@ -5,38 +5,46 @@
 namespace titan
 {
 
-Quantity::Quantity()
+Quantity::Quantity():
+    _hashValue(0)
 {
 }
 
 Quantity::Quantity(float32 value, const Unit& unit)
 {
 	_singles.push_back(std::move(SingleQuantity(value,unit)));
+	updateHash();
 }
 
 Quantity::Quantity(const SingleQuantity& singleQuantity)
 {
 	_singles.push_back(singleQuantity);
+	updateHash();
 }
 
 Quantity::Quantity(const Quantity& quantity):
+    _hashValue(quantity._hashValue),
 	_singles(quantity._singles)
 {
 }
 
 Quantity::Quantity(Quantity&& quantity):
+    _hashValue(quantity._hashValue),
 	_singles(std::move(quantity._singles))
 {
+    updateHash();
 }
 
 Quantity& Quantity::operator=(const Quantity& quantity)
 {
+    _hashValue=quantity._hashValue;
 	_singles=quantity._singles;
 	return *this;
 }
 
 Quantity& Quantity::operator=(Quantity&& quantity)
 {
+    _hashValue=quantity._hashValue;
 	_singles=std::move(quantity._singles);
 	return *this;
 }
@@ -53,6 +61,7 @@ Quantity Quantity::operator+(const SingleQuantity& singleQuantity) const
         }
     }
     result._singles.push_back(singleQuantity);
+    result.updateHash();
     return std::move(result);
 }
 
@@ -68,6 +77,7 @@ Quantity Quantity::operator-(const SingleQuantity& singleQuantity) const
         }
     }
     result._singles.push_back(-1.0*singleQuantity);
+    result.updateHash();
     return std::move(result);
 }
 
@@ -82,6 +92,7 @@ Quantity& Quantity::operator+=(const SingleQuantity& singleQuantity)
 		}
 	}
 	_singles.push_back(singleQuantity);
+	updateHash();
 	return *this;
 }
 
@@ -96,6 +107,7 @@ Quantity& Quantity::operator-=(const SingleQuantity& singleQuantity)
 		}
 	}
 	_singles.push_back(-1.0*singleQuantity);
+	updateHash();
 	return *this;
 }
 
@@ -108,8 +120,9 @@ Quantity& Quantity::operator+=(const Quantity& quantity)
     }
     for (unsigned int i = 0; i < quantity._singles.size(); ++i)
     {
-        _singles.push_back(quantity._singles[i]);
+        (*this)+=quantity._singles[i];
     }
+    updateHash();
     return *this;
 }
 
@@ -122,8 +135,9 @@ Quantity& Quantity::operator-=(const Quantity& quantity)
     }
     for (unsigned int i = 0; i < quantity._singles.size(); ++i)
     {
-        _singles.push_back(-1.0*quantity._singles[i]);
+        (*this)-=quantity._singles[i];
     }
+    updateHash();
     return *this;
 }
 
@@ -131,6 +145,7 @@ Quantity Quantity::operator+(const Quantity& quantity) const
 {
 	Quantity q(*this);
 	q+=quantity;
+	q.updateHash();
 	return std::move(q);
 }
 
@@ -138,6 +153,7 @@ Quantity Quantity::operator-(const Quantity& quantity) const
 {
 	Quantity q(*this);
 	q-=quantity;
+	q.updateHash();
 	return std::move(q);
 }
 
@@ -148,6 +164,7 @@ Quantity Quantity::operator*(float32 factor) const
 	{
 		q._singles[i]*=factor;
 	}
+	q.updateHash();
 	return std::move(q);
 }
 Quantity Quantity::operator/(float32 factor) const
@@ -157,6 +174,7 @@ Quantity Quantity::operator/(float32 factor) const
 	{
 		q._singles[i]/=factor;
 	}
+	q.updateHash();
 	return std::move(q);
 }
 Quantity Quantity::operator*(const Unit& unit) const
@@ -166,6 +184,7 @@ Quantity Quantity::operator*(const Unit& unit) const
 	{
 		q._singles[i]*=unit;
 	}
+	q.updateHash();
 	return std::move(q);
 }
 Quantity Quantity::operator/(const Unit& unit) const
@@ -175,6 +194,7 @@ Quantity Quantity::operator/(const Unit& unit) const
 	{
 		q._singles[i]/=unit;
 	}
+	q.updateHash();
 	return std::move(q);
 }
 
@@ -184,6 +204,7 @@ Quantity& Quantity::operator*=(float32 factor)
     {
         _singles[i]*=factor;
     }
+    updateHash();
     return *this;
 }
 Quantity& Quantity::operator/=(float32 factor)
@@ -192,6 +213,7 @@ Quantity& Quantity::operator/=(float32 factor)
     {
         _singles[i]/=factor;
     }
+    updateHash();
     return *this;
 }
 Quantity& Quantity::operator*=(const Unit& unit)
@@ -200,6 +222,7 @@ Quantity& Quantity::operator*=(const Unit& unit)
     {
         _singles[i]*=unit;
     }
+    updateHash();
     return *this;
 }
 Quantity& Quantity::operator/=(const Unit& unit)
@@ -208,6 +231,7 @@ Quantity& Quantity::operator/=(const Unit& unit)
     {
         _singles[i]/=unit;
     }
+    updateHash();
     return *this;
 }
 
@@ -216,6 +240,7 @@ Quantity Quantity::operator*(const SingleQuantity& singleQuantity) const
 {
     Quantity result(*this);
     result*=singleQuantity;
+    result.updateHash();
     return std::move(result);
 }
 
@@ -223,6 +248,7 @@ Quantity Quantity::operator/(const SingleQuantity& singleQuantity) const
 {
     Quantity result(*this);
     result/=singleQuantity;
+    result.updateHash();
     return std::move(result);
 }
 
@@ -232,6 +258,7 @@ Quantity& Quantity::operator*=(const SingleQuantity& singleQuantity)
     {
         _singles[i]*=singleQuantity;
     }
+    updateHash();
     return *this;
 }
 
@@ -241,48 +268,18 @@ Quantity& Quantity::operator/=(const SingleQuantity& singleQuantity)
     {
         _singles[i]/=singleQuantity;
     }
+    updateHash();
     return *this;
 }
 
-//TODO: this is quite inefficient!!!!!
 bool Quantity::operator==(const Quantity& quantity) const
 {
-    Quantity q1(*this);
-    q1.shrink();
-    Quantity q2(quantity);
-    q2.shrink();
-    if (q1.getNumberOfSingleQuantities()!=q2.getNumberOfSingleQuantities())
-    {
-        return false;
-    }
-    for (uint32 i = 0; i <q1.getNumberOfSingleQuantities(); ++i)
-    {
-        if (q1.getSingleQuantity(i)!=q2.getSingleQuantity(i))
-        {
-            return false;
-        }
-    }
-    return true;
+    return _hashValue==quantity._hashValue;
 }
 
 bool Quantity::operator!=(const Quantity& quantity) const
 {
-    Quantity q1(*this);
-    q1.shrink();
-    Quantity q2(quantity);
-    q2.shrink();
-    if (q1.getNumberOfSingleQuantities()==q2.getNumberOfSingleQuantities())
-    {
-        return false;
-    }
-    for (uint32 i = 0; i <q1.getNumberOfSingleQuantities(); ++i)
-    {
-        if (q1.getSingleQuantity(i)==q2.getSingleQuantity(i))
-        {
-            return false;
-        }
-    }
-    return true;
+    return _hashValue!=quantity._hashValue;
 }
 
 std::string Quantity::toString() const
@@ -299,32 +296,6 @@ std::string Quantity::toString() const
 	return std::move(ss.str());
 }
 
-void Quantity::shrink()
-{
-    std::map<Unit,SingleQuantity,Unit::less> shrinkMap;
-    for (uint32 i = 0; i < _singles.size(); ++i)
-    {
-        const SingleQuantity& sq = _singles[i];
-        std::map<Unit,SingleQuantity,Unit::less>::iterator it = shrinkMap.find(sq.getUnit());
-        if (it!=shrinkMap.end())
-        {
-            it->second.getValue()+=sq.getValue();
-        }
-        else
-        {
-            shrinkMap[sq.getUnit()]=sq;
-        }
-    }
-    _singles.clear();
-    for (std::map<Unit,SingleQuantity,Unit::less>::const_iterator it = shrinkMap.cbegin(); it != shrinkMap.cend(); ++it)
-    {
-        if (it->second.getValue()!=0.0)
-        {
-            _singles.emplace_back(it->second);
-        }
-    }
-}
-
 Quantity::~Quantity()
 {
 }
@@ -336,33 +307,43 @@ Quantity::~Quantity()
 Quantity operator+(const SingleQuantity& quantity1, const SingleQuantity& quantity2)
 {
     Quantity q(quantity1);
-    return std::move(q+quantity2);
+    q+=quantity2;
+    return std::move(q);
 }
 
 Quantity operator-(const SingleQuantity& quantity1, const SingleQuantity& quantity2)
 {
     Quantity q(quantity1);
-    return std::move(q-quantity2);
+    q-=quantity2;
+    return std::move(q);
 }
 
 Quantity operator+(const SingleQuantity& singleQuantity, Quantity& quantity)
 {
-    return std::move(quantity+singleQuantity);
+    Quantity q(quantity);
+    q+=singleQuantity;
+    return std::move(q);
 }
 
 Quantity operator-(const SingleQuantity& singleQuantity, Quantity& quantity)
 {
-    return std::move(quantity-singleQuantity);
+    Quantity q(quantity);
+    q-=singleQuantity;
+    return std::move(q);
 }
 
 Quantity operator*(const SingleQuantity& singleQuantity, Quantity& quantity)
 {
-    return std::move(quantity*singleQuantity);
+    Quantity q(quantity);
+    q*=singleQuantity;
+    return std::move(q);
 }
 
 Quantity operator/(const SingleQuantity& singleQuantity, Quantity& quantity)
 {
-    return std::move(quantity/singleQuantity);
+    Quantity q(quantity);
+    q/=singleQuantity;
+    return std::move(q);
 }
 
 }

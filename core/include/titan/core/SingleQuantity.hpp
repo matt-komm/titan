@@ -5,6 +5,8 @@
 #include "titan/core/Unit.hpp"
 #include "titan/core/StreamInterface.hpp"
 
+#include <stdio.h>
+
 namespace titan
 {
 
@@ -47,6 +49,12 @@ class SingleQuantity:
         }
 
 		virtual std::string toString() const;
+
+		inline uint64 getHash() const
+		{
+		    uint32* i = (uint32*)&_value;
+		    return *i | _unit.getHash();
+		}
 
         ~SingleQuantity();
 
