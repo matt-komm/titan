@@ -3,6 +3,7 @@
 
 #include "titan/core/Types.hpp"
 #include "titan/core/Quantity.hpp"
+#include "titan/core/Exception.hpp"
 #include "titan/drawing/Point.hpp"
 
 
@@ -12,51 +13,39 @@ namespace titan
 class CoordinateSystem
 {
     public:
-        virtual
-        virtual const PxPoint& toPixel(const SQPoint& sqPoint) const = 0;
+        virtual void convert(QPoint& qPoint) const = 0;
         virtual ~CoordinateSystem()
         {
         }
 };
 
-/*
-class CartesianCoordinates:
+
+class CartesianCoordinates2d:
     public CoordinateSystem
 {
     protected:
-        const SingleQuantity _resolution;
+        const SingleQuantity _nominator;
+        const SingleQuantity _denominator;
     public:
-        CartesianCoordinates(const SingleQuantity& resolution):
-            _resolution(resolution)
+        CartesianCoordinates2d(const SingleQuantity& nominator, const SingleQuantity& denominator):
+            _nominator(nominator),_denominator(denominator)
         {
         }
 
-        inline const Unit& getUnit() const
+        virtual void convert(QPoint& qPoint) const
         {
-            return (_resolution).getUnit();
-        }
-        
-
-
-        virtual const PxPoint& toPixel(const SQPoint& sqPoint) const
-        {
-            PxPoint result(sqPoint.size());
-            for (uint32 idim = 0; idim < sqPoint.size(); ++idim)
+            if (qPoint.size()!=2)
             {
-                const SingleQuantity& sq_result = sqPoint[idim]/_resolution;
-                if (sq_result.getUnit()==Unit("px"))
-                {
-                    result[idim]=sq_result.getValue();
-                }
+                titan_throw("BadArgument", "Point has to be of dimension 2.");
             }
-            return result;
+            qPoint[0].substitute(_nominator,_denominator);
+            qPoint[1].substitute(_nominator,_denominator);
         }
-        virtual ~CartesianCoordinates()
+        virtual ~CartesianCoordinates2d()
         {
         }
 };
 
-*/
 }
 
 #endif

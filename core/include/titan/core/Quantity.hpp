@@ -29,7 +29,7 @@ class Quantity:
                 _hashValue=_singles[0].getHash();
                 for (uint32 i = 1; i < _singles.size(); ++i)
                 {
-                    _hashValue|=_singles[i].getHash();
+                    _hashValue^=_singles[i].getHash();
                 }
             }
         }
@@ -88,6 +88,18 @@ class Quantity:
         inline const SingleQuantity& getSingleQuantity(uint32 index) const
         {
             return _singles[index];
+        }
+
+        SingleQuantity* findByUnit(const Unit& unit);
+
+        void substitute(const SingleQuantity& find, const SingleQuantity& replacement)
+        {
+            SingleQuantity* found = findByUnit(find.getUnit());
+            if (found)
+            {
+                (*found)*=replacement/find;
+            }
+            updateHash();
         }
 
 };

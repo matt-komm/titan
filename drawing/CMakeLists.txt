@@ -22,4 +22,5 @@ add_gtest(
     NAME drawing 
     SOURCES tests/test.cpp 
     LIBRARIES titan-core titan-drawing
+    DEPS titan-core titan-drawing
 )

@@ -71,8 +71,6 @@ TEST(Core, Quantity)
     Quantity q3 = q1+q2;
     Quantity q4 = q1-q2;
 
-    std::cout<<sq1.getHash()<<std::endl;
-
     Quantity q5 = q3*3;
     //std::cout<<q3.getHash()<<std::endl;
     //std::cout<<q5.getHash()<<std::endl;
@@ -140,4 +138,28 @@ TEST(Core, GenericType)
     EXPECT_NE(GenericType::fromValue<uint32>(0),GenericType::fromValue<int32>(0));
     EXPECT_NE(GenericType::fromValue<float32>(0),GenericType::fromValue<int32>(0));
     EXPECT_NE(GenericType::fromValue<float64>(0),GenericType::fromValue<int32>(0));
+}
+
+void testException(titan::uint32& lno)
+{
+    lno=__LINE__; titan_throw("TestException","test exception message",12345);
+}
+
+TEST(Core, Exception)
+{
+    titan::uint32 lno=0;
+    EXPECT_THROW(testException(lno),titan::Exception);
+    try
+    {
+        testException(lno);
+    }
+    catch (titan::Exception e)
+    {
+        EXPECT_EQ(e.type(),"TestException");
+        EXPECT_EQ(e.file(),__FILE__);
+        EXPECT_EQ(e.function(),"testException");
+        EXPECT_EQ(e.lno(),lno);
+        EXPECT_EQ(e.msg(),"test exception message12345");
+    }
+
 }

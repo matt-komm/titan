@@ -61,13 +61,14 @@ if (ENABLE_TEST)
             TEST                        #prefix
             ""                          #options
             "NAME"                   #one_value_keywords
-            "SOURCES;LIBRARIES"   #multi_value_keywords
+            "SOURCES;LIBRARIES;DEPS"   #multi_value_keywords
             ${ARGN} 
         )
         add_executable(gtest-${TEST_NAME}
             ${TEST_SOURCES}
         )
         target_link_libraries(gtest-${TEST_NAME} ${TEST_LIBRARIES} gtest gtest_main)
+        add_dependencies(gtest-${TEST_NAME} ${TEST_DEPS})
         add_test(${TEST_NAME} gtest-${TEST_NAME} --gtest_color=yes)
         #add_test(memtest-${TEST_NAME} valgrind --tool=memcheck --leak-check=summary ${CMAKE_CURRENT_BINARY_DIR}/gtest-${TEST_NAME} > /dev/null)
         add_dependencies(runtests gtest-${TEST_NAME})

@@ -32,4 +32,5 @@ add_gtest(
     NAME core 
     SOURCES tests/test.cpp 
     LIBRARIES titan-core
+    DEPS titan-core
 )

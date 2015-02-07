@@ -53,7 +53,7 @@ class SingleQuantity:
         inline uint64 getHash() const
         {
             uint32* i = (uint32*)&_value;
-            return *i | _unit.getHash();
+            return *i ^ _unit.getHash();
         }
 
         ~SingleQuantity();

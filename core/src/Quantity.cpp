@@ -296,6 +296,19 @@ std::string Quantity::toString() const
     return std::move(ss.str());
 }
 
+
+SingleQuantity* Quantity::findByUnit(const Unit& unit)
+{
+    for (uint32 i = 0; i < _singles.size(); ++i)
+    {
+        if (_singles[i].getUnit()==unit)
+        {
+            return &_singles[i];
+        }
+    }
+    return nullptr;
+}
+
 Quantity::~Quantity()
 {
 }
