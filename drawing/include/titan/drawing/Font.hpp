@@ -42,17 +42,17 @@ class Font
         
         inline const Color& getColor() const
         {
-        	return _fontColor;
+            return _fontColor;
         }
 
         inline Color& getColor()
         {
-        	return _fontColor;
+            return _fontColor;
         }
 
         inline FontStyle::type getFontStyle()
         {
-        	return _fontStyle;
+            return _fontStyle;
         }
 
         inline void setFontName(const std::string& fontName)
@@ -67,12 +67,12 @@ class Font
         
         inline void setColor(const Color& fontColor)
         {
-        	_fontColor=fontColor;
+            _fontColor=fontColor;
         }
 
         inline void setFontStyle(FontStyle::type fontStyle)
         {
-        	_fontStyle=fontStyle;
+            _fontStyle=fontStyle;
         }
 
         inline bool operator==(const Font& font)

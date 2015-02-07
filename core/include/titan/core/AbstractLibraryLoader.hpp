@@ -10,9 +10,9 @@ class AbstractLibraryLoader
 {
     protected:
     public:
-		AbstractLibraryLoader()
-    	{
-    	}
+        AbstractLibraryLoader()
+        {
+        }
 
         virtual ~AbstractLibraryLoader()
         {

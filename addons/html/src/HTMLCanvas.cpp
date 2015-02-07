@@ -8,7 +8,7 @@ namespace plugins
 {
 
 HTMLCanvas::HTMLCanvas(uint32 pxWidth, uint32 pxHeight, const std::string& outputName, OutputType::type outputType, ColorType::type colorType):
-	CanvasInterface(pxWidth,pxHeight,outputName,outputType,colorType)
+    CanvasInterface(pxWidth,pxHeight,outputName,outputType,colorType)
 {
     _htmlContext = new HTMLContext(*this);
 }
@@ -24,7 +24,7 @@ ContextInterface& HTMLCanvas::getContext()
 
 void HTMLCanvas::freeSurface()
 {
-	
+    
 }
 
 }

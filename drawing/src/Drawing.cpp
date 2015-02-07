@@ -13,19 +13,19 @@ Drawing::Drawing()
 
 void Drawing::render()
 {
-	//1. sort for z-index
-	std::sort(_drawTypes.begin(),_drawTypes.end(),DrawType::less());
-	//(optional) layout
-	//2. calculate biggest bounding box
-	//3. book canvas
-	//4. draw all
-	//5. save
+    //1. sort for z-index
+    std::sort(_drawTypes.begin(),_drawTypes.end(),DrawType::less());
+    //(optional) layout
+    //2. calculate biggest bounding box
+    //3. book canvas
+    //4. draw all
+    //5. save
 
 }
 
 void Drawing::add(DrawType* drawType)
 {
-	_drawTypes.push_back(drawType);
+    _drawTypes.push_back(drawType);
 }
 
 }

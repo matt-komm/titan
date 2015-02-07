@@ -16,58 +16,58 @@ template<class TYPE>
 class Point:
     public StreamInterface
 {
-	protected:
-		std::vector<TYPE> _x;
-	public:
-		Point(uint32 size=0):
-		    _x(size)
-		{
-		}
+    protected:
+        std::vector<TYPE> _x;
+    public:
+        Point(uint32 size=0):
+            _x(size)
+        {
+        }
 
-		Point(const Point<TYPE>& p):
-		    _x(p._x)
-		{
-		}
+        Point(const Point<TYPE>& p):
+            _x(p._x)
+        {
+        }
 
-		Point(Point<TYPE>&& p):
+        Point(Point<TYPE>&& p):
             _x(std::move(p._x))
         {
         }
 
-		inline uint32 size() const
-		{
-		    return _x.size();
-		}
-
-		Point<TYPE>& operator=(const Point<TYPE>& p)
+        inline uint32 size() const
         {
-            _x.resize(p.size());
-		    for (uint32 i = 0; i < _x.size(); ++i)
-		    {
-		        _x[i]=p._x[i];
-		    }
-		    return *this;
+            return _x.size();
         }
 
-		Point<TYPE>& operator=(Point<TYPE>&& p)
+        Point<TYPE>& operator=(const Point<TYPE>& p)
+        {
+            _x.resize(p.size());
+            for (uint32 i = 0; i < _x.size(); ++i)
+            {
+                _x[i]=p._x[i];
+            }
+            return *this;
+        }
+
+        Point<TYPE>& operator=(Point<TYPE>&& p)
         {
             _x=std::move(p._x);
             return *this;
         }
 
-		Point(const std::initializer_list<TYPE>& x):
-		    _x(x.size())
+        Point(const std::initializer_list<TYPE>& x):
+            _x(x.size())
         {
-		    for (const TYPE* value = x.begin(); value != x.end(); ++value)
-		    {
-		        int i = value-x.begin();
-		        _x[i]=(*value);
-		    }
+            for (const TYPE* value = x.begin(); value != x.end(); ++value)
+            {
+                int i = value-x.begin();
+                _x[i]=(*value);
+            }
         }
 
-		Point<TYPE>& operator=(const std::initializer_list<TYPE>& x)
+        Point<TYPE>& operator=(const std::initializer_list<TYPE>& x)
         {
-		    _x.resize(x.size());
+            _x.resize(x.size());
             for (TYPE* value = x.begin(); value != x.end(); ++value)
             {
                 int i = value-x.begin();
@@ -263,28 +263,28 @@ class Point:
         }
 
 
-		inline const TYPE& operator[](uint32 index) const
-		{
-			return _x[index];
-		}
+        inline const TYPE& operator[](uint32 index) const
+        {
+            return _x[index];
+        }
 
-		inline TYPE& operator[](uint32 index)
-		{
-			return _x[index];
-		}
+        inline TYPE& operator[](uint32 index)
+        {
+            return _x[index];
+        }
 
-		virtual std::string toString() const
-		{
-		    std::stringstream ss;
-		    ss<<"[";
-		    for (uint32 i=0; i<_x.size()-1; ++i)
-		    {
-		        ss<<"["<<_x[i]<<"],";
-		    }
-		    ss<<"["<<_x[_x.size()-1]<<"]";
-		    ss<<"]";
-		    return ss.str();
-		}
+        virtual std::string toString() const
+        {
+            std::stringstream ss;
+            ss<<"[";
+            for (uint32 i=0; i<_x.size()-1; ++i)
+            {
+                ss<<"["<<_x[i]<<"],";
+            }
+            ss<<"["<<_x[_x.size()-1]<<"]";
+            ss<<"]";
+            return ss.str();
+        }
 };
 
 typedef Point<Unit> UPoint;

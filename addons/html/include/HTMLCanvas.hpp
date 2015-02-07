@@ -11,12 +11,12 @@ namespace plugins
 
 
 class HTMLCanvas:
-	public titan::CanvasInterface
+    public titan::CanvasInterface
 {
     protected:
-		HTMLContext* _htmlContext;
+        HTMLContext* _htmlContext;
     public:
-		HTMLCanvas(uint32 pxWidth, uint32 pxHeight, const std::string& outputName, OutputType::type outputType, ColorType::type colorTyp=ColorType::OUTPUTDEFAULT);
+        HTMLCanvas(uint32 pxWidth, uint32 pxHeight, const std::string& outputName, OutputType::type outputType, ColorType::type colorTyp=ColorType::OUTPUTDEFAULT);
         ~HTMLCanvas();
 
 

@@ -13,18 +13,18 @@ namespace plugins
 
 
 class CairoCanvas:
-	public titan::CanvasInterface
+    public titan::CanvasInterface
 {
     protected:
-		CairoContext* _cairoContext;
-		cairo_surface_t* _cairo_surface;
+        CairoContext* _cairoContext;
+        cairo_surface_t* _cairo_surface;
     public:
-		CairoCanvas(uint32 pxWidth, uint32 pxHeight, const std::string& outputName, OutputType::type outputType, ColorType::type colorTyp=ColorType::OUTPUTDEFAULT);
+        CairoCanvas(uint32 pxWidth, uint32 pxHeight, const std::string& outputName, OutputType::type outputType, ColorType::type colorTyp=ColorType::OUTPUTDEFAULT);
         ~CairoCanvas();
 
         inline cairo_surface_t* getCairoSurface()
         {
-        	return _cairo_surface;
+            return _cairo_surface;
         }
 
         virtual ContextInterface& getContext();

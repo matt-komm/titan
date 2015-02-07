@@ -4,7 +4,7 @@ namespace titan
 {
 
 Stroke::Stroke():
-	_color(Color::argb32())
+    _color(Color::argb32())
 {
 }
 

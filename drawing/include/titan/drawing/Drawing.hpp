@@ -11,13 +11,13 @@ class DrawType;
 class Drawing
 {
     protected:
-		std::vector<DrawType*> _drawTypes;
+        std::vector<DrawType*> _drawTypes;
     public:
-		Drawing();
+        Drawing();
 
-		void add( DrawType* drawType);
-		void render();
-		/*
+        void add( DrawType* drawType);
+        void render();
+        /*
         Class(const Class& c);
         Class(Class&& c);
         Class& operator=(const Class& c);

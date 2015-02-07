@@ -12,25 +12,25 @@ Quantity::Quantity():
 
 Quantity::Quantity(float32 value, const Unit& unit)
 {
-	_singles.push_back(std::move(SingleQuantity(value,unit)));
-	updateHash();
+    _singles.push_back(std::move(SingleQuantity(value,unit)));
+    updateHash();
 }
 
 Quantity::Quantity(const SingleQuantity& singleQuantity)
 {
-	_singles.push_back(singleQuantity);
-	updateHash();
+    _singles.push_back(singleQuantity);
+    updateHash();
 }
 
 Quantity::Quantity(const Quantity& quantity):
     _hashValue(quantity._hashValue),
-	_singles(quantity._singles)
+    _singles(quantity._singles)
 {
 }
 
 Quantity::Quantity(Quantity&& quantity):
     _hashValue(quantity._hashValue),
-	_singles(std::move(quantity._singles))
+    _singles(std::move(quantity._singles))
 {
     updateHash();
 }
@@ -38,15 +38,15 @@ Quantity::Quantity(Quantity&& quantity):
 Quantity& Quantity::operator=(const Quantity& quantity)
 {
     _hashValue=quantity._hashValue;
-	_singles=quantity._singles;
-	return *this;
+    _singles=quantity._singles;
+    return *this;
 }
 
 Quantity& Quantity::operator=(Quantity&& quantity)
 {
     _hashValue=quantity._hashValue;
-	_singles=std::move(quantity._singles);
-	return *this;
+    _singles=std::move(quantity._singles);
+    return *this;
 }
 
 Quantity Quantity::operator+(const SingleQuantity& singleQuantity) const
@@ -83,32 +83,32 @@ Quantity Quantity::operator-(const SingleQuantity& singleQuantity) const
 
 Quantity& Quantity::operator+=(const SingleQuantity& singleQuantity)
 {
-	for (unsigned int i = 0; i < _singles.size(); ++i)
-	{
-		if (_singles[i].getUnit()==singleQuantity.getUnit())
-		{
-			_singles[i].getValue()+=singleQuantity.getValue();
-			return *this;
-		}
-	}
-	_singles.push_back(singleQuantity);
-	updateHash();
-	return *this;
+    for (unsigned int i = 0; i < _singles.size(); ++i)
+    {
+        if (_singles[i].getUnit()==singleQuantity.getUnit())
+        {
+            _singles[i].getValue()+=singleQuantity.getValue();
+            return *this;
+        }
+    }
+    _singles.push_back(singleQuantity);
+    updateHash();
+    return *this;
 }
 
 Quantity& Quantity::operator-=(const SingleQuantity& singleQuantity)
 {
-	for (unsigned int i = 0; i < _singles.size(); ++i)
-	{
-		if (_singles[i].getUnit()==singleQuantity.getUnit())
-		{
-			_singles[i].getValue()-=singleQuantity.getValue();
-			return *this;
-		}
-	}
-	_singles.push_back(-1.0*singleQuantity);
-	updateHash();
-	return *this;
+    for (unsigned int i = 0; i < _singles.size(); ++i)
+    {
+        if (_singles[i].getUnit()==singleQuantity.getUnit())
+        {
+            _singles[i].getValue()-=singleQuantity.getValue();
+            return *this;
+        }
+    }
+    _singles.push_back(-1.0*singleQuantity);
+    updateHash();
+    return *this;
 }
 
 Quantity& Quantity::operator+=(const Quantity& quantity)
@@ -143,59 +143,59 @@ Quantity& Quantity::operator-=(const Quantity& quantity)
 
 Quantity Quantity::operator+(const Quantity& quantity) const
 {
-	Quantity q(*this);
-	q+=quantity;
-	q.updateHash();
-	return std::move(q);
+    Quantity q(*this);
+    q+=quantity;
+    q.updateHash();
+    return std::move(q);
 }
 
 Quantity Quantity::operator-(const Quantity& quantity) const
 {
-	Quantity q(*this);
-	q-=quantity;
-	q.updateHash();
-	return std::move(q);
+    Quantity q(*this);
+    q-=quantity;
+    q.updateHash();
+    return std::move(q);
 }
 
 Quantity Quantity::operator*(float32 factor) const
 {
-	Quantity q(*this);
-	for (unsigned int i = 0; i < q._singles.size(); ++i)
-	{
-		q._singles[i]*=factor;
-	}
-	q.updateHash();
-	return std::move(q);
+    Quantity q(*this);
+    for (unsigned int i = 0; i < q._singles.size(); ++i)
+    {
+        q._singles[i]*=factor;
+    }
+    q.updateHash();
+    return std::move(q);
 }
 Quantity Quantity::operator/(float32 factor) const
 {
-	Quantity q(*this);
-	for (unsigned int i = 0; i < q._singles.size(); ++i)
-	{
-		q._singles[i]/=factor;
-	}
-	q.updateHash();
-	return std::move(q);
+    Quantity q(*this);
+    for (unsigned int i = 0; i < q._singles.size(); ++i)
+    {
+        q._singles[i]/=factor;
+    }
+    q.updateHash();
+    return std::move(q);
 }
 Quantity Quantity::operator*(const Unit& unit) const
 {
-	Quantity q(*this);
-	for (unsigned int i = 0; i < q._singles.size(); ++i)
-	{
-		q._singles[i]*=unit;
-	}
-	q.updateHash();
-	return std::move(q);
+    Quantity q(*this);
+    for (unsigned int i = 0; i < q._singles.size(); ++i)
+    {
+        q._singles[i]*=unit;
+    }
+    q.updateHash();
+    return std::move(q);
 }
 Quantity Quantity::operator/(const Unit& unit) const
 {
-	Quantity q(*this);
-	for (unsigned int i = 0; i < q._singles.size(); ++i)
-	{
-		q._singles[i]/=unit;
-	}
-	q.updateHash();
-	return std::move(q);
+    Quantity q(*this);
+    for (unsigned int i = 0; i < q._singles.size(); ++i)
+    {
+        q._singles[i]/=unit;
+    }
+    q.updateHash();
+    return std::move(q);
 }
 
 Quantity& Quantity::operator*=(float32 factor)
@@ -288,12 +288,12 @@ std::string Quantity::toString() const
     {
         return "<none>";
     }
-	std::stringstream ss;
-	for (unsigned int i = 0; i < _singles.size(); ++i)
-	{
-		ss<<_singles[i].toString();
-	}
-	return std::move(ss.str());
+    std::stringstream ss;
+    for (unsigned int i = 0; i < _singles.size(); ++i)
+    {
+        ss<<_singles[i].toString();
+    }
+    return std::move(ss.str());
 }
 
 Quantity::~Quantity()

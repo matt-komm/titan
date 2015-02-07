@@ -5,107 +5,107 @@ namespace titan
 
 
 SingleQuantity::SingleQuantity():
-	_value(0.0),
-	_unit("")
+    _value(0.0),
+    _unit("")
 {
 }
 
 SingleQuantity::SingleQuantity(float32 value, const Unit& unit):
-	_value(value),
-	_unit(unit)
+    _value(value),
+    _unit(unit)
 {
 }
 
 SingleQuantity::SingleQuantity(const SingleQuantity& singleQuantity):
-	_value(singleQuantity._value),
-	_unit(singleQuantity._unit)
+    _value(singleQuantity._value),
+    _unit(singleQuantity._unit)
 {
 }
 
 SingleQuantity::SingleQuantity(SingleQuantity&& singleQuantity):
-	_value(singleQuantity._value),
-	_unit(std::move(singleQuantity._unit))
+    _value(singleQuantity._value),
+    _unit(std::move(singleQuantity._unit))
 {
 }
 
 SingleQuantity& SingleQuantity::operator=(const SingleQuantity& singleQuantity)
 {
-	_value=singleQuantity._value;
-	_unit=singleQuantity._unit;
-	return *this;
+    _value=singleQuantity._value;
+    _unit=singleQuantity._unit;
+    return *this;
 }
 
 SingleQuantity& SingleQuantity::operator=(SingleQuantity&& singleQuantity)
 {
-	_value=singleQuantity._value;
-	_unit=std::move(singleQuantity._unit);
-	return *this;
+    _value=singleQuantity._value;
+    _unit=std::move(singleQuantity._unit);
+    return *this;
 }
 
 SingleQuantity SingleQuantity::operator*(float32 factor) const
 {
-	SingleQuantity result(*this);
-	result._value*=factor;
-	return std::move(result);
+    SingleQuantity result(*this);
+    result._value*=factor;
+    return std::move(result);
 }
 
 SingleQuantity SingleQuantity::operator/(float32 factor) const
 {
-	SingleQuantity result(*this);
-	result._value/=factor;
-	return std::move(result);
+    SingleQuantity result(*this);
+    result._value/=factor;
+    return std::move(result);
 }
 
 SingleQuantity SingleQuantity::operator*(const Unit& unit) const
 {
-	SingleQuantity result(*this);
-	result._unit*=unit;
-	return std::move(result);
+    SingleQuantity result(*this);
+    result._unit*=unit;
+    return std::move(result);
 }
 
 SingleQuantity SingleQuantity::operator/(const Unit& unit) const
 {
-	SingleQuantity result(*this);
-	result._unit/=unit;
-	return std::move(result);
+    SingleQuantity result(*this);
+    result._unit/=unit;
+    return std::move(result);
 }
 
 SingleQuantity SingleQuantity::operator*(const SingleQuantity& singleQuantity) const
 {
-	SingleQuantity result(_value*singleQuantity.getValue(),_unit*singleQuantity._unit);
-	return std::move(result);
+    SingleQuantity result(_value*singleQuantity.getValue(),_unit*singleQuantity._unit);
+    return std::move(result);
 }
 
 SingleQuantity SingleQuantity::operator/(const SingleQuantity& singleQuantity) const
 {
-	SingleQuantity result(_value/singleQuantity.getValue(),_unit/singleQuantity._unit);
-	return std::move(result);
+    SingleQuantity result(_value/singleQuantity.getValue(),_unit/singleQuantity._unit);
+    return std::move(result);
 }
 
 SingleQuantity& SingleQuantity::operator*=(const SingleQuantity& singleQuantity)
 {
-	_value*=singleQuantity.getValue();
-	_unit*=singleQuantity.getUnit();
-	return *this;
+    _value*=singleQuantity.getValue();
+    _unit*=singleQuantity.getUnit();
+    return *this;
 }
 
 SingleQuantity& SingleQuantity::operator/=(const SingleQuantity& singleQuantity)
 {
-	_value/=singleQuantity.getValue();
-	_unit/=singleQuantity.getUnit();
-	return *this;
+    _value/=singleQuantity.getValue();
+    _unit/=singleQuantity.getUnit();
+    return *this;
 }
 
 SingleQuantity SingleQuantity::operator*=(const SingleQuantity& singleQuantity) const
 {
-	SingleQuantity result(getValue()*singleQuantity.getValue(),getUnit()*singleQuantity.getUnit());
-	return std::move(result);
+    SingleQuantity result(getValue()*singleQuantity.getValue(),getUnit()*singleQuantity.getUnit());
+    return std::move(result);
 }
 
 SingleQuantity SingleQuantity::operator/=(const SingleQuantity& singleQuantity) const
 {
-	SingleQuantity result(getValue()/singleQuantity.getValue(),getUnit()/singleQuantity.getUnit());
-	return std::move(result);
+    SingleQuantity result(getValue()/singleQuantity.getValue(),getUnit()/singleQuantity.getUnit());
+    return std::move(result);
 }
 
 std::string SingleQuantity::toString() const

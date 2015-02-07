@@ -8,23 +8,23 @@ namespace titan
 template<typename INPTR, typename OUTPTR>
 class SharedMemory
 {
-	private:
-		union Memory
-		{
-			INPTR iptr;
-			OUTPTR optr;
-		} _memory;
+    private:
+        union Memory
+        {
+            INPTR iptr;
+            OUTPTR optr;
+        } _memory;
 
-	public:
-		SharedMemory(INPTR inptr)
-		{
-			_memory.iptr=inptr;
-		}
+    public:
+        SharedMemory(INPTR inptr)
+        {
+            _memory.iptr=inptr;
+        }
 
-		OUTPTR get()
-		{
-			return _memory.optr;
-		}
+        OUTPTR get()
+        {
+            return _memory.optr;
+        }
 };
 
 }
@@ -36,7 +36,7 @@ class SharedMemory
 
 namespace titan
 {
-	typedef LinuxLibraryLoader LibraryLoader;
+    typedef LinuxLibraryLoader LibraryLoader;
 }
 
 #else
@@ -55,19 +55,19 @@ namespace titan
 
 
 #define REGISTER_PLUGIN(BASECLASS,USERCLASS) \
-	/*std::cout<<"REGISTER_PLUGIN: "<< #BASECLASS <<","<< #USERCLASS <<std::endl;*/ \
-	static ConcretePlugin<BASECLASS,USERCLASS>  _ ## BASECLASS ## USERCLASS ## plugin(#USERCLASS, #BASECLASS); \
-	titan::PluginFactory::getInstance()->registerPlugin(&_ ## BASECLASS ## USERCLASS ## plugin); \
+    /*std::cout<<"REGISTER_PLUGIN: "<< #BASECLASS <<","<< #USERCLASS <<std::endl;*/ \
+    static ConcretePlugin<BASECLASS,USERCLASS>  _ ## BASECLASS ## USERCLASS ## plugin(#USERCLASS, #BASECLASS); \
+    titan::PluginFactory::getInstance()->registerPlugin(&_ ## BASECLASS ## USERCLASS ## plugin); \
 
 
 #define INIT(PLUGINS) \
-	extern "C" \
-	{ \
-		void initialize() \
-		{ \
-			PLUGINS \
-		} \
-	} \
+    extern "C" \
+    { \
+        void initialize() \
+        { \
+            PLUGINS \
+        } \
+    } \
 
 
 #endif

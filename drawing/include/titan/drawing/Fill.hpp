@@ -9,31 +9,31 @@ namespace titan
 class Fill
 {
     protected:
-		Color _color;
+        Color _color;
     public:
         Fill();
         ~Fill();
 
         static Fill byColor(const Color& color)
         {
-        	Fill f;
-        	f._color=color;
-        	return f;
+            Fill f;
+            f._color=color;
+            return f;
         }
 
         inline const Color& getColor() const
-		{
-			return _color;
-		}
+        {
+            return _color;
+        }
 
         inline Color& getColor()
         {
-        	return _color;
+            return _color;
         }
 
         inline void setColor(const Color& color)
         {
-        	_color=color;
+            _color=color;
         }
 };
 

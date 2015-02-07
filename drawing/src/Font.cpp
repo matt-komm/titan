@@ -13,7 +13,7 @@ Font::Font(std::string fontName,float32 fontSize, Color fontColor, FontStyle::ty
 
 Font Font::byName(std::string fontName,float32 fontSize, Color fontColor, FontStyle::type fontStyle)
 {
-	return Font(fontName,fontSize,fontColor,fontStyle);
+    return Font(fontName,fontSize,fontColor,fontStyle);
 }
 
 

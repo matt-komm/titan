@@ -32,71 +32,71 @@ class SingleQuantity:
 
 
         SingleQuantity operator*(const SingleQuantity& singleQuantity) const;
-		SingleQuantity operator/(const SingleQuantity& singleQuantity) const;
-		SingleQuantity& operator*=(const SingleQuantity& singleQuantity);
-		SingleQuantity& operator/=(const SingleQuantity& singleQuantity);
-		SingleQuantity operator*=(const SingleQuantity& singleQuantity) const;
-		SingleQuantity operator/=(const SingleQuantity& singleQuantity) const;
+        SingleQuantity operator/(const SingleQuantity& singleQuantity) const;
+        SingleQuantity& operator*=(const SingleQuantity& singleQuantity);
+        SingleQuantity& operator/=(const SingleQuantity& singleQuantity);
+        SingleQuantity operator*=(const SingleQuantity& singleQuantity) const;
+        SingleQuantity operator/=(const SingleQuantity& singleQuantity) const;
 
-		inline bool operator==(const SingleQuantity& singleQuantity) const
+        inline bool operator==(const SingleQuantity& singleQuantity) const
         {
             return (_unit==singleQuantity.getUnit()) && (_value==singleQuantity.getValue());
         }
 
-		inline bool operator!=(const SingleQuantity& singleQuantity) const
+        inline bool operator!=(const SingleQuantity& singleQuantity) const
         {
             return (_unit!=singleQuantity.getUnit()) || (_value!=singleQuantity.getValue());
         }
 
-		virtual std::string toString() const;
+        virtual std::string toString() const;
 
-		inline uint64 getHash() const
-		{
-		    uint32* i = (uint32*)&_value;
-		    return *i | _unit.getHash();
-		}
+        inline uint64 getHash() const
+        {
+            uint32* i = (uint32*)&_value;
+            return *i | _unit.getHash();
+        }
 
         ~SingleQuantity();
 
         inline SingleQuantity& operator*=(float32 factor)
-		{
-			_value*=factor;
-			return *this;
-		}
-		inline SingleQuantity& operator/=(float32 factor)
-		{
-			_value/=factor;
-			return *this;
-		}
-		inline SingleQuantity& operator*=(const Unit& unit)
-		{
-			_unit*=unit;
-			return *this;
-		}
-		inline SingleQuantity& operator/=(const Unit& unit)
-		{
-			_unit/=unit;
-			return *this;
-		}
+        {
+            _value*=factor;
+            return *this;
+        }
+        inline SingleQuantity& operator/=(float32 factor)
+        {
+            _value/=factor;
+            return *this;
+        }
+        inline SingleQuantity& operator*=(const Unit& unit)
+        {
+            _unit*=unit;
+            return *this;
+        }
+        inline SingleQuantity& operator/=(const Unit& unit)
+        {
+            _unit/=unit;
+            return *this;
+        }
 
         inline const Unit& getUnit() const
-		{
-			return _unit;
-		}
-		inline float32 getValue() const
-		{
-			return _value;
-		}
+        {
+            return _unit;
+        }
+        inline float32 getValue() const
+        {
+            return _value;
+        }
 
-		inline Unit& getUnit()
-		{
-			return _unit;
-		}
+        inline Unit& getUnit()
+        {
+            return _unit;
+        }
 
-		inline float32& getValue()
-		{
-			return _value;
-		}
+        inline float32& getValue()
+        {
+            return _value;
+        }
 };
 
 SingleQuantity operator*(float32 magnitude, const Unit& unit);

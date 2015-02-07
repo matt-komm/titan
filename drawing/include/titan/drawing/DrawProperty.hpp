@@ -10,10 +10,10 @@ class DrawProperty
 {
     protected:
     public:
-		DrawProperty()
-    	{
+        DrawProperty()
+        {
 
-    	}
+        }
 
         virtual void apply(const Drawing& drawing, CanvasInterface& canvas) = 0;
         virtual bool operator==(const DrawProperty& drawProperty) = 0;

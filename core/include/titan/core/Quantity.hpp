@@ -82,12 +82,12 @@ class Quantity:
 
         inline uint32 getNumberOfSingleQuantities() const
         {
-        	return _singles.size();
+            return _singles.size();
         }
 
         inline const SingleQuantity& getSingleQuantity(uint32 index) const
         {
-        	return _singles[index];
+            return _singles[index];
         }
 
 };
