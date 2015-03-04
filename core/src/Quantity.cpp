@@ -297,7 +297,7 @@ std::string Quantity::toString() const
 }
 
 
-SingleQuantity* Quantity::findByUnit(const Unit& unit)
+const SingleQuantity* Quantity::findByUnit(const Unit& unit) const
 {
     for (uint32 i = 0; i < _singles.size(); ++i)
     {

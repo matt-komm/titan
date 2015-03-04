@@ -275,6 +275,10 @@ class Point:
 
         virtual std::string toString() const
         {
+            if (_x.size()==0)
+            {
+                return "[]";
+            }
             std::stringstream ss;
             ss<<"[";
             for (uint32 i=0; i<_x.size()-1; ++i)

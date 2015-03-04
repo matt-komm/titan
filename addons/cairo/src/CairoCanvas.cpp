@@ -1,3 +1,4 @@
+#include "titan/core/Exception.hpp"
 #include "CairoCanvas.hpp"
 
 #include <cairo.h>
@@ -48,11 +49,11 @@ CairoCanvas::CairoCanvas(uint32 pxWidth, uint32 pxHeight, const std::string& out
     }
     else
     {
-        throw std::string("cannot create canvas with format");
+        titan_throw("CairoBackendException","cannot create canvas with format:",outputType);
     }
     if (!_cairo_surface)
     {
-        throw std::string("no cairo surface created");
+        titan_throw("CairoBackendException","no cairo surface created");
     }
     //std::cout<<cairo_status_to_string(cairo_surface_status (_cairo_surface))<<std::endl;
 }

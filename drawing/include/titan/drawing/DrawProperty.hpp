@@ -15,7 +15,7 @@ class DrawProperty
 
         }
 
-        virtual void apply(const Drawing& drawing, CanvasInterface& canvas) = 0;
+        virtual void apply(const DrawType& type, const Drawing& drawing, CanvasInterface& canvas) = 0;
         virtual bool operator==(const DrawProperty& drawProperty) = 0;
         virtual bool operator!=(const DrawProperty& drawProperty) = 0;
         virtual ~DrawProperty()

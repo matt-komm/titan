@@ -13,7 +13,8 @@ namespace titan
 class CoordinateSystem
 {
     public:
-        virtual void convert(QPoint& qPoint) const = 0;
+        virtual const UPoint& getUnits() const = 0;
+        virtual QPoint convert(const QPoint& qPoint) const = 0;
         virtual ~CoordinateSystem()
         {
         }
@@ -24,22 +25,45 @@ class CartesianCoordinates2d:
     public CoordinateSystem
 {
     protected:
-        const SingleQuantity _nominator;
-        const SingleQuantity _denominator;
+        const SQPoint _resolution;
+        const SQPoint _center;
+        const UPoint _units;
+
     public:
-        CartesianCoordinates2d(const SingleQuantity& nominator, const SingleQuantity& denominator):
-            _nominator(nominator),_denominator(denominator)
+        CartesianCoordinates2d(const SQPoint& resolution, const SQPoint center):
+            _resolution(resolution),
+            _center(center),
+            _units{{_resolution[0].getUnit(),_resolution[1].getUnit()}}
         {
+            if (_resolution.size()!=2)
+            {
+                titan_throw("BadArgument", "SQPoint 'resolution' has to be of dimension 2");
+            }
+            if (_center.size()!=2)
+            {
+                titan_throw("BadArgument", "SQPoint 'center' has to be of dimension 2");
+            }
         }
 
-        virtual void convert(QPoint& qPoint) const
+        virtual const UPoint& getUnits() const
+        {
+            return _units;
+        }
+
+        virtual QPoint convert(const QPoint& qPoint) const
         {
             if (qPoint.size()!=2)
             {
-                titan_throw("BadArgument", "Point has to be of dimension 2.");
+                titan_throw("BadArgument", "QPoint has to be of dimension 2");
             }
-            qPoint[0].substitute(_nominator,_denominator);
-            qPoint[1].substitute(_nominator,_denominator);
+            const SingleQuantity* sq1 = qPoint[0].findByUnit(_units[0]);
+            const SingleQuantity* sq2 = qPoint[1].findByUnit(_units[1]);
+
+            if (sq1 and sq2)
+            {
+                return QPoint({(*sq1+_center[0])/_resolution[0],(*sq2+_center[1])/_resolution[1]});
+            }
+            return QPoint(2);
         }
         virtual ~CartesianCoordinates2d()
         {

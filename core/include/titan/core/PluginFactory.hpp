@@ -1,6 +1,7 @@
 #ifndef __PLUGINFACTORY_H__
 #define __PLUGINFACTORY_H__
 
+#include "titan/core/Exception.hpp"
 #include "titan/core/Plugin.hpp"
 #include "titan/core/LibraryLoader.hpp"
 
@@ -29,13 +30,13 @@ class PluginFactory
                 Plugin<BASECLASS>* plugin = dynamic_cast<Plugin<BASECLASS>*>(_producers[pluginName]);
                 if (!plugin)
                 {
-                    throw std::string("plugin with name '"+pluginName+"' is of type '"+_producers[pluginName]->getPluginBaseName()+"'");
+                    titan_throw("plugin with name '",pluginName,"' is of type '",_producers[pluginName]->getPluginBaseName(),"'");
                 }
                 return plugin;
             }
             else
             {
-                throw std::string("plugin with name '"+pluginName+"' not found");
+                titan_throw("plugin with name '",pluginName,"' not found");
             }
         }
         void loadPluginsFromFile(std::string file);

@@ -118,11 +118,11 @@ TEST(Core, GenericType)
     GenericType floatType = GenericType::fromValue<float32>(1234567890);
     EXPECT_FLOAT_EQ(std::stof(floatType.toString()),1234567890);
 
-    EXPECT_THROW(GenericType::fromBoolString("bla"),std::string);
-    EXPECT_THROW(GenericType::fromInt32String("bla"),std::string);
-    EXPECT_THROW(GenericType::fromUInt32String("bla"),std::string);
-    EXPECT_THROW(GenericType::fromFloat32String("bla"),std::string);
-    EXPECT_THROW(GenericType::fromFloat64String("bla"),std::string);
+    EXPECT_THROW(GenericType::fromBoolString("bla"),titan::Exception);
+    EXPECT_THROW(GenericType::fromInt32String("bla"),titan::Exception);
+    EXPECT_THROW(GenericType::fromUInt32String("bla"),titan::Exception);
+    EXPECT_THROW(GenericType::fromFloat32String("bla"),titan::Exception);
+    EXPECT_THROW(GenericType::fromFloat64String("bla"),titan::Exception);
 
     EXPECT_EQ(GenericType::fromString("bla"),GenericType::fromValue<std::string>("bla"));
     EXPECT_EQ(GenericType::fromBoolString("true"),GenericType::fromValue<bool>(true));

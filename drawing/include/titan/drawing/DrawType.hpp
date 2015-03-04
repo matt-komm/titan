@@ -25,6 +25,7 @@ class DrawType
             _zIndex(zIndex)
         {
         }
+
         inline int32 getZIndex() const
         {
             return _zIndex;

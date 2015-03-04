@@ -72,14 +72,17 @@ SingleQuantity SingleQuantity::operator/(const Unit& unit) const
 
 SingleQuantity SingleQuantity::operator*(const SingleQuantity& singleQuantity) const
 {
-    SingleQuantity result(_value*singleQuantity.getValue(),_unit*singleQuantity._unit);
+    SingleQuantity result(_value*singleQuantity.getValue(),_unit*singleQuantity.getUnit());
     return std::move(result);
 }
 
 SingleQuantity SingleQuantity::operator/(const SingleQuantity& singleQuantity) const
 {
-    SingleQuantity result(_value/singleQuantity.getValue(),_unit/singleQuantity._unit);
-    return std::move(result);
+
+    SingleQuantity result(_value/singleQuantity.getValue(),_unit/singleQuantity.getUnit());
+    std::cout<<"blub"<<_value/singleQuantity.getValue()<<std::endl;
+    std::cout<<"blub"<<_unit/singleQuantity.getUnit()<<std::endl;
+    return result;
 }
 
 SingleQuantity& SingleQuantity::operator*=(const SingleQuantity& singleQuantity)
@@ -121,7 +124,10 @@ std::string SingleQuantity::toString() const
     }
     std::string s(buf);
     delete buf;
-    s+="*"+_unit.toString();
+    if (!_unit.isScalar())
+    {
+        s+="*"+_unit.toString();
+    }
     return std::move(s);
 }
 

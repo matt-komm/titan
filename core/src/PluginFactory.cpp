@@ -1,3 +1,4 @@
+#include "titan/core/Exception.hpp"
 #include "titan/core/PluginFactory.hpp"
 
 namespace titan
@@ -32,7 +33,7 @@ void PluginFactory::registerPlugin(AbstractPlugin* producer)
     }
     else
     {
-        throw std::string("plugin with name '"+producer->getPluginName()+"' already loaded");
+        titan_throw("plugin with name '",producer->getPluginName(),"' already loaded");
     }
 }
 

@@ -97,7 +97,10 @@ class Exception:
 
 }
 
+
 #define titan_throw(TYPE,...) \
     throw titan::Exception::create(TYPE,__FILE__,__FUNCTION__,__LINE__,__VA_ARGS__)
+
+
 
 #endif

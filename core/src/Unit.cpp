@@ -99,46 +99,14 @@ Unit& Unit::operator=(Unit&& unit)
 Unit Unit::operator*(const Unit& unit) const
 {
     Unit result(*this);
-    for (std::map<std::string,int32>::const_iterator it = unit._units.cbegin(); it!= unit._units.cend();++it)
-    {
-        if (result._units.find(it->first)!=result._units.cend())
-        {
-            int32& power = result._units[it->first];
-            power+=it->second;
-            if (power==0)
-            {
-                result._units.erase(it->first);
-            }
-        }
-        else
-        {
-            result._units[it->first]=it->second;
-        }
-    }
-    result.updateHash();
+    result*=unit;
     return std::move(result);
 }
 
 Unit Unit::operator/(const Unit& unit) const
 {
     Unit result(*this);
-    for (std::map<std::string,int32>::const_iterator it = unit._units.cbegin(); it!= unit._units.cend();++it)
-    {
-        if (result._units.find(it->first)!=result._units.cend())
-        {
-            int32& power = result._units[it->first];
-            power-=it->second;
-            if (power==0)
-            {
-                result._units.erase(it->first);
-            }
-        }
-        else
-        {
-            result._units[it->first]=-it->second;
-        }
-    }
-    result.updateHash();
+    result/=unit;
     return std::move(result);
 }
 
@@ -146,13 +114,14 @@ Unit& Unit::operator*=(const Unit& unit)
 {
     for (std::map<std::string,int32>::const_iterator it = unit._units.cbegin(); it!= unit._units.cend();++it)
     {
-        if (_units.find(it->first)!=_units.cend())
+        std::map<std::string,int32>::iterator thisIt = _units.find(it->first);
+        if (thisIt!=_units.end())
         {
             int32& power = _units[it->first];
             power+=it->second;
             if (power==0)
             {
-                _units.erase(it->first);
+                _units.erase(thisIt);
             }
         }
         else
@@ -168,13 +137,14 @@ Unit& Unit::operator/=(const Unit& unit)
 {
     for (std::map<std::string,int32>::const_iterator it = unit._units.cbegin(); it!= unit._units.cend();++it)
     {
-        if (_units.find(it->first)!=_units.cend())
+        std::map<std::string,int32>::iterator thisIt = _units.find(it->first);
+        if (_units.find(it->first)!=_units.end())
         {
             int32& power = _units[it->first];
             power-=it->second;
             if (power==0)
             {
-                _units.erase(it->first);
+                _units.erase(thisIt);
             }
         }
         else
@@ -189,6 +159,10 @@ Unit& Unit::operator/=(const Unit& unit)
 
 std::string Unit::toString() const
 {
+    if (_units.size()==0)
+    {
+        return "";
+    }
     std::stringstream ss;
     for (std::map<std::string,int32>::const_iterator it = _units.cbegin(); it!= _units.cend();++it)
     {

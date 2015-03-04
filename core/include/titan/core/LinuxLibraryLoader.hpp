@@ -1,6 +1,7 @@
 #ifndef __LINUXLIBRARYLOADER_H__
 #define __LINUXLIBRARYLOADER_H__
 
+#include "titan/core/Exception.hpp"
 #include "titan/core/AbstractLibraryLoader.hpp"
 
 #include <string>
@@ -37,7 +38,7 @@ class LinuxLibraryLoader:
                 lib_handle = dlopen(file.c_str(), RTLD_LAZY);
                 if (!lib_handle)
                 {
-                    throw "Error while opening file: '"+file+"': "+std::string(dlerror());
+                    titan_throw("Error while opening file: '",file,"': ",dlerror());
                 }
                 _loadedLibHandles[file]=lib_handle;
 
@@ -46,7 +47,7 @@ class LinuxLibraryLoader:
                 init_function_type fn = smemory.get();
                 if ((error = dlerror()) != NULL)
                 {
-                    throw "Error while initializing file: '"+file+"': "+std::string(dlerror());
+                    titan_throw("Error while initializing file: '",file,"': ",dlerror());
                 }
                 (*fn)();
             }

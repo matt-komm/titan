@@ -90,17 +90,7 @@ class Quantity:
             return _singles[index];
         }
 
-        SingleQuantity* findByUnit(const Unit& unit);
-
-        void substitute(const SingleQuantity& find, const SingleQuantity& replacement)
-        {
-            SingleQuantity* found = findByUnit(find.getUnit());
-            if (found)
-            {
-                (*found)*=replacement/find;
-            }
-            updateHash();
-        }
+        const SingleQuantity* findByUnit(const Unit& unit) const;
 
 };
 

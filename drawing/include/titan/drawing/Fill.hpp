@@ -18,7 +18,7 @@ class Fill
         {
             Fill f;
             f._color=color;
-            return f;
+            return std::move(f);
         }
 
         inline const Color& getColor() const

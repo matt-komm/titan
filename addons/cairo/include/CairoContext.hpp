@@ -32,7 +32,7 @@ class CairoContext:
 
         virtual void setAntialising(Antialising::type antialising);
         virtual void setStroke(const Stroke& stroke);
-        virtual void setFill(const Fill& stroke);
+        virtual void setFill(const Fill& fill);
         virtual void setFont(const Font& font);
         virtual void drawText(uint32 x, uint32 y, const std::string& text);
         virtual void drawLine(uint32 x1, uint32 y1, uint32 x2, uint32 y2);
