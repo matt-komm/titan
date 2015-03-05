@@ -18,7 +18,7 @@ class SingleQuantity:
         Unit _unit;
     public:
         SingleQuantity();
-        SingleQuantity(float32 value, const Unit& unit);
+        SingleQuantity(float32 value, const Unit& unit=Unit());
         SingleQuantity(const SingleQuantity& sq);
         SingleQuantity(SingleQuantity&& sq);
 

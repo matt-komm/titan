@@ -47,6 +47,7 @@ Unit::Unit(std::string name,int32 power)
 Unit::Unit(const Unit& unit):
     _units(unit._units)
 {
+
     updateHash();
 }
 
@@ -54,6 +55,7 @@ Unit::Unit(Unit&& unit):
     _hashValue(unit._hashValue),
     _units(std::move(unit._units))
 {
+    unit.updateHash();
 }
 
 Unit& Unit::invert()
@@ -68,12 +70,8 @@ Unit& Unit::invert()
 
 Unit Unit::invert() const
 {
-    Unit u;
-    for (std::map<std::string,int32>::const_iterator it =_units.cbegin(); it != _units.cend();++it)
-    {
-        u._units[it->first]=-it->second;
-    }
-    u.updateHash();
+    Unit u(*this);
+    u.invert();
     return std::move(u);
 }
 
@@ -93,6 +91,7 @@ Unit& Unit::operator=(Unit&& unit)
     _units.clear();
     _units=std::move(unit._units);
     _hashValue=unit._hashValue;
+    unit.updateHash();
     return *this;
 }
 

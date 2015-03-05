@@ -30,7 +30,7 @@ installlib(titan-core)
 
 add_gtest(
     NAME core 
-    SOURCES tests/test.cpp 
+    SOURCES tests/test_Exception.cpp tests/test_GenericType.cpp tests/test_Unit.cpp tests/test_SingleQuantity.cpp tests/test_Quantity.cpp
     LIBRARIES titan-core
     DEPS titan-core
 )

@@ -81,9 +81,9 @@ class Unit:
         inline int32 getPower(std::string unitName) const
         {
             std::map<std::string,int32>::const_iterator it = _units.find(unitName);
-            if (it!=_units.end())
+            if (it!=_units.cend())
             {
-                return _units.at(unitName);
+                return it->second;
             }
             return 0;
         }

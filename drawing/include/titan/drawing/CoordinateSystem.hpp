@@ -56,14 +56,19 @@ class CartesianCoordinates2d:
             {
                 titan_throw("BadArgument", "QPoint has to be of dimension 2");
             }
-            const SingleQuantity* sq1 = qPoint[0].findByUnit(_units[0]);
-            const SingleQuantity* sq2 = qPoint[1].findByUnit(_units[1]);
+            const SingleQuantity* sqX = qPoint[0].findByUnit(_units[0]);
+            const SingleQuantity* sqY = qPoint[1].findByUnit(_units[1]);
 
-            if (sq1 and sq2)
+            QPoint result(2);
+            if (sqX)
             {
-                return QPoint({(*sq1+_center[0])/_resolution[0],(*sq2+_center[1])/_resolution[1]});
+                result[0]+=(*sqX+_center[0])/_resolution[0];
             }
-            return QPoint(2);
+            if (sqY)
+            {
+                result[1]+=(*sqY+_center[1])/_resolution[1];
+            }
+            return result;
         }
         virtual ~CartesianCoordinates2d()
         {

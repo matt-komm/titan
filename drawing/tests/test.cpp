@@ -72,15 +72,15 @@ TEST(Drawing, CartesianCoordiantes)
 {
     using namespace titan;
 
-    CartesianCoordinates2d  coords({0.1*mm,0.1*mm},{0*mm,0*mm});
+    CartesianCoordinates2d  coordsMM({0.1*mm,0.1*mm},{0*mm,0*mm});
+    CartesianCoordinates2d  coordsPX({0.1*px,0.1*px},{0*px,0*px});
 
     QPoint qpoint(2);
     qpoint[0]=1.0*mm;
-    qpoint[1]=4.0*mm;
+    qpoint[1]=4.0*mm+0.5*px;
 
-    QPoint qpointConv = coords.convert(qpoint);
-
+    QPoint qpointConv = coordsMM.convert(qpoint);
+    qpointConv+=coordsPX.convert(qpoint);
     std::cout<<qpointConv<<std::endl;
-
-    //compare<Quantity>(qpointConv,{10*px,40*px});
+    //compare<Quantity>(qpointConv,{5.0,5.0});
 }
