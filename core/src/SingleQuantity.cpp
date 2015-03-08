@@ -6,7 +6,7 @@ namespace titan
 
 SingleQuantity::SingleQuantity():
     _value(0.0),
-    _unit("")
+    _unit()
 {
 }
 
@@ -26,6 +26,7 @@ SingleQuantity::SingleQuantity(SingleQuantity&& singleQuantity):
     _value(singleQuantity._value),
     _unit(std::move(singleQuantity._unit))
 {
+    singleQuantity._value=0.0;
 }
 
 SingleQuantity& SingleQuantity::operator=(const SingleQuantity& singleQuantity)
